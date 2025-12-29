@@ -7,59 +7,80 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Google Sans', sans-serif; background-color: #fff; }
-        .google-shadow { box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15); }
-        .pill-active { background-color: #e8f0fe; color: #1967d2; border-color: transparent; }
-        .pill-inactive { border: 1px solid #dadce0; color: #3c4043; }
-        .pill-inactive:hover { background-color: #f1f3f4; }
+        body { font-family: 'Google Sans', sans-serif; background-color: #f8f9fa; color: #202124; }
+        /* Google-style softness */
+        .card-shadow { box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15); }
+        .reality-box { background-color: #f1f3f4; border-left: 4px solid #1967d2; }
+        .myth-badge { background-color: #fce8e6; color: #c5221f; }
+        
+        /* Hide scrollbar for the sticky nav */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="text-[#202124]">
+<body class="antialiased">
 
-    <header class="pt-8 pb-6 px-4 max-w-5xl mx-auto">
-        <div class="flex items-center justify-between mb-8">
-            <h1 class="text-3xl md:text-4xl text-[#202124] tracking-tight">
-                <span class="font-bold">No BS</span> Camino
-            </h1>
-            <span class="text-xs font-bold bg-[#e8f0fe] text-[#1967d2] px-3 py-1 rounded-full uppercase tracking-wider">Live Beta</span>
-        </div>
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 transition-all duration-300 shadow-sm">
+        <div class="max-w-3xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between mb-3">
+                <h1 class="text-xl font-bold tracking-tight text-gray-800">
+                    <span class="text-[#1967d2]">No BS</span> Camino
+                </h1>
+                <span class="text-[10px] font-bold bg-green-100 text-green-800 px-2 py-1 rounded-full uppercase tracking-wider">Live Beta</span>
+            </div>
 
-        <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-            <button class="pill-active px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 whitespace-nowrap">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                All Truths
-            </button>
-            <button class="pill-inactive px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Gear Checks</button>
-            <button class="pill-inactive px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Logistics</button>
-            <button class="pill-inactive px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">GPX Maps</button>
+            <nav class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                <button class="bg-[#e8f0fe] text-[#1967d2] px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors hover:bg-[#d2e3fc]">
+                    All Truths
+                </button>
+                <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">
+                    Gear Checks
+                </button>
+                <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">
+                    Logistics
+                </button>
+                <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-gray-50 transition-colors">
+                    GPX Maps
+                </button>
+            </nav>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 pb-20">
-        
-        <div id="faq-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-            </div>
+    <main class="max-w-3xl mx-auto px-4 py-8">
 
-        <div class="flex items-center gap-3 mb-6">
-            <h2 class="text-xl font-medium">Live from the Trail</h2>
-            <div class="h-px bg-gray-200 flex-grow"></div>
+        <div class="mb-10 text-center px-4">
+            <p class="text-gray-500 text-lg leading-relaxed">
+                600km of raw data for the burned-out, the broke, and the brave. 
+                <br class="hidden md:block">No influencers. No drama. Just the walk.
+            </p>
         </div>
         
-        <div id="ig-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div id="faq-stream" class="space-y-8 mb-16">
             </div>
+
+        <div class="border-t border-gray-200 pt-10">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="bg-pink-100 p-2 rounded-full">
+                    <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+                <h2 class="text-lg font-bold text-gray-800">Live from the Trail</h2>
+            </div>
+            
+            <div id="ig-grid" class="grid grid-cols-2 md:grid-cols-4 gap-1">
+                </div>
+        </div>
 
     </main>
 
     <script>
-        // Your Verified Cloudflare Tunnel
+        // YOUR VERIFIED CLOUDFLARE TUNNEL
         const N8N_URL = 'https://local-tear-statute-lip.trycloudflare.com/webhook/camino-data';
 
-        // Icons for the visual flair you wanted
+        // Icons for the visual flair
         const icons = {
-            'Gear': '<svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>',
-            'Logistics': '<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 7m0 13V7"></path></svg>',
-            'GPX DATA': '<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>',
-            'Truth': '<svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            'Gear': '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>',
+            'Logistics': '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 7m0 13V7"></path></svg>',
+            'GPX DATA': '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>',
         };
 
         async function loadHub() {
@@ -67,16 +88,65 @@
                 const response = await fetch(N8N_URL);
                 const data = await response.json();
 
-                const faqGrid = document.getElementById('faq-grid');
+                const faqStream = document.getElementById('faq-stream');
                 const igGrid = document.getElementById('ig-grid');
 
                 data.forEach(item => {
-                    // Render Cards
+                    // 1. RENDER TRUTH CARDS (Vertical Stream)
                     if (item.title) {
-                        const icon = icons[item.category] || icons['Truth'];
-                        // Google Flights Style Card
-                        faqGrid.innerHTML += `
-                            <div class="bg-white border border-[#dadce0] rounded-[24px] p-6 hover:shadow-md transition-shadow cursor-default flex flex-col h-full">
-                                <div class="flex justify-between items-start mb-4">
-                                    <div class="bg-gray-50 p-3 rounded-full">${icon}</div>
-                                    <span class="text-[11px] font-bold text-[#5f6368] uppercase tracking-wider">${item.
+                        const icon = icons[item.category] || icons['Gear'];
+                        
+                        faqStream.innerHTML += `
+                            <article class="bg-white rounded-3xl p-6 md:p-8 card-shadow transition-transform duration-300">
+                                
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="bg-gray-100 p-2 rounded-full">${icon}</div>
+                                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">${item.category || 'INFO'}</span>
+                                    </div>
+                                    <span class="myth-badge text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide">Common Myth</span>
+                                </div>
+
+                                <h3 class="text-2xl font-bold text-gray-900 mb-6 leading-tight">
+                                    "${item.title}"
+                                </h3>
+
+                                <div class="reality-box rounded-xl p-5 mb-6">
+                                    <h4 class="text-sm font-bold text-[#1967d2] uppercase mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                        The Reality
+                                    </h4>
+                                    <p class="text-gray-800 text-lg font-medium leading-relaxed">
+                                        ${item.content}
+                                    </p>
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <a href="${item.link}" target="_blank" class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-[#1967d2] transition-colors group">
+                                        Source of Truth
+                                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                    </a>
+                                </div>
+                            </article>
+                        `;
+                    }
+                    
+                    // 2. RENDER INSTAGRAM (Grid)
+                    if (item.media_url) {
+                        igGrid.innerHTML += `
+                            <a href="${item.permalink}" target="_blank" class="relative block aspect-square bg-gray-100 overflow-hidden group">
+                                <img src="${item.media_url}" class="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90" alt="Instagram Post">
+                            </a>
+                        `;
+                    }
+                });
+            } catch (err) {
+                console.error("Loading failed", err);
+                document.getElementById('faq-stream').innerHTML = `<div class="p-6 text-center bg-red-50 text-red-600 rounded-xl">Connection lost. Check Cloudflare tunnel.</div>`;
+            }
+        }
+
+        loadHub();
+    </script>
+</body>
+</html>
