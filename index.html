@@ -3,36 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rude Camino | No-BS Intelligence Hub</title>
+    <title>No BS Camino | The 600km Reality Check</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        .card-shadow { box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); }
+        body { font-family: 'Google Sans', sans-serif; background-color: #fff; }
+        .google-shadow { box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15); }
+        .pill-active { background-color: #e8f0fe; color: #1967d2; border-color: transparent; }
+        .pill-inactive { border: 1px solid #dadce0; color: #3c4043; }
+        .pill-inactive:hover { background-color: #f1f3f4; }
     </style>
 </head>
-<body class="bg-[#f4f7fa] text-gray-900 font-sans leading-tight">
+<body class="text-[#202124]">
 
-    <header class="py-16 px-6 text-center bg-white border-b">
-        <h1 class="text-5xl font-black tracking-tighter text-blue-900">RUDE CAMINO</h1>
-        <p class="mt-4 text-xl text-gray-500 max-w-xl mx-auto font-medium">The No-BS Cockpit. 600km of raw data, zero affiliate fluff, and absolute reality checks.</p>
+    <header class="pt-8 pb-6 px-4 max-w-5xl mx-auto">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl md:text-4xl text-[#202124] tracking-tight">
+                <span class="font-bold">No BS</span> Camino
+            </h1>
+            <span class="text-xs font-bold bg-[#e8f0fe] text-[#1967d2] px-3 py-1 rounded-full uppercase tracking-wider">Live Beta</span>
+        </div>
+
+        <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+            <button class="pill-active px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                All Truths
+            </button>
+            <button class="pill-inactive px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Gear Checks</button>
+            <button class="pill-inactive px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Logistics</button>
+            <button class="pill-inactive px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">GPX Maps</button>
+        </div>
     </header>
 
-    <main class="max-w-6xl mx-auto py-12 px-6">
+    <main class="max-w-5xl mx-auto px-4 pb-20">
         
-        <h2 class="text-2xl font-bold mb-8 text-blue-900">The Truth Table</h2>
-        <div id="faq-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="faq-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
             </div>
 
-        <hr class="my-16 border-gray-200">
-
-        <h2 class="text-2xl font-bold mb-8 text-blue-900">Live Reality (Instagram)</h2>
-        <div id="ig-grid" class="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <div class="flex items-center gap-3 mb-6">
+            <h2 class="text-xl font-medium">Live from the Trail</h2>
+            <div class="h-px bg-gray-200 flex-grow"></div>
+        </div>
+        
+        <div id="ig-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
             </div>
 
     </main>
 
     <script>
-        // YOUR PERMANENT CLOUDFLARE TUNNEL URL
+        // Your Verified Cloudflare Tunnel
         const N8N_URL = 'https://local-tear-statute-lip.trycloudflare.com/webhook/camino-data';
+
+        // Icons for the visual flair you wanted
+        const icons = {
+            'Gear': '<svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>',
+            'Logistics': '<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 7m0 13V7"></path></svg>',
+            'GPX DATA': '<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>',
+            'Truth': '<svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+        };
 
         async function loadHub() {
             try {
@@ -43,33 +71,12 @@
                 const igGrid = document.getElementById('ig-grid');
 
                 data.forEach(item => {
-                    // Logic for FAQ/Truth Cards
+                    // Render Cards
                     if (item.title) {
+                        const icon = icons[item.category] || icons['Truth'];
+                        // Google Flights Style Card
                         faqGrid.innerHTML += `
-                            <div class="bg-white p-8 border border-gray-100 rounded-2xl card-shadow hover:border-blue-300 transition-all group">
-                                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">${item.category || 'ROUTE'}</span>
-                                <h3 class="text-2xl font-bold mt-2 mb-4 group-hover:text-blue-700">${item.title}</h3>
-                                <p class="text-gray-500 mb-6 text-sm leading-relaxed">${item.content}</p>
-                                <a href="${item.link}" target="_blank" class="text-sm font-bold bg-gray-50 px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors inline-block">Source &rarr;</a>
-                            </div>
-                        `;
-                    }
-                    
-                    // Logic for Instagram Grid
-                    if (item.media_url) {
-                        igGrid.innerHTML += `
-                            <a href="${item.permalink}" target="_blank" class="block aspect-square overflow-hidden rounded-lg bg-gray-200 hover:opacity-80 transition-opacity">
-                                <img src="${item.media_url}" class="w-full h-full object-cover" alt="Instagram Post">
-                            </a>
-                        `;
-                    }
-                });
-            } catch (err) {
-                console.error("Connection failed. Check n8n/Cloudflare.", err);
-            }
-        }
-
-        loadHub();
-    </script>
-</body>
-</html>
+                            <div class="bg-white border border-[#dadce0] rounded-[24px] p-6 hover:shadow-md transition-shadow cursor-default flex flex-col h-full">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="bg-gray-50 p-3 rounded-full">${icon}</div>
+                                    <span class="text-[11px] font-bold text-[#5f6368] uppercase tracking-wider">${item.
