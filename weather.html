@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Planner | No BS Camino</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Google Sans', sans-serif; background-color: #ffffff; color: #202124; }
+        .google-gradient { background: -webkit-linear-gradient(45deg, #1967d2, #4285f4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-pill:hover { background-color: #f1f3f4; color: #1967d2; }
+        .card-flight { border: 1px solid #dadce0; border-radius: 16px; background: white; transition: all 0.2s ease; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <svg class="w-6 h-6 text-[#1967d2]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span class="font-bold text-gray-700 text-lg tracking-tight">No BS <span class="text-[#1967d2]">Camino</span></span>
+            </div>
+            <nav class="flex gap-2 overflow-x-auto no-scrollbar">
+                <a href="index.html" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap">Home</a>
+                <a href="#" class="nav-pill px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-sm font-bold text-[#1967d2] whitespace-nowrap">Weather Planner 🌤️</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 pt-12">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold google-gradient tracking-tight mb-4">Smart Weather Planner</h1>
+            <p class="text-gray-600 mb-2">Plan your route around the forecast. We calculate where you will be each day and pull the specific weather for that location.</p>
+            <div class="inline-block px-3 py-1 bg-yellow-50 border border-yellow-200 rounded-md text-xs text-yellow-700 font-bold">
+                ⚠️ Forecasts are only accurate 14 days out.
+            </div>
+        </div>
+
+        <div class="card-flight p-6 mb-8 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Location</label>
+                    <select id="startLocation" class="w-full p-3 border border-gray-300 rounded-lg text-gray-700 font-medium focus:outline-none focus:border-[#1967d2]">
+                        </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Date</label>
+                    <input type="date" id="startDate" class="w-full p-3 border border-gray-300 rounded-lg text-gray-700 font-medium focus:outline-none focus:border-[#1967d2]">
+                </div>
+            </div>
+            <button onclick="getForecast()" class="w-full mt-4 bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2">
+                <span>Get 10-Day Forecast</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+
+        <div id="loading" class="hidden text-center py-10">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
+            <p class="text-sm text-gray-400 mt-2">Crunching the data...</p>
+        </div>
+        
+        <div id="results" class="space-y-3"></div>
+
+    </main>
+
+    <script>
+        // Data derived from your prompt
+        const stages = [
+            { id: 1, start: "Sevilla", end: "Guillena", dist: "22.6 km", lat: 37.47, lon: -6.02 },
+            { id: 2, start: "Guillena", end: "Castilblanco", dist: "18 km", lat: 37.60, lon: -6.01 },
+            { id: 3, start: "Castilblanco", end: "Almadén", dist: "29.5 km", lat: 37.78, lon: -6.00 },
+            { id: 4, start: "Almadén", end: "El Real", dist: "15.4 km", lat: 37.90, lon: -6.10 },
+            { id: 5, start: "El Real", end: "Monesterio", dist: "19.8 km", lat: 38.02, lon: -6.20 },
+            { id: 6, start: "Monesterio", end: "F. de Cantos", dist: "21.6 km", lat: 38.16, lon: -6.25 },
+            { id: 7, start: "F. de Cantos", end: "Zafra", dist: "25.1 km", lat: 38.32, lon: -6.35 },
+            { id: 8, start: "Zafra", end: "Villafranca", dist: "18.9 km", lat: 38.48, lon: -6.38 },
+            { id: 9, start: "Villafranca", end: "Torremejía", dist: "27.4 km", lat: 38.68, lon: -6.38 },
+            { id: 10, start: "Torremejía", end: "Mérida", dist: "15.6 km", lat: 38.85, lon: -6.35 },
+            { id: 11, start: "Mérida", end: "Aljucén", dist: "15.9 km", lat: 39.00, lon: -6.35 },
+            { id: 12, start: "Aljucén", end: "Alcuéscar", dist: "20.1 km", lat: 39.10, lon: -6.25 },
+            { id: 13, start: "Alcuéscar", end: "Valdesalor", dist: "25.7 km", lat: 39.25, lon: -6.25 },
+            { id: 14, start: "Valdesalor", end: "Casar Caceres", dist: "21.8 km", lat: 39.40, lon: -6.35 },
+            { id: 15, start: "Casar", end: "Cañaveral", dist: "33 km", lat: 39.65, lon: -6.40 },
+            { id: 16, start: "Cañaveral", end: "Galisteo", dist: "29.3 km", lat: 39.88, lon: -6.38 },
+            { id: 17, start: "Galisteo", end: "Carcaboso", dist: "11.5 km", lat: 40.00, lon: -6.30 },
+            { id: 18, start: "Carcaboso", end: "Cáparra", dist: "40 km", lat: 40.11, lon: -6.15 },
+            { id: 19, start: "Cáparra", end: "Calzada Béjar", dist: "22.5 km", lat: 40.25, lon: -5.95 },
+            { id: 20, start: "Calzada", end: "Fuenterroble", dist: "20.3 km", lat: 40.45, lon: -5.85 },
+            { id: 21, start: "Fuenterroble", end: "San Pedro", dist: "29.9 km", lat: 40.65, lon: -5.75 },
+            { id: 22, start: "San Pedro", end: "Salamanca", dist: "23.1 km", lat: 40.85, lon: -5.70 },
+            { id: 23, start: "Salamanca", end: "Valdunciel", dist: "15 km", lat: 41.05, lon: -5.65 },
+            { id: 24, start: "Valdunciel", end: "El Cubo", dist: "20 km", lat: 41.15, lon: -5.68 },
+            { id: 25, start: "El Cubo", end: "Zamora", dist: "31.7 km", lat: 41.35, lon: -5.75 },
+            { id: 26, start: "Zamora", end: "Montamarta", dist: "18.3 km", lat: 41.58, lon: -5.80 },
+            { id: 27, start: "Montamarta", end: "Granja", dist: "22.5 km", lat: 41.75, lon: -5.78 },
+            { id: 28, start: "Granja", end: "Tábara", dist: "25.6 km", lat: 41.85, lon: -5.95 },
+            { id: 29, start: "Tábara", end: "Santa Marta", dist: "22.8 km", lat: 41.95, lon: -6.05 },
+            { id: 30, start: "Santa Marta", end: "Mombuey", dist: "35.2 km", lat: 42.05, lon: -6.20 },
+            { id: 31, start: "Mombuey", end: "Puebla Sanabria", dist: "31.8 km", lat: 42.08, lon: -6.50 },
+            { id: 32, start: "Puebla", end: "Lubián", dist: "29.5 km", lat: 42.05, lon: -6.85 },
+            { id: 33, start: "Lubián", end: "A Gudiña", dist: "25.7 km", lat: 42.06, lon: -7.10 },
+            { id: 34, start: "A Gudiña", end: "Laza", dist: "35 km", lat: 42.05, lon: -7.40 },
+            { id: 35, start: "Laza", end: "Xunqueira", dist: "33 km", lat: 42.15, lon: -7.60 },
+            { id: 36, start: "Xunqueira", end: "Ourense", dist: "22.5 km", lat: 42.25, lon: -7.80 },
+            { id: 37, start: "Ourense", end: "Cea", dist: "22.5 km", lat: 42.38, -7.98 },
+            { id: 38, start: "Cea", end: "Castro Dozón", dist: "19.5 km", lat: 42.50, lon: -8.02 },
+            { id: 39, start: "Castro", end: "Silleda", dist: "28 km", lat: 42.65, lon: -8.15 },
+            { id: 40, start: "Silleda", end: "Ponte Ulla", dist: "19.6 km", lat: 42.78, lon: -8.35 },
+            { id: 41, start: "Ponte Ulla", end: "Santiago", dist: "20.5 km", lat: 42.82, lon: -8.50 }
+        ];
+
+        // Initialize Form
+        window.onload = function() {
+            const select = document.getElementById('startLocation');
+            stages.forEach(s => {
+                const option = document.createElement('option');
+                option.value = s.start;
+                option.text = s.start;
+                if(s.start === "Mérida") option.selected = true; // Default per user preference
+                select.appendChild(option);
+            });
+            document.getElementById('startDate').valueAsDate = new Date();
+        };
+
+        const weatherCodes = {
+            0: '☀️ Clear sky', 1: '🌤️ Mainly clear', 2: '⛅ Partly cloudy', 3: '☁️ Overcast',
+            45: '🌫️ Fog', 48: '🌫️ Fog', 51: '🌧️ Drizzle', 53: '🌧️ Drizzle', 55: '🌧️ Drizzle',
+            61: '☔ Slight Rain', 63: '☔ Rain', 65: '☔ Heavy Rain',
+            71: '❄️ Snow', 73: '❄️ Snow', 75: '❄️ Heavy Snow',
+            80: '🌦️ Showers', 81: '🌦️ Showers', 82: '⛈️ Violent Showers',
+            95: '⚡ Thunderstorm', 96: '⚡ Hail'
+        };
+
+        async function getForecast() {
+            const resultsDiv = document.getElementById('results');
+            const loading = document.getElementById('loading');
+            const startLoc = document.getElementById('startLocation').value;
+            const startDateStr = document.getElementById('startDate').value;
+
+            resultsDiv.innerHTML = '';
+            loading.classList.remove('hidden');
+
+            try {
+                const startIndex = stages.findIndex(s => s.start === startLoc);
+                const plannedStages = stages.slice(startIndex, startIndex + 10); // Limit to 10 days
+                
+                for (let i = 0; i < plannedStages.length; i++) {
+                    const stage = plannedStages[i];
+                    
+                    // Calculate date: Start Date + i days
+                    const current = new Date(startDateStr);
+                    current.setDate(current.getDate() + i);
+                    const dateQuery = current.toISOString().split('T')[0];
+                    
+                    // Fetch Open-Meteo
+                    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${stage.lat}&longitude=${stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`);
+                    const data = await response.json();
+                    
+                    if(data.daily) {
+                        const dayData = {
+                            date: current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+                            tempMax: data.daily.temperature_2m_max[0],
+                            tempMin: data.daily.temperature_2m_min[0],
+                            rain: data.daily.precipitation_sum[0],
+                            code: data.daily.weathercode[0]
+                        };
+                        
+                        // Render Card
+                        const html = `
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-colors">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-0.5 rounded text-gray-500">${dayData.date}</span>
+                                        <span class="text-xs text-gray-400">Day ${i+1}</span>
+                                    </div>
+                                    <h4 class="font-bold text-gray-800">${stage.start} <span class="text-gray-400 font-normal">→</span> ${stage.end}</h4>
+                                    <p class="text-xs text-gray-500">${stage.dist}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-medium text-gray-800">${weatherCodes[dayData.code] || 'Unknown'}</p>
+                                    <div class="text-sm font-bold">
+                                        <span class="text-gray-800">${Math.round(dayData.tempMax)}°</span> 
+                                        <span class="text-gray-400">/</span> 
+                                        <span class="text-blue-500">${Math.round(dayData.tempMin)}°</span>
+                                    </div>
+                                    ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1">💧 ${dayData.rain}mm</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                        resultsDiv.innerHTML += html;
+                    }
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm">Error fetching weather. Please check your dates (must be within next 14 days).</div>`;
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
