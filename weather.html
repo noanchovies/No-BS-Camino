@@ -18,9 +18,9 @@
         /* Map Container Height */
         #map { height: 400px; width: 100%; border-radius: 0 0 16px 16px; z-index: 1; }
         
-        /* Custom Map Pin Styles */
-        .leaflet-popup-content-wrapper { border-radius: 8px; font-family: 'Google Sans', sans-serif; }
-        .leaflet-popup-content { margin: 12px; font-size: 14px; font-weight: bold; color: #1967d2; }
+        /* PIN STYLING: SELECTED STATE */
+        /* Takes standard blue leaflet marker and rotates hue to make it Red */
+        .img-selected-pin { filter: hue-rotate(140deg) saturate(1.5) brightness(0.9); }
     </style>
 </head>
 <body class="antialiased pb-20">
@@ -42,7 +42,7 @@
         
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold google-gradient tracking-tight mb-3">Smart Weather Planner</h1>
-            <p class="text-gray-600">We calculate exactly where you will be each day and pull the specific weather for that location.</p>
+            <p class="text-gray-600">We calculate your daily position and pull accurate data for that specific location.</p>
         </div>
 
         <div class="grid grid-cols-3 gap-2 md:gap-8 mb-8 text-center px-2">
@@ -51,31 +51,22 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                 </div>
                 <h3 class="text-sm font-bold text-gray-800">1. Select Route</h3>
-                <p class="text-xs text-gray-400 mt-1 hidden md:block">Choose your Camino path on the map.</p>
             </div>
             <div class="flex flex-col items-center group">
                 <div class="w-12 h-12 rounded-full bg-blue-50 text-[#1967d2] flex items-center justify-center mb-3 group-hover:bg-[#1967d2] group-hover:text-white transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </div>
                 <h3 class="text-sm font-bold text-gray-800">2. Pick Start Pin</h3>
-                <p class="text-xs text-gray-400 mt-1 hidden md:block">Click the town where you start walking.</p>
             </div>
             <div class="flex flex-col items-center group">
                 <div class="w-12 h-12 rounded-full bg-blue-50 text-[#1967d2] flex items-center justify-center mb-3 group-hover:bg-[#1967d2] group-hover:text-white transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
                 <h3 class="text-sm font-bold text-gray-800">3. Set Date</h3>
-                <p class="text-xs text-gray-400 mt-1 hidden md:block">We handle the daily math.</p>
             </div>
         </div>
 
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6 flex items-start gap-3">
-            <svg class="w-5 h-5 text-yellow-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            <p class="text-sm text-yellow-800 font-medium">Forecasts are only accurate 14 days out. <span class="font-normal text-yellow-700">If you select a date further in the future, we can't predict the weather yet.</span></p>
-        </div>
-
-        <div class="card-flight shadow-sm mb-8 overflow-hidden">
-            
+        <div class="card-flight shadow-sm mb-8 overflow-hidden z-10 relative">
             <div class="p-4 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row gap-4 items-end">
                 <div class="w-full">
                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Select Route</label>
@@ -92,40 +83,59 @@
                 </div>
             </div>
 
+            <div class="px-4 py-2 bg-blue-50/50 border-b border-gray-100 flex items-center gap-3">
+                <input type="checkbox" id="addRestDays" class="w-4 h-4 text-[#1967d2] rounded focus:ring-blue-500 border-gray-300">
+                <label for="addRestDays" class="text-xs text-gray-600 cursor-pointer select-none">
+                    <span class="font-bold text-gray-800">Add "Smart Rest Days"</span> (Recommended)
+                    <br/><span class="text-gray-500">Automatically adds a rest day at major cities (e.g., Burgos, León) for a realistic plan.</span>
+                </label>
+            </div>
+
             <div class="relative">
                 <div id="map"></div>
-                <div class="absolute top-4 right-4 z-[999] bg-white/90 backdrop-blur px-3 py-2 rounded-lg shadow-md border border-gray-200 pointer-events-none">
+                <div class="absolute top-4 right-4 z-[999] bg-white/95 backdrop-blur px-3 py-2 rounded-lg shadow-md border border-gray-200 pointer-events-none">
                     <p class="text-xs text-gray-500 font-bold uppercase">Selected Start:</p>
                     <p id="selectedLocationText" class="text-sm font-bold text-[#1967d2]">Click a pin on map</p>
                 </div>
             </div>
 
             <div class="p-4 bg-white border-t border-gray-100">
-                <button onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2">
+                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
                     <span>Get 10-Day Forecast</span>
                 </button>
             </div>
         </div>
 
+        <div id="summaryBox" class="hidden mb-6 p-4 rounded-xl border-l-4 border-[#1967d2] bg-blue-50/50 shadow-sm animate-fade-in">
+            <h4 class="text-sm font-bold text-[#1967d2] uppercase mb-1">Trip Overview</h4>
+            <p id="summaryText" class="text-gray-700 text-sm font-medium">Calculating...</p>
+        </div>
+
         <div id="loading" class="hidden text-center py-10">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
-            <p class="text-sm text-gray-400 mt-2">Locating coordinates & fetching data...</p>
+            <p class="text-sm text-gray-400 mt-2">Checking caches & fetching data...</p>
         </div>
         
-        <div id="results" class="space-y-3"></div>
+        <div id="results" class="space-y-3 pb-10 scroll-mt-20"></div>
 
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- 1. DATA: ROUTE DEFINITIONS ---
-        // I have parsed the provided CSVs into this structure
+        // --- 1. CONFIG & DATA ---
+        
+        // Define major "Rest Cities" where pilgrims usually stop
+        const restCities = [
+            "Burgos", "León", "Logroño", // Francés
+            "Bilbao", "Santander", "Gijón", "Ribadeo", // Norte
+            "Salamanca", "Mérida", "Zamora", "Ourense", // Plata
+            "Coimbra", "Porto", "Pontevedra" // Lusitana
+        ];
+
         const routes = {
             frances: {
-                name: "Camino Francés",
-                center: [42.6, -4.0], // Centered on Spain
-                zoom: 7,
+                name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
                 stages: [
                     { start: "Saint-Jean-Pied-de-Port", end: "Roncesvalles", dist: "25km", lat: 43.163, lon: -1.235 },
                     { start: "Roncesvalles", end: "Zubiri", dist: "21km", lat: 43.009, lon: -1.319 },
@@ -162,9 +172,7 @@
                 ]
             },
             norte: {
-                name: "Camino del Norte",
-                center: [43.4, -4.0],
-                zoom: 7,
+                name: "Camino del Norte", center: [43.4, -4.0], zoom: 7,
                 stages: [
                     { start: "Irún", end: "San Sebastián", dist: "26km", lat: 43.338, lon: -1.788 },
                     { start: "San Sebastián", end: "Zarautz", dist: "22km", lat: 43.318, lon: -1.981 },
@@ -201,9 +209,7 @@
                 ]
             },
             plata: {
-                name: "Vía de la Plata",
-                center: [39.5, -6.0],
-                zoom: 6,
+                name: "Vía de la Plata", center: [39.5, -6.0], zoom: 6,
                 stages: [
                     { start: "Sevilla", end: "Guillena", dist: "22km", lat: 37.389, lon: -5.984 },
                     { start: "Guillena", end: "Castilblanco", dist: "18km", lat: 37.555, lon: -6.056 },
@@ -246,9 +252,7 @@
                 ]
             },
             lusitana: {
-                name: "Via Lusitana",
-                center: [40.5, -8.5],
-                zoom: 7,
+                name: "Via Lusitana", center: [40.5, -8.5], zoom: 7,
                 stages: [
                     { start: "Lisboa", end: "Alverca", dist: "28km", lat: 38.722, lon: -9.139 },
                     { start: "Alverca", end: "Azambuja", dist: "29km", lat: 38.895, lon: -9.040 },
@@ -279,66 +283,6 @@
             }
         };
 
-        // --- 2. MAP & LOGIC ---
-        let map;
-        let markers = [];
-        let currentRouteId = 'frances';
-        let selectedStageIndex = 0;
-
-        window.onload = function() {
-            // Set Date Input to Today
-            document.getElementById('startDate').valueAsDate = new Date();
-            
-            // Initialize Map
-            map = L.map('map').setView([42.6, -4.0], 7);
-            
-            // Add CartoDB Positron Tiles (Clean & Minimal)
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap &copy; CARTO',
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(map);
-
-            // Initial Render
-            changeRoute();
-        };
-
-        function changeRoute() {
-            const select = document.getElementById('routeSelect');
-            currentRouteId = select.value;
-            const routeData = routes[currentRouteId];
-
-            // 1. Reset Map Center
-            map.flyTo(routeData.center, routeData.zoom);
-
-            // 2. Clear old markers
-            markers.forEach(m => map.removeLayer(m));
-            markers = [];
-
-            // 3. Add New Pins
-            routeData.stages.forEach((stage, index) => {
-                const marker = L.marker([stage.lat, stage.lon]).addTo(map);
-                
-                // Add click event
-                marker.on('click', () => {
-                    selectedStageIndex = index;
-                    document.getElementById('selectedLocationText').innerText = stage.start;
-                    document.getElementById('selectedLocationText').classList.add('animate-pulse');
-                    setTimeout(() => document.getElementById('selectedLocationText').classList.remove('animate-pulse'), 500);
-                    
-                    // Highlight marker
-                    marker.openPopup();
-                });
-
-                marker.bindPopup(`<b>${stage.start}</b><br>Stage ${index + 1}`);
-                markers.push(marker);
-            });
-            
-            // Default select first stage
-            selectedStageIndex = 0;
-            document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
-        }
-
         const weatherCodes = {
             0: '☀️ Clear sky', 1: '🌤️ Mainly clear', 2: '⛅ Partly cloudy', 3: '☁️ Overcast',
             45: '🌫️ Fog', 48: '🌫️ Fog', 51: '🌧️ Drizzle', 53: '🌧️ Drizzle', 55: '🌧️ Drizzle',
@@ -348,73 +292,228 @@
             95: '⚡ Thunderstorm', 96: '⚡ Hail'
         };
 
+        // --- 2. LOGIC ---
+        let map;
+        let markers = [];
+        let currentRouteId = 'frances';
+        let selectedStageIndex = 0;
+
+        window.onload = function() {
+            document.getElementById('startDate').valueAsDate = new Date();
+            
+            map = L.map('map').setView([42.6, -4.0], 7);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+
+            changeRoute();
+        };
+
+        function changeRoute() {
+            const select = document.getElementById('routeSelect');
+            currentRouteId = select.value;
+            const routeData = routes[currentRouteId];
+
+            map.flyTo(routeData.center, routeData.zoom);
+
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
+            routeData.stages.forEach((stage, index) => {
+                const marker = L.marker([stage.lat, stage.lon]).addTo(map);
+                
+                // Add Click Logic for Red Pin
+                marker.on('click', () => {
+                    selectedStageIndex = index;
+                    document.getElementById('selectedLocationText').innerText = stage.start;
+                    document.getElementById('selectedLocationText').classList.add('animate-pulse');
+                    setTimeout(() => document.getElementById('selectedLocationText').classList.remove('animate-pulse'), 500);
+                    
+                    // Reset all icons
+                    markers.forEach(m => {
+                        if (m._icon) m._icon.classList.remove('img-selected-pin');
+                    });
+                    
+                    // Set this icon to red (using class with css filter)
+                    if (marker._icon) marker._icon.classList.add('img-selected-pin');
+                    
+                    marker.openPopup();
+                });
+
+                marker.bindPopup(`<b>${stage.start}</b><br>Stage ${index + 1}`);
+                markers.push(marker);
+            });
+            
+            // Auto-select first stage
+            selectedStageIndex = 0;
+            document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
+        }
+
         async function getForecast() {
+            const btn = document.getElementById('getForecastBtn');
             const resultsDiv = document.getElementById('results');
             const loading = document.getElementById('loading');
+            const summaryBox = document.getElementById('summaryBox');
             const startDateStr = document.getElementById('startDate').value;
+            const addRestDays = document.getElementById('addRestDays').checked;
+
+            // Debounce to save API calls
+            btn.disabled = true;
+            setTimeout(() => btn.disabled = false, 2000);
 
             resultsDiv.innerHTML = '';
+            summaryBox.classList.add('hidden');
             loading.classList.remove('hidden');
 
             try {
+                // 1. Build the Itinerary (Insert Rest Days if needed)
                 const routeData = routes[currentRouteId];
-                
-                // Get next 10 stages from selected start point
-                const stagesToFetch = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 10);
-                
-                for (let i = 0; i < stagesToFetch.length; i++) {
-                    const stage = stagesToFetch[i];
+                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12); // Grab 12 to ensure we fill 10 days if rest days exist
+                let itinerary = [];
+                let dayOffset = 0;
+
+                for (let i = 0; i < rawStages.length; i++) {
+                    if (itinerary.length >= 10) break; // Limit to 10 display days
+
+                    const stage = rawStages[i];
                     
-                    // Date Math
+                    // Add Walk Day
+                    itinerary.push({ type: 'walk', stage: stage, dayOffset: dayOffset });
+                    dayOffset++;
+
+                    // Check for Rest Day insertion
+                    if (addRestDays && restCities.includes(stage.end) && i < rawStages.length - 1) {
+                        itinerary.push({ type: 'rest', stage: stage, dayOffset: dayOffset }); // Rest in the "End" city
+                        dayOffset++;
+                    }
+                }
+
+                // 2. Determine Date Mode (Forecast vs Historical)
+                const startObj = new Date(startDateStr);
+                const today = new Date();
+                const diffTime = startObj - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                
+                let isHistorical = false;
+                let fetchYear = startObj.getFullYear();
+                
+                if (diffDays > 10) {
+                    isHistorical = true;
+                    fetchYear = 2025; // Force fallback to previous year data
+                }
+
+                // 3. Process each day
+                let summaryRainDays = 0;
+                let summaryTemps = [];
+
+                for (let item of itinerary) {
+                    // Calculate Date
                     const current = new Date(startDateStr);
-                    current.setDate(current.getDate() + i);
-                    const dateQuery = current.toISOString().split('T')[0];
+                    current.setDate(current.getDate() + item.dayOffset);
                     
-                    // API Call
-                    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${stage.lat}&longitude=${stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`);
-                    
-                    if(!response.ok) throw new Error("Date out of range");
-                    
-                    const data = await response.json();
-                    
-                    if(data.daily) {
+                    // If historical, we fetch specific date from 2025
+                    let dateQuery = current.toISOString().split('T')[0];
+                    if (isHistorical) {
+                        const histDate = new Date(current);
+                        histDate.setFullYear(2025); // Hardcode to 2025
+                        dateQuery = histDate.toISOString().split('T')[0];
+                    }
+
+                    // CACHING: Check LocalStorage
+                    const cacheKey = `weather_${item.stage.lat}_${dateQuery}`;
+                    const cached = localStorage.getItem(cacheKey);
+                    let data;
+
+                    if (cached && (Date.now() - JSON.parse(cached).timestamp < 3600000)) { // 1 hour cache
+                        data = JSON.parse(cached).data;
+                    } else {
+                        // Fetch fresh
+                        const url = isHistorical 
+                            ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
+                            : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                        
+                        const res = await fetch(url);
+                        if(!res.ok) continue;
+                        const json = await res.json();
+                        data = json;
+                        // Save to cache
+                        localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: json }));
+                    }
+
+                    if (data.daily) {
                         const dayData = {
-                            date: current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+                            dateDisplay: current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
                             tempMax: data.daily.temperature_2m_max[0],
                             tempMin: data.daily.temperature_2m_min[0],
                             rain: data.daily.precipitation_sum[0],
-                            code: data.daily.weathercode[0]
+                            code: data.daily.weathercode[0],
+                            sunrise: data.daily.sunrise[0].split('T')[1],
+                            sunset: data.daily.sunset[0].split('T')[1],
+                            daylight: (data.daily.daylight_duration[0] / 3600).toFixed(1)
                         };
-                        
+
+                        // Aggregate for Summary
+                        if (dayData.rain > 1.0) summaryRainDays++;
+                        summaryTemps.push(dayData.tempMax);
+
                         // Render Card
+                        const isRest = item.type === 'rest';
+                        const cardColor = isRest ? 'bg-green-50 border-green-200' : 'bg-white border-gray-100';
+                        const badgeHtml = isHistorical 
+                            ? `<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded">Historical (2025)</span>` 
+                            : `<span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">Forecast</span>`;
+
                         const html = `
-                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-colors">
-                                <div>
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-0.5 rounded text-gray-500">${dayData.date}</span>
-                                        <span class="text-xs text-gray-400">Day ${i+1} of walk</span>
+                            <div class="flex flex-col md:flex-row gap-4 p-4 ${cardColor} rounded-xl border hover:border-blue-300 transition-colors shadow-sm">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600 shadow-sm">${dayData.dateDisplay}</span>
+                                            ${isRest ? '<span class="text-xs font-bold text-green-600">🛌 Rest Day</span>' : `<span class="text-xs text-gray-400">Day ${item.dayOffset+1}</span>`}
+                                        </div>
+                                        ${badgeHtml}
                                     </div>
-                                    <h4 class="font-bold text-gray-800">${stage.start} <span class="text-gray-400 font-normal">→</span> ${stage.end}</h4>
-                                    <p class="text-xs text-gray-500">${stage.dist} approx.</p>
+                                    <h4 class="font-bold text-gray-800 text-lg">
+                                        ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
+                                    </h4>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        ${isRest ? 'Recharge your batteries.' : `${item.stage.dist} approx • 🌅 ${dayData.sunrise} • 🌇 ${dayData.sunset} (${dayData.daylight}h light)`}
+                                    </p>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-medium text-gray-800">${weatherCodes[dayData.code] || 'Unknown'}</p>
-                                    <div class="text-sm font-bold">
-                                        <span class="text-gray-800">${Math.round(dayData.tempMax)}°</span> 
-                                        <span class="text-gray-400">/</span> 
+                                <div class="text-right border-t md:border-t-0 md:border-l border-gray-100 md:pl-4 pt-3 md:pt-0 min-w-[120px]">
+                                    <p class="text-2xl mb-1">${weatherCodes[dayData.code] || 'Unknown'}</p>
+                                    <div class="text-lg font-bold">
+                                        <span class="text-gray-900">${Math.round(dayData.tempMax)}°</span> 
+                                        <span class="text-gray-300">/</span> 
                                         <span class="text-blue-500">${Math.round(dayData.tempMin)}°</span>
                                     </div>
-                                    ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1">💧 ${dayData.rain}mm</p>` : ''}
+                                    ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-full">💧 ${dayData.rain}mm</p>` : '<p class="text-xs text-gray-400 mt-1">Dry</p>'}
                                 </div>
                             </div>
                         `;
                         resultsDiv.innerHTML += html;
                     }
                 }
+
+                // 4. Generate & Show Summary
+                const avgTemp = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
+                let summaryMsg = `Expect an average high of <b>${avgTemp}°C</b>. `;
+                
+                if (summaryRainDays === 0) summaryMsg += `<span class="text-green-600 font-bold">Great news: It looks completely dry! ☀️</span>`;
+                else if (summaryRainDays <= 2) summaryMsg += `<span class="text-blue-600 font-bold">Pack light rain gear: Some rain expected on ${summaryRainDays} days. 🌦️</span>`;
+                else summaryMsg += `<span class="text-orange-600 font-bold">Prepare for wet weather: Rain expected on ${summaryRainDays} days. ☔</span>`;
+
+                document.getElementById('summaryText').innerHTML = summaryMsg;
+                summaryBox.classList.remove('hidden');
+
+                // 5. Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
             } catch (error) {
-                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm font-bold">
-                    Unable to load forecast. <br/><span class="font-normal text-xs">Please ensure your Start Date is within the next 14 days.</span>
-                </div>`;
+                console.error(error);
+                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm font-bold">Error loading weather data. Please try again.</div>`;
             } finally {
                 loading.classList.add('hidden');
             }
