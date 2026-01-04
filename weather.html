@@ -89,7 +89,7 @@
                 <input type="checkbox" id="addRestDays" class="w-4 h-4 text-[#1967d2] rounded focus:ring-blue-500 border-gray-300">
                 <label for="addRestDays" class="text-xs text-gray-600 cursor-pointer select-none">
                     <span class="font-bold text-gray-800">Add "Smart Rest Days"</span> (Recommended)
-                    <br/><span class="text-gray-500">Automatically adds a rest day at major cities (e.g., Burgos, León) for a realistic plan.</span>
+                    <br/><span class="text-gray-500">Automatically adds a rest day at major cities (e.g., Burgos, León).</span>
                 </label>
             </div>
 
@@ -131,11 +131,12 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- 1. CONFIG & ICONS ---
+        // --- ⚙️ CONFIGURATION ---
         
-        // Using "Basmilius Weather Icons" from CDN for that AccuWeather/Pro look
+        const DEV_MODE = false; 
+
+        // Icon Helper: Returns professional SVG URL instead of Emoji
         const getIconUrl = (code) => {
-            // Mapping WMO codes to Icon Names
             const map = {
                 0: 'clear-day', 1: 'partly-cloudy-day', 2: 'partly-cloudy-day', 3: 'overcast',
                 45: 'fog', 48: 'fog', 51: 'drizzle', 53: 'drizzle', 55: 'drizzle',
@@ -146,13 +147,20 @@
             return `https://bmcdn.nl/assets/weather-icons/v3.0/fill/svg/${iconName}.svg`;
         };
 
+        // Text descriptions for accessibility/tooltips
+        const weatherCodeDesc = {
+            0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
+            45: 'Fog', 48: 'Fog', 51: 'Light Drizzle', 53: 'Drizzle', 55: 'Heavy Drizzle',
+            61: 'Slight Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Slight Snow', 73: 'Snow', 75: 'Heavy Snow',
+            80: 'Rain Showers', 81: 'Showers', 82: 'Violent Showers', 95: 'Thunderstorm', 96: 'Hail'
+        };
+
         const restCities = [
             "Burgos", "León", "Logroño", "Bilbao", "Santander", "Gijón", 
             "Ribadeo", "Salamanca", "Mérida", "Zamora", "Ourense", "Coimbra", "Porto", "Pontevedra"
         ];
 
-        // Route Data (Shortened for brevity - reuse your full data object here)
-        // I've kept your exact data structure, just ensure the full object is pasted here.
+        // --- 🗺️ ROUTE DATA ---
         const routes = {
             frances: {
                 name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
@@ -263,311 +271,4 @@
                     { start: "Puebla", end: "Lubián", dist: "29km", lat: 42.054, lon: -6.633 },
                     { start: "Lubián", end: "A Gudiña", dist: "24km", lat: 42.032, lon: -6.919 },
                     { start: "A Gudiña", end: "Laza", dist: "34km", lat: 42.061, lon: -7.139 },
-                    { start: "Laza", end: "Xunqueira", dist: "32km", lat: 42.062, lon: -7.461 },
-                    { start: "Xunqueira", end: "Ourense", dist: "22km", lat: 42.222, lon: -7.643 },
-                    { start: "Ourense", end: "Cea", dist: "22km", lat: 42.335, lon: -7.863 },
-                    { start: "Cea", end: "Castro Dozón", dist: "20km", lat: 42.474, lon: -7.986 },
-                    { start: "Castro", end: "Silleda", dist: "28km", lat: 42.578, lon: -8.026 },
-                    { start: "Silleda", end: "Santiago", dist: "40km", lat: 42.697, lon: -8.247 }
-                ]
-            },
-            lusitana: {
-                name: "Via Lusitana", center: [40.5, -8.5], zoom: 7,
-                stages: [
-                    { start: "Lisboa", end: "Alverca", dist: "28km", lat: 38.722, lon: -9.139 },
-                    { start: "Alverca", end: "Azambuja", dist: "29km", lat: 38.895, lon: -9.040 },
-                    { start: "Azambuja", end: "Santarém", dist: "32km", lat: 39.069, lon: -8.870 },
-                    { start: "Santarém", end: "Golegã", dist: "30km", lat: 39.236, lon: -8.686 },
-                    { start: "Golegã", end: "Tomar", dist: "30km", lat: 39.401, lon: -8.484 },
-                    { start: "Tomar", end: "Alvaiázere", dist: "31km", lat: 39.605, lon: -8.414 },
-                    { start: "Alvaiázere", end: "Rabaçal", dist: "32km", lat: 39.814, lon: -8.384 },
-                    { start: "Rabaçal", end: "Coimbra", dist: "29km", lat: 40.033, lon: -8.448 },
-                    { start: "Coimbra", end: "Mealhada", dist: "25km", lat: 40.203, lon: -8.410 },
-                    { start: "Mealhada", end: "Águeda", dist: "25km", lat: 40.380, lon: -8.450 },
-                    { start: "Águeda", end: "Albergaria", dist: "16km", lat: 40.575, lon: -8.444 },
-                    { start: "Albergaria", end: "Oliveira de Azeméis", dist: "20km", lat: 40.693, lon: -8.481 },
-                    { start: "Oliveira", end: "São João", dist: "18km", lat: 40.838, lon: -8.479 },
-                    { start: "São João", end: "Grijó", dist: "19km", lat: 40.970, lon: -8.508 },
-                    { start: "Grijó", end: "Porto", dist: "15km", lat: 41.050, lon: -8.575 },
-                    { start: "Porto", end: "Vilarinho", dist: "26km", lat: 41.149, lon: -8.611 },
-                    { start: "Vilarinho", end: "Barcelos", dist: "28km", lat: 41.328, lon: -8.697 },
-                    { start: "Barcelos", end: "Ponte de Lima", dist: "33km", lat: 41.530, lon: -8.620 },
-                    { start: "Ponte de Lima", end: "Rubiães", dist: "18km", lat: 41.767, lon: -8.583 },
-                    { start: "Rubiães", end: "Tui", dist: "19km", lat: 41.890, lon: -8.617 },
-                    { start: "Tui", end: "Redondela", dist: "31km", lat: 42.046, lon: -8.644 },
-                    { start: "Redondela", end: "Pontevedra", dist: "18km", lat: 42.285, lon: -8.611 },
-                    { start: "Pontevedra", end: "Caldas de Reis", dist: "23km", lat: 42.433, lon: -8.647 },
-                    { start: "Caldas", end: "Padrón", dist: "18km", lat: 42.604, lon: -8.643 },
-                    { start: "Padrón", end: "Santiago", dist: "25km", lat: 42.738, lon: -8.660 }
-                ]
-            }
-        };
-
-        const weatherCodeDesc = {
-            0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
-            45: 'Fog', 48: 'Fog', 51: 'Light Drizzle', 53: 'Drizzle', 55: 'Heavy Drizzle',
-            61: 'Slight Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Slight Snow', 73: 'Snow', 75: 'Heavy Snow',
-            80: 'Rain Showers', 81: 'Showers', 82: 'Violent Showers', 95: 'Thunderstorm', 96: 'Hail'
-        };
-
-        // --- 2. LOGIC ---
-        let map;
-        let markers = [];
-        let currentRouteId = 'frances';
-        let selectedStageIndex = 0;
-
-        window.onload = function() {
-            document.getElementById('startDate').valueAsDate = new Date();
-            
-            map = L.map('map').setView([42.6, -4.0], 7);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap &copy; CARTO',
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(map);
-
-            changeRoute();
-            checkRateLimitOnLoad(); // Check if user is already blocked
-        };
-
-        // --- RATE LIMITING LOGIC ---
-        function checkRateLimitOnLoad() {
-            const usage = JSON.parse(localStorage.getItem('caminoUsage') || '{"count": 0, "date": null}');
-            const today = new Date().toDateString();
-            // Reset if different day
-            if (usage.date !== today) {
-                localStorage.setItem('caminoUsage', JSON.stringify({ count: 0, date: today }));
-            }
-        }
-
-        function handleForecastClick() {
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('caminoUsage') || '{"count": 0, "date": today}');
-            
-            // Check Limit
-            if (usage.date === today && usage.count >= 3) {
-                // BLOCKED: Show Alert & Load Cached Data
-                document.getElementById('limitAlert').classList.remove('hidden');
-                document.getElementById('summaryBox').classList.add('hidden');
-                
-                // Try to load last result HTML
-                const lastResult = localStorage.getItem('lastCaminoResult');
-                const lastSummary = localStorage.getItem('lastCaminoSummary');
-                
-                if(lastResult) {
-                    document.getElementById('results').innerHTML = lastResult;
-                    if(lastSummary) {
-                        document.getElementById('summaryText').innerHTML = lastSummary;
-                        document.getElementById('summaryBox').classList.remove('hidden');
-                    }
-                    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-                }
-                return;
-            }
-
-            // ALLOWED: Increment & Proceed
-            if (usage.date !== today) usage = { count: 0, date: today };
-            usage.count++;
-            localStorage.setItem('caminoUsage', JSON.stringify(usage));
-            
-            getForecast();
-        }
-
-        // --- MAP LOGIC ---
-        function changeRoute() {
-            const select = document.getElementById('routeSelect');
-            currentRouteId = select.value;
-            const routeData = routes[currentRouteId];
-
-            map.flyTo(routeData.center, routeData.zoom);
-
-            markers.forEach(m => map.removeLayer(m));
-            markers = [];
-
-            routeData.stages.forEach((stage, index) => {
-                const marker = L.marker([stage.lat, stage.lon]).addTo(map);
-                
-                marker.on('click', () => {
-                    selectedStageIndex = index;
-                    document.getElementById('selectedLocationText').innerText = stage.start;
-                    document.getElementById('selectedLocationText').classList.add('animate-pulse');
-                    setTimeout(() => document.getElementById('selectedLocationText').classList.remove('animate-pulse'), 500);
-                    
-                    markers.forEach(m => {
-                        if (m._icon) m._icon.classList.remove('img-selected-pin');
-                    });
-                    
-                    if (marker._icon) marker._icon.classList.add('img-selected-pin');
-                    marker.openPopup();
-                });
-
-                marker.bindPopup(`<b>${stage.start}</b><br>Stage ${index + 1}`);
-                markers.push(marker);
-            });
-            
-            selectedStageIndex = 0;
-            document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
-        }
-
-        // --- FORECAST LOGIC ---
-        async function getForecast() {
-            const btn = document.getElementById('getForecastBtn');
-            const resultsDiv = document.getElementById('results');
-            const loading = document.getElementById('loading');
-            const summaryBox = document.getElementById('summaryBox');
-            const startDateStr = document.getElementById('startDate').value;
-            const addRestDays = document.getElementById('addRestDays').checked;
-
-            btn.disabled = true;
-            setTimeout(() => btn.disabled = false, 2000);
-
-            resultsDiv.innerHTML = '';
-            summaryBox.classList.add('hidden');
-            loading.classList.remove('hidden');
-            document.getElementById('limitAlert').classList.add('hidden');
-
-            try {
-                const routeData = routes[currentRouteId];
-                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12);
-                let itinerary = [];
-                let dayOffset = 0;
-
-                for (let i = 0; i < rawStages.length; i++) {
-                    if (itinerary.length >= 10) break;
-                    const stage = rawStages[i];
-                    itinerary.push({ type: 'walk', stage: stage, dayOffset: dayOffset });
-                    dayOffset++;
-                    if (addRestDays && restCities.includes(stage.end) && i < rawStages.length - 1) {
-                        itinerary.push({ type: 'rest', stage: stage, dayOffset: dayOffset });
-                        dayOffset++;
-                    }
-                }
-
-                const startObj = new Date(startDateStr);
-                const today = new Date();
-                const diffTime = startObj - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                
-                let isHistorical = false;
-                if (diffDays > 10) isHistorical = true;
-
-                let summaryRainDays = 0;
-                let summaryTemps = [];
-                let htmlBuffer = "";
-
-                for (let item of itinerary) {
-                    const current = new Date(startDateStr);
-                    current.setDate(current.getDate() + item.dayOffset);
-                    
-                    let dateQuery = current.toISOString().split('T')[0];
-                    if (isHistorical) {
-                        const histDate = new Date(current);
-                        histDate.setFullYear(2025);
-                        dateQuery = histDate.toISOString().split('T')[0];
-                    }
-
-                    const cacheKey = `weather_${item.stage.lat}_${dateQuery}`;
-                    const cached = localStorage.getItem(cacheKey);
-                    let data;
-
-                    if (cached && (Date.now() - JSON.parse(cached).timestamp < 3600000)) {
-                        data = JSON.parse(cached).data;
-                    } else {
-                        const url = isHistorical 
-                            ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
-                            : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
-                        
-                        const res = await fetch(url);
-                        if(!res.ok) continue;
-                        const json = await res.json();
-                        data = json;
-                        localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: json }));
-                    }
-
-                    if (data.daily) {
-                        const dayData = {
-                            dateDisplay: current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-                            tempMax: data.daily.temperature_2m_max[0],
-                            tempMin: data.daily.temperature_2m_min[0],
-                            rain: data.daily.precipitation_sum[0],
-                            code: data.daily.weathercode[0],
-                            sunrise: data.daily.sunrise[0].split('T')[1],
-                            sunset: data.daily.sunset[0].split('T')[1],
-                            daylight: (data.daily.daylight_duration[0] / 3600).toFixed(1)
-                        };
-
-                        if (dayData.rain > 1.0) summaryRainDays++;
-                        summaryTemps.push(dayData.tempMax);
-
-                        const isRest = item.type === 'rest';
-                        const cardColor = isRest ? 'bg-green-50 border-green-200' : 'bg-white border-gray-100';
-                        const badgeHtml = isHistorical 
-                            ? `<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded">Historical</span>` 
-                            : `<span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">Forecast</span>`;
-
-                        // NEW: Using IMG tag for Icon
-                        htmlBuffer += `
-                            <div class="flex flex-col md:flex-row gap-4 p-4 ${cardColor} rounded-xl border hover:border-blue-300 transition-colors shadow-sm items-center">
-                                <div class="flex-1 w-full">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600 shadow-sm">${dayData.dateDisplay}</span>
-                                            ${isRest ? '<span class="text-xs font-bold text-green-600">🛌 Rest Day</span>' : `<span class="text-xs text-gray-400">Day ${item.dayOffset+1}</span>`}
-                                        </div>
-                                        ${badgeHtml}
-                                    </div>
-                                    <h4 class="font-bold text-gray-800 text-lg">
-                                        ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
-                                    </h4>
-                                    <p class="text-xs text-gray-500 mt-1 flex items-center gap-2">
-                                        ${isRest ? 'Recharge your batteries.' : `${item.stage.dist} • <span class="text-orange-400">🌅</span> ${dayData.sunrise} • <span class="text-indigo-400">🌇</span> ${dayData.sunset} (${dayData.daylight}h light)`}
-                                    </p>
-                                </div>
-                                
-                                <div class="flex items-center justify-between w-full md:w-auto md:justify-end gap-6 border-t md:border-t-0 md:border-l border-gray-100 md:pl-4 pt-3 md:pt-0">
-                                    <img src="${getIconUrl(dayData.code)}" alt="${weatherCodeDesc[dayData.code]}" class="weather-icon filter drop-shadow-sm">
-                                    
-                                    <div class="text-right min-w-[80px]">
-                                        <div class="text-lg font-bold">
-                                            <span class="text-gray-900">${Math.round(dayData.tempMax)}°</span> 
-                                            <span class="text-gray-300">/</span> 
-                                            <span class="text-blue-500">${Math.round(dayData.tempMin)}°</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-0.5">${weatherCodeDesc[dayData.code]}</p>
-                                        ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-full">💧 ${dayData.rain}mm</p>` : ''}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
-
-                // Render Results
-                resultsDiv.innerHTML = htmlBuffer;
-
-                // Render Summary
-                const avgTemp = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
-                let summaryMsg = `Expect an average high of <b>${avgTemp}°C</b>. `;
-                if (summaryRainDays === 0) summaryMsg += `<span class="text-green-600 font-bold">It looks completely dry! ☀️</span>`;
-                else if (summaryRainDays <= 2) summaryMsg += `<span class="text-blue-600 font-bold">Pack light rain gear: Rain on ${summaryRainDays} days. 🌦️</span>`;
-                else summaryMsg += `<span class="text-orange-600 font-bold">Prepare for wet weather: Rain on ${summaryRainDays} days. ☔</span>`;
-
-                document.getElementById('summaryText').innerHTML = summaryMsg;
-                summaryBox.classList.remove('hidden');
-                
-                // SAVE RESULT TO LOCAL STORAGE FOR BLOCKED STATE
-                localStorage.setItem('lastCaminoResult', htmlBuffer);
-                localStorage.setItem('lastCaminoSummary', summaryMsg);
-
-                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-
-            } catch (error) {
-                console.error(error);
-                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm font-bold">Error loading weather data. Please try again later.</div>`;
-            } finally {
-                loading.classList.add('hidden');
-            }
-        }
-    </script>
-</body>
-</html>
+                    { start: "Laza", end: "Xunqueira", dist:
