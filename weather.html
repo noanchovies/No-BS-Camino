@@ -15,12 +15,14 @@
         .nav-pill:hover { background-color: #f1f3f4; color: #1967d2; }
         .card-flight { border: 1px solid #dadce0; border-radius: 16px; background: white; transition: all 0.2s ease; }
         
-        /* Map Container Height */
+        /* Map Container */
         #map { height: 400px; width: 100%; border-radius: 0 0 16px 16px; z-index: 1; }
         
-        /* PIN STYLING: SELECTED STATE */
-        /* Takes standard blue leaflet marker and rotates hue to make it Red */
+        /* PIN STYLING */
         .img-selected-pin { filter: hue-rotate(140deg) saturate(1.5) brightness(0.9); }
+
+        /* Weather Icon Sizing */
+        .weather-icon { width: 64px; height: 64px; }
     </style>
 </head>
 <body class="antialiased pb-20">
@@ -33,7 +35,7 @@
             </div>
             <nav class="flex gap-2 overflow-x-auto">
                 <a href="index.html" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap">Home</a>
-                <a href="#" class="nav-pill px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-sm font-bold text-[#1967d2] whitespace-nowrap">Weather Planner 🌤️</a>
+                <a href="#" class="nav-pill px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-sm font-bold text-[#1967d2] whitespace-nowrap">Weather Planner</a>
             </nav>
         </div>
     </header>
@@ -42,7 +44,7 @@
         
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold google-gradient tracking-tight mb-3">Smart Weather Planner</h1>
-            <p class="text-gray-600">We calculate your daily position and pull accurate data for that specific location.</p>
+            <p class="text-gray-600">Calculate your daily position and view accurate forecasts.</p>
         </div>
 
         <div class="grid grid-cols-3 gap-2 md:gap-8 mb-8 text-center px-2">
@@ -100,10 +102,16 @@
             </div>
 
             <div class="p-4 bg-white border-t border-gray-100">
-                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                <button id="getForecastBtn" onclick="handleForecastClick()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
                     <span>Get 10-Day Forecast</span>
                 </button>
             </div>
+        </div>
+
+        <div id="limitAlert" class="hidden mb-6 p-4 rounded-xl bg-orange-50 border border-orange-200 text-center animate-fade-in">
+            <h4 class="text-sm font-bold text-orange-800 uppercase mb-1">Daily Limit Reached</h4>
+            <p class="text-xs text-orange-700 mb-2">To save server resources, we limit forecasts to 3 per day.</p>
+            <p class="text-xs font-bold text-gray-600">Showing your last successful result below.</p>
         </div>
 
         <div id="summaryBox" class="hidden mb-6 p-4 rounded-xl border-l-4 border-[#1967d2] bg-blue-50/50 shadow-sm animate-fade-in">
@@ -113,7 +121,7 @@
 
         <div id="loading" class="hidden text-center py-10">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
-            <p class="text-sm text-gray-400 mt-2">Checking caches & fetching data...</p>
+            <p class="text-sm text-gray-400 mt-2">Fetching satellite data...</p>
         </div>
         
         <div id="results" class="space-y-3 pb-10 scroll-mt-20"></div>
@@ -123,16 +131,28 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- 1. CONFIG & DATA ---
+        // --- 1. CONFIG & ICONS ---
         
-        // Define major "Rest Cities" where pilgrims usually stop
+        // Using "Basmilius Weather Icons" from CDN for that AccuWeather/Pro look
+        const getIconUrl = (code) => {
+            // Mapping WMO codes to Icon Names
+            const map = {
+                0: 'clear-day', 1: 'partly-cloudy-day', 2: 'partly-cloudy-day', 3: 'overcast',
+                45: 'fog', 48: 'fog', 51: 'drizzle', 53: 'drizzle', 55: 'drizzle',
+                61: 'rain', 63: 'rain', 65: 'rain', 71: 'snow', 73: 'snow', 75: 'snow',
+                80: 'rain', 81: 'rain', 82: 'thunderstorms-rain', 95: 'thunderstorms', 96: 'thunderstorms-snow'
+            };
+            const iconName = map[code] || 'not-available';
+            return `https://bmcdn.nl/assets/weather-icons/v3.0/fill/svg/${iconName}.svg`;
+        };
+
         const restCities = [
-            "Burgos", "León", "Logroño", // Francés
-            "Bilbao", "Santander", "Gijón", "Ribadeo", // Norte
-            "Salamanca", "Mérida", "Zamora", "Ourense", // Plata
-            "Coimbra", "Porto", "Pontevedra" // Lusitana
+            "Burgos", "León", "Logroño", "Bilbao", "Santander", "Gijón", 
+            "Ribadeo", "Salamanca", "Mérida", "Zamora", "Ourense", "Coimbra", "Porto", "Pontevedra"
         ];
 
+        // Route Data (Shortened for brevity - reuse your full data object here)
+        // I've kept your exact data structure, just ensure the full object is pasted here.
         const routes = {
             frances: {
                 name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
@@ -283,13 +303,11 @@
             }
         };
 
-        const weatherCodes = {
-            0: '☀️ Clear sky', 1: '🌤️ Mainly clear', 2: '⛅ Partly cloudy', 3: '☁️ Overcast',
-            45: '🌫️ Fog', 48: '🌫️ Fog', 51: '🌧️ Drizzle', 53: '🌧️ Drizzle', 55: '🌧️ Drizzle',
-            61: '☔ Slight Rain', 63: '☔ Rain', 65: '☔ Heavy Rain',
-            71: '❄️ Snow', 73: '❄️ Snow', 75: '❄️ Heavy Snow',
-            80: '🌦️ Showers', 81: '🌦️ Showers', 82: '⛈️ Violent Showers',
-            95: '⚡ Thunderstorm', 96: '⚡ Hail'
+        const weatherCodeDesc = {
+            0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
+            45: 'Fog', 48: 'Fog', 51: 'Light Drizzle', 53: 'Drizzle', 55: 'Heavy Drizzle',
+            61: 'Slight Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Slight Snow', 73: 'Snow', 75: 'Heavy Snow',
+            80: 'Rain Showers', 81: 'Showers', 82: 'Violent Showers', 95: 'Thunderstorm', 96: 'Hail'
         };
 
         // --- 2. LOGIC ---
@@ -309,8 +327,53 @@
             }).addTo(map);
 
             changeRoute();
+            checkRateLimitOnLoad(); // Check if user is already blocked
         };
 
+        // --- RATE LIMITING LOGIC ---
+        function checkRateLimitOnLoad() {
+            const usage = JSON.parse(localStorage.getItem('caminoUsage') || '{"count": 0, "date": null}');
+            const today = new Date().toDateString();
+            // Reset if different day
+            if (usage.date !== today) {
+                localStorage.setItem('caminoUsage', JSON.stringify({ count: 0, date: today }));
+            }
+        }
+
+        function handleForecastClick() {
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('caminoUsage') || '{"count": 0, "date": today}');
+            
+            // Check Limit
+            if (usage.date === today && usage.count >= 3) {
+                // BLOCKED: Show Alert & Load Cached Data
+                document.getElementById('limitAlert').classList.remove('hidden');
+                document.getElementById('summaryBox').classList.add('hidden');
+                
+                // Try to load last result HTML
+                const lastResult = localStorage.getItem('lastCaminoResult');
+                const lastSummary = localStorage.getItem('lastCaminoSummary');
+                
+                if(lastResult) {
+                    document.getElementById('results').innerHTML = lastResult;
+                    if(lastSummary) {
+                        document.getElementById('summaryText').innerHTML = lastSummary;
+                        document.getElementById('summaryBox').classList.remove('hidden');
+                    }
+                    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                }
+                return;
+            }
+
+            // ALLOWED: Increment & Proceed
+            if (usage.date !== today) usage = { count: 0, date: today };
+            usage.count++;
+            localStorage.setItem('caminoUsage', JSON.stringify(usage));
+            
+            getForecast();
+        }
+
+        // --- MAP LOGIC ---
         function changeRoute() {
             const select = document.getElementById('routeSelect');
             currentRouteId = select.value;
@@ -324,21 +387,17 @@
             routeData.stages.forEach((stage, index) => {
                 const marker = L.marker([stage.lat, stage.lon]).addTo(map);
                 
-                // Add Click Logic for Red Pin
                 marker.on('click', () => {
                     selectedStageIndex = index;
                     document.getElementById('selectedLocationText').innerText = stage.start;
                     document.getElementById('selectedLocationText').classList.add('animate-pulse');
                     setTimeout(() => document.getElementById('selectedLocationText').classList.remove('animate-pulse'), 500);
                     
-                    // Reset all icons
                     markers.forEach(m => {
                         if (m._icon) m._icon.classList.remove('img-selected-pin');
                     });
                     
-                    // Set this icon to red (using class with css filter)
                     if (marker._icon) marker._icon.classList.add('img-selected-pin');
-                    
                     marker.openPopup();
                 });
 
@@ -346,11 +405,11 @@
                 markers.push(marker);
             });
             
-            // Auto-select first stage
             selectedStageIndex = 0;
             document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
         }
 
+        // --- FORECAST LOGIC ---
         async function getForecast() {
             const btn = document.getElementById('getForecastBtn');
             const resultsDiv = document.getElementById('results');
@@ -359,77 +418,61 @@
             const startDateStr = document.getElementById('startDate').value;
             const addRestDays = document.getElementById('addRestDays').checked;
 
-            // Debounce to save API calls
             btn.disabled = true;
             setTimeout(() => btn.disabled = false, 2000);
 
             resultsDiv.innerHTML = '';
             summaryBox.classList.add('hidden');
             loading.classList.remove('hidden');
+            document.getElementById('limitAlert').classList.add('hidden');
 
             try {
-                // 1. Build the Itinerary (Insert Rest Days if needed)
                 const routeData = routes[currentRouteId];
-                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12); // Grab 12 to ensure we fill 10 days if rest days exist
+                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12);
                 let itinerary = [];
                 let dayOffset = 0;
 
                 for (let i = 0; i < rawStages.length; i++) {
-                    if (itinerary.length >= 10) break; // Limit to 10 display days
-
+                    if (itinerary.length >= 10) break;
                     const stage = rawStages[i];
-                    
-                    // Add Walk Day
                     itinerary.push({ type: 'walk', stage: stage, dayOffset: dayOffset });
                     dayOffset++;
-
-                    // Check for Rest Day insertion
                     if (addRestDays && restCities.includes(stage.end) && i < rawStages.length - 1) {
-                        itinerary.push({ type: 'rest', stage: stage, dayOffset: dayOffset }); // Rest in the "End" city
+                        itinerary.push({ type: 'rest', stage: stage, dayOffset: dayOffset });
                         dayOffset++;
                     }
                 }
 
-                // 2. Determine Date Mode (Forecast vs Historical)
                 const startObj = new Date(startDateStr);
                 const today = new Date();
                 const diffTime = startObj - today;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
                 
                 let isHistorical = false;
-                let fetchYear = startObj.getFullYear();
-                
-                if (diffDays > 10) {
-                    isHistorical = true;
-                    fetchYear = 2025; // Force fallback to previous year data
-                }
+                if (diffDays > 10) isHistorical = true;
 
-                // 3. Process each day
                 let summaryRainDays = 0;
                 let summaryTemps = [];
+                let htmlBuffer = "";
 
                 for (let item of itinerary) {
-                    // Calculate Date
                     const current = new Date(startDateStr);
                     current.setDate(current.getDate() + item.dayOffset);
                     
-                    // If historical, we fetch specific date from 2025
                     let dateQuery = current.toISOString().split('T')[0];
                     if (isHistorical) {
                         const histDate = new Date(current);
-                        histDate.setFullYear(2025); // Hardcode to 2025
+                        histDate.setFullYear(2025);
                         dateQuery = histDate.toISOString().split('T')[0];
                     }
 
-                    // CACHING: Check LocalStorage
                     const cacheKey = `weather_${item.stage.lat}_${dateQuery}`;
                     const cached = localStorage.getItem(cacheKey);
                     let data;
 
-                    if (cached && (Date.now() - JSON.parse(cached).timestamp < 3600000)) { // 1 hour cache
+                    if (cached && (Date.now() - JSON.parse(cached).timestamp < 3600000)) {
                         data = JSON.parse(cached).data;
                     } else {
-                        // Fetch fresh
                         const url = isHistorical 
                             ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
                             : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
@@ -438,7 +481,6 @@
                         if(!res.ok) continue;
                         const json = await res.json();
                         data = json;
-                        // Save to cache
                         localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: json }));
                     }
 
@@ -454,20 +496,19 @@
                             daylight: (data.daily.daylight_duration[0] / 3600).toFixed(1)
                         };
 
-                        // Aggregate for Summary
                         if (dayData.rain > 1.0) summaryRainDays++;
                         summaryTemps.push(dayData.tempMax);
 
-                        // Render Card
                         const isRest = item.type === 'rest';
                         const cardColor = isRest ? 'bg-green-50 border-green-200' : 'bg-white border-gray-100';
                         const badgeHtml = isHistorical 
-                            ? `<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded">Historical (2025)</span>` 
+                            ? `<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded">Historical</span>` 
                             : `<span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">Forecast</span>`;
 
-                        const html = `
-                            <div class="flex flex-col md:flex-row gap-4 p-4 ${cardColor} rounded-xl border hover:border-blue-300 transition-colors shadow-sm">
-                                <div class="flex-1">
+                        // NEW: Using IMG tag for Icon
+                        htmlBuffer += `
+                            <div class="flex flex-col md:flex-row gap-4 p-4 ${cardColor} rounded-xl border hover:border-blue-300 transition-colors shadow-sm items-center">
+                                <div class="flex-1 w-full">
                                     <div class="flex justify-between items-start mb-2">
                                         <div class="flex items-center gap-2">
                                             <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600 shadow-sm">${dayData.dateDisplay}</span>
@@ -478,42 +519,51 @@
                                     <h4 class="font-bold text-gray-800 text-lg">
                                         ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
                                     </h4>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        ${isRest ? 'Recharge your batteries.' : `${item.stage.dist} approx • 🌅 ${dayData.sunrise} • 🌇 ${dayData.sunset} (${dayData.daylight}h light)`}
+                                    <p class="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                                        ${isRest ? 'Recharge your batteries.' : `${item.stage.dist} • <span class="text-orange-400">🌅</span> ${dayData.sunrise} • <span class="text-indigo-400">🌇</span> ${dayData.sunset} (${dayData.daylight}h light)`}
                                     </p>
                                 </div>
-                                <div class="text-right border-t md:border-t-0 md:border-l border-gray-100 md:pl-4 pt-3 md:pt-0 min-w-[120px]">
-                                    <p class="text-2xl mb-1">${weatherCodes[dayData.code] || 'Unknown'}</p>
-                                    <div class="text-lg font-bold">
-                                        <span class="text-gray-900">${Math.round(dayData.tempMax)}°</span> 
-                                        <span class="text-gray-300">/</span> 
-                                        <span class="text-blue-500">${Math.round(dayData.tempMin)}°</span>
+                                
+                                <div class="flex items-center justify-between w-full md:w-auto md:justify-end gap-6 border-t md:border-t-0 md:border-l border-gray-100 md:pl-4 pt-3 md:pt-0">
+                                    <img src="${getIconUrl(dayData.code)}" alt="${weatherCodeDesc[dayData.code]}" class="weather-icon filter drop-shadow-sm">
+                                    
+                                    <div class="text-right min-w-[80px]">
+                                        <div class="text-lg font-bold">
+                                            <span class="text-gray-900">${Math.round(dayData.tempMax)}°</span> 
+                                            <span class="text-gray-300">/</span> 
+                                            <span class="text-blue-500">${Math.round(dayData.tempMin)}°</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-0.5">${weatherCodeDesc[dayData.code]}</p>
+                                        ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-full">💧 ${dayData.rain}mm</p>` : ''}
                                     </div>
-                                    ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-full">💧 ${dayData.rain}mm</p>` : '<p class="text-xs text-gray-400 mt-1">Dry</p>'}
                                 </div>
                             </div>
                         `;
-                        resultsDiv.innerHTML += html;
                     }
                 }
 
-                // 4. Generate & Show Summary
+                // Render Results
+                resultsDiv.innerHTML = htmlBuffer;
+
+                // Render Summary
                 const avgTemp = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
                 let summaryMsg = `Expect an average high of <b>${avgTemp}°C</b>. `;
-                
-                if (summaryRainDays === 0) summaryMsg += `<span class="text-green-600 font-bold">Great news: It looks completely dry! ☀️</span>`;
-                else if (summaryRainDays <= 2) summaryMsg += `<span class="text-blue-600 font-bold">Pack light rain gear: Some rain expected on ${summaryRainDays} days. 🌦️</span>`;
-                else summaryMsg += `<span class="text-orange-600 font-bold">Prepare for wet weather: Rain expected on ${summaryRainDays} days. ☔</span>`;
+                if (summaryRainDays === 0) summaryMsg += `<span class="text-green-600 font-bold">It looks completely dry! ☀️</span>`;
+                else if (summaryRainDays <= 2) summaryMsg += `<span class="text-blue-600 font-bold">Pack light rain gear: Rain on ${summaryRainDays} days. 🌦️</span>`;
+                else summaryMsg += `<span class="text-orange-600 font-bold">Prepare for wet weather: Rain on ${summaryRainDays} days. ☔</span>`;
 
                 document.getElementById('summaryText').innerHTML = summaryMsg;
                 summaryBox.classList.remove('hidden');
+                
+                // SAVE RESULT TO LOCAL STORAGE FOR BLOCKED STATE
+                localStorage.setItem('lastCaminoResult', htmlBuffer);
+                localStorage.setItem('lastCaminoSummary', summaryMsg);
 
-                // 5. Scroll to results
                 document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 
             } catch (error) {
                 console.error(error);
-                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm font-bold">Error loading weather data. Please try again.</div>`;
+                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm font-bold">Error loading weather data. Please try again later.</div>`;
             } finally {
                 loading.classList.add('hidden');
             }
