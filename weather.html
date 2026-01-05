@@ -15,14 +15,12 @@
         .nav-pill:hover { background-color: #f1f3f4; color: #1967d2; }
         .card-flight { border: 1px solid #dadce0; border-radius: 16px; background: white; transition: all 0.2s ease; }
         
-        /* Map Container */
+        /* Map Container Height */
         #map { height: 400px; width: 100%; border-radius: 0 0 16px 16px; z-index: 1; }
         
-        /* PIN STYLING */
+        /* PIN STYLING: SELECTED STATE */
+        /* Takes standard blue leaflet marker and rotates hue to make it Red */
         .img-selected-pin { filter: hue-rotate(140deg) saturate(1.5) brightness(0.9); }
-
-        /* Weather Icon Sizing */
-        .weather-icon { width: 64px; height: 64px; }
     </style>
 </head>
 <body class="antialiased pb-20">
@@ -35,7 +33,7 @@
             </div>
             <nav class="flex gap-2 overflow-x-auto">
                 <a href="index.html" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap">Home</a>
-                <a href="#" class="nav-pill px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-sm font-bold text-[#1967d2] whitespace-nowrap">Weather Planner</a>
+                <a href="#" class="nav-pill px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-sm font-bold text-[#1967d2] whitespace-nowrap">Weather Planner 🌤️</a>
             </nav>
         </div>
     </header>
@@ -44,7 +42,7 @@
         
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold google-gradient tracking-tight mb-3">Smart Weather Planner</h1>
-            <p class="text-gray-600">Calculate your daily position and view accurate forecasts.</p>
+            <p class="text-gray-600">We calculate your daily position and pull accurate data for that specific location.</p>
         </div>
 
         <div class="grid grid-cols-3 gap-2 md:gap-8 mb-8 text-center px-2">
@@ -89,7 +87,7 @@
                 <input type="checkbox" id="addRestDays" class="w-4 h-4 text-[#1967d2] rounded focus:ring-blue-500 border-gray-300">
                 <label for="addRestDays" class="text-xs text-gray-600 cursor-pointer select-none">
                     <span class="font-bold text-gray-800">Add "Smart Rest Days"</span> (Recommended)
-                    <br/><span class="text-gray-500">Automatically adds a rest day at major cities (e.g., Burgos, León).</span>
+                    <br/><span class="text-gray-500">Automatically adds a rest day at major cities (e.g., Burgos, León) for a realistic plan.</span>
                 </label>
             </div>
 
@@ -102,16 +100,10 @@
             </div>
 
             <div class="p-4 bg-white border-t border-gray-100">
-                <button id="getForecastBtn" onclick="handleForecastClick()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
                     <span>Get 10-Day Forecast</span>
                 </button>
             </div>
-        </div>
-
-        <div id="limitAlert" class="hidden mb-6 p-4 rounded-xl bg-orange-50 border border-orange-200 text-center animate-fade-in">
-            <h4 class="text-sm font-bold text-orange-800 uppercase mb-1">Daily Limit Reached</h4>
-            <p class="text-xs text-orange-700 mb-2">To save server resources, we limit forecasts to 3 per day.</p>
-            <p class="text-xs font-bold text-gray-600">Showing your last successful result below.</p>
         </div>
 
         <div id="summaryBox" class="hidden mb-6 p-4 rounded-xl border-l-4 border-[#1967d2] bg-blue-50/50 shadow-sm animate-fade-in">
@@ -121,7 +113,7 @@
 
         <div id="loading" class="hidden text-center py-10">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
-            <p class="text-sm text-gray-400 mt-2">Fetching satellite data...</p>
+            <p class="text-sm text-gray-400 mt-2">Checking caches & fetching data...</p>
         </div>
         
         <div id="results" class="space-y-3 pb-10 scroll-mt-20"></div>
@@ -131,36 +123,16 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- ⚙️ CONFIGURATION ---
+        // --- 1. CONFIG & DATA ---
         
-        const DEV_MODE = false; 
-
-        // Icon Helper: Returns professional SVG URL instead of Emoji
-        const getIconUrl = (code) => {
-            const map = {
-                0: 'clear-day', 1: 'partly-cloudy-day', 2: 'partly-cloudy-day', 3: 'overcast',
-                45: 'fog', 48: 'fog', 51: 'drizzle', 53: 'drizzle', 55: 'drizzle',
-                61: 'rain', 63: 'rain', 65: 'rain', 71: 'snow', 73: 'snow', 75: 'snow',
-                80: 'rain', 81: 'rain', 82: 'thunderstorms-rain', 95: 'thunderstorms', 96: 'thunderstorms-snow'
-            };
-            const iconName = map[code] || 'not-available';
-            return `https://bmcdn.nl/assets/weather-icons/v3.0/fill/svg/${iconName}.svg`;
-        };
-
-        // Text descriptions for accessibility/tooltips
-        const weatherCodeDesc = {
-            0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
-            45: 'Fog', 48: 'Fog', 51: 'Light Drizzle', 53: 'Drizzle', 55: 'Heavy Drizzle',
-            61: 'Slight Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Slight Snow', 73: 'Snow', 75: 'Heavy Snow',
-            80: 'Rain Showers', 81: 'Showers', 82: 'Violent Showers', 95: 'Thunderstorm', 96: 'Hail'
-        };
-
+        // Define major "Rest Cities" where pilgrims usually stop
         const restCities = [
-            "Burgos", "León", "Logroño", "Bilbao", "Santander", "Gijón", 
-            "Ribadeo", "Salamanca", "Mérida", "Zamora", "Ourense", "Coimbra", "Porto", "Pontevedra"
+            "Burgos", "León", "Logroño", // Francés
+            "Bilbao", "Santander", "Gijón", "Ribadeo", // Norte
+            "Salamanca", "Mérida", "Zamora", "Ourense", // Plata
+            "Coimbra", "Porto", "Pontevedra" // Lusitana
         ];
 
-        // --- 🗺️ ROUTE DATA ---
         const routes = {
             frances: {
                 name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
@@ -271,4 +243,281 @@
                     { start: "Puebla", end: "Lubián", dist: "29km", lat: 42.054, lon: -6.633 },
                     { start: "Lubián", end: "A Gudiña", dist: "24km", lat: 42.032, lon: -6.919 },
                     { start: "A Gudiña", end: "Laza", dist: "34km", lat: 42.061, lon: -7.139 },
-                    { start: "Laza", end: "Xunqueira", dist:
+                    { start: "Laza", end: "Xunqueira", dist: "32km", lat: 42.062, lon: -7.461 },
+                    { start: "Xunqueira", end: "Ourense", dist: "22km", lat: 42.222, lon: -7.643 },
+                    { start: "Ourense", end: "Cea", dist: "22km", lat: 42.335, lon: -7.863 },
+                    { start: "Cea", end: "Castro Dozón", dist: "20km", lat: 42.474, lon: -7.986 },
+                    { start: "Castro", end: "Silleda", dist: "28km", lat: 42.578, lon: -8.026 },
+                    { start: "Silleda", end: "Santiago", dist: "40km", lat: 42.697, lon: -8.247 }
+                ]
+            },
+            lusitana: {
+                name: "Via Lusitana", center: [40.5, -8.5], zoom: 7,
+                stages: [
+                    { start: "Lisboa", end: "Alverca", dist: "28km", lat: 38.722, lon: -9.139 },
+                    { start: "Alverca", end: "Azambuja", dist: "29km", lat: 38.895, lon: -9.040 },
+                    { start: "Azambuja", end: "Santarém", dist: "32km", lat: 39.069, lon: -8.870 },
+                    { start: "Santarém", end: "Golegã", dist: "30km", lat: 39.236, lon: -8.686 },
+                    { start: "Golegã", end: "Tomar", dist: "30km", lat: 39.401, lon: -8.484 },
+                    { start: "Tomar", end: "Alvaiázere", dist: "31km", lat: 39.605, lon: -8.414 },
+                    { start: "Alvaiázere", end: "Rabaçal", dist: "32km", lat: 39.814, lon: -8.384 },
+                    { start: "Rabaçal", end: "Coimbra", dist: "29km", lat: 40.033, lon: -8.448 },
+                    { start: "Coimbra", end: "Mealhada", dist: "25km", lat: 40.203, lon: -8.410 },
+                    { start: "Mealhada", end: "Águeda", dist: "25km", lat: 40.380, lon: -8.450 },
+                    { start: "Águeda", end: "Albergaria", dist: "16km", lat: 40.575, lon: -8.444 },
+                    { start: "Albergaria", end: "Oliveira de Azeméis", dist: "20km", lat: 40.693, lon: -8.481 },
+                    { start: "Oliveira", end: "São João", dist: "18km", lat: 40.838, lon: -8.479 },
+                    { start: "São João", end: "Grijó", dist: "19km", lat: 40.970, lon: -8.508 },
+                    { start: "Grijó", end: "Porto", dist: "15km", lat: 41.050, lon: -8.575 },
+                    { start: "Porto", end: "Vilarinho", dist: "26km", lat: 41.149, lon: -8.611 },
+                    { start: "Vilarinho", end: "Barcelos", dist: "28km", lat: 41.328, lon: -8.697 },
+                    { start: "Barcelos", end: "Ponte de Lima", dist: "33km", lat: 41.530, lon: -8.620 },
+                    { start: "Ponte de Lima", end: "Rubiães", dist: "18km", lat: 41.767, lon: -8.583 },
+                    { start: "Rubiães", end: "Tui", dist: "19km", lat: 41.890, lon: -8.617 },
+                    { start: "Tui", end: "Redondela", dist: "31km", lat: 42.046, lon: -8.644 },
+                    { start: "Redondela", end: "Pontevedra", dist: "18km", lat: 42.285, lon: -8.611 },
+                    { start: "Pontevedra", end: "Caldas de Reis", dist: "23km", lat: 42.433, lon: -8.647 },
+                    { start: "Caldas", end: "Padrón", dist: "18km", lat: 42.604, lon: -8.643 },
+                    { start: "Padrón", end: "Santiago", dist: "25km", lat: 42.738, lon: -8.660 }
+                ]
+            }
+        };
+
+        const weatherCodes = {
+            0: '☀️ Clear sky', 1: '🌤️ Mainly clear', 2: '⛅ Partly cloudy', 3: '☁️ Overcast',
+            45: '🌫️ Fog', 48: '🌫️ Fog', 51: '🌧️ Drizzle', 53: '🌧️ Drizzle', 55: '🌧️ Drizzle',
+            61: '☔ Slight Rain', 63: '☔ Rain', 65: '☔ Heavy Rain',
+            71: '❄️ Snow', 73: '❄️ Snow', 75: '❄️ Heavy Snow',
+            80: '🌦️ Showers', 81: '🌦️ Showers', 82: '⛈️ Violent Showers',
+            95: '⚡ Thunderstorm', 96: '⚡ Hail'
+        };
+
+        // --- 2. LOGIC ---
+        let map;
+        let markers = [];
+        let currentRouteId = 'frances';
+        let selectedStageIndex = 0;
+
+        window.onload = function() {
+            document.getElementById('startDate').valueAsDate = new Date();
+            
+            map = L.map('map').setView([42.6, -4.0], 7);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+
+            changeRoute();
+        };
+
+        function changeRoute() {
+            const select = document.getElementById('routeSelect');
+            currentRouteId = select.value;
+            const routeData = routes[currentRouteId];
+
+            map.flyTo(routeData.center, routeData.zoom);
+
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
+            routeData.stages.forEach((stage, index) => {
+                const marker = L.marker([stage.lat, stage.lon]).addTo(map);
+                
+                // Add Click Logic for Red Pin
+                marker.on('click', () => {
+                    selectedStageIndex = index;
+                    document.getElementById('selectedLocationText').innerText = stage.start;
+                    document.getElementById('selectedLocationText').classList.add('animate-pulse');
+                    setTimeout(() => document.getElementById('selectedLocationText').classList.remove('animate-pulse'), 500);
+                    
+                    // Reset all icons
+                    markers.forEach(m => {
+                        if (m._icon) m._icon.classList.remove('img-selected-pin');
+                    });
+                    
+                    // Set this icon to red (using class with css filter)
+                    if (marker._icon) marker._icon.classList.add('img-selected-pin');
+                    
+                    marker.openPopup();
+                });
+
+                marker.bindPopup(`<b>${stage.start}</b><br>Stage ${index + 1}`);
+                markers.push(marker);
+            });
+            
+            // Auto-select first stage
+            selectedStageIndex = 0;
+            document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
+        }
+
+        async function getForecast() {
+            const btn = document.getElementById('getForecastBtn');
+            const resultsDiv = document.getElementById('results');
+            const loading = document.getElementById('loading');
+            const summaryBox = document.getElementById('summaryBox');
+            const startDateStr = document.getElementById('startDate').value;
+            const addRestDays = document.getElementById('addRestDays').checked;
+
+            // Debounce to save API calls
+            btn.disabled = true;
+            setTimeout(() => btn.disabled = false, 2000);
+
+            resultsDiv.innerHTML = '';
+            summaryBox.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            try {
+                // 1. Build the Itinerary (Insert Rest Days if needed)
+                const routeData = routes[currentRouteId];
+                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12); // Grab 12 to ensure we fill 10 days if rest days exist
+                let itinerary = [];
+                let dayOffset = 0;
+
+                for (let i = 0; i < rawStages.length; i++) {
+                    if (itinerary.length >= 10) break; // Limit to 10 display days
+
+                    const stage = rawStages[i];
+                    
+                    // Add Walk Day
+                    itinerary.push({ type: 'walk', stage: stage, dayOffset: dayOffset });
+                    dayOffset++;
+
+                    // Check for Rest Day insertion
+                    if (addRestDays && restCities.includes(stage.end) && i < rawStages.length - 1) {
+                        itinerary.push({ type: 'rest', stage: stage, dayOffset: dayOffset }); // Rest in the "End" city
+                        dayOffset++;
+                    }
+                }
+
+                // 2. Determine Date Mode (Forecast vs Historical)
+                const startObj = new Date(startDateStr);
+                const today = new Date();
+                const diffTime = startObj - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                
+                let isHistorical = false;
+                let fetchYear = startObj.getFullYear();
+                
+                if (diffDays > 10) {
+                    isHistorical = true;
+                    fetchYear = 2025; // Force fallback to previous year data
+                }
+
+                // 3. Process each day
+                let summaryRainDays = 0;
+                let summaryTemps = [];
+
+                for (let item of itinerary) {
+                    // Calculate Date
+                    const current = new Date(startDateStr);
+                    current.setDate(current.getDate() + item.dayOffset);
+                    
+                    // If historical, we fetch specific date from 2025
+                    let dateQuery = current.toISOString().split('T')[0];
+                    if (isHistorical) {
+                        const histDate = new Date(current);
+                        histDate.setFullYear(2025); // Hardcode to 2025
+                        dateQuery = histDate.toISOString().split('T')[0];
+                    }
+
+                    // CACHING: Check LocalStorage
+                    const cacheKey = `weather_${item.stage.lat}_${dateQuery}`;
+                    const cached = localStorage.getItem(cacheKey);
+                    let data;
+
+                    if (cached && (Date.now() - JSON.parse(cached).timestamp < 3600000)) { // 1 hour cache
+                        data = JSON.parse(cached).data;
+                    } else {
+                        // Fetch fresh
+                        const url = isHistorical 
+                            ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
+                            : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                        
+                        const res = await fetch(url);
+                        if(!res.ok) continue;
+                        const json = await res.json();
+                        data = json;
+                        // Save to cache
+                        localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: json }));
+                    }
+
+                    if (data.daily) {
+                        const dayData = {
+                            dateDisplay: current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+                            tempMax: data.daily.temperature_2m_max[0],
+                            tempMin: data.daily.temperature_2m_min[0],
+                            rain: data.daily.precipitation_sum[0],
+                            code: data.daily.weathercode[0],
+                            sunrise: data.daily.sunrise[0].split('T')[1],
+                            sunset: data.daily.sunset[0].split('T')[1],
+                            daylight: (data.daily.daylight_duration[0] / 3600).toFixed(1)
+                        };
+
+                        // Aggregate for Summary
+                        if (dayData.rain > 1.0) summaryRainDays++;
+                        summaryTemps.push(dayData.tempMax);
+
+                        // Render Card
+                        const isRest = item.type === 'rest';
+                        const cardColor = isRest ? 'bg-green-50 border-green-200' : 'bg-white border-gray-100';
+                        const badgeHtml = isHistorical 
+                            ? `<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded">Historical (2025)</span>` 
+                            : `<span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">Forecast</span>`;
+
+                        const html = `
+                            <div class="flex flex-col md:flex-row gap-4 p-4 ${cardColor} rounded-xl border hover:border-blue-300 transition-colors shadow-sm">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600 shadow-sm">${dayData.dateDisplay}</span>
+                                            ${isRest ? '<span class="text-xs font-bold text-green-600">🛌 Rest Day</span>' : `<span class="text-xs text-gray-400">Day ${item.dayOffset+1}</span>`}
+                                        </div>
+                                        ${badgeHtml}
+                                    </div>
+                                    <h4 class="font-bold text-gray-800 text-lg">
+                                        ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
+                                    </h4>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        ${isRest ? 'Recharge your batteries.' : `${item.stage.dist} approx • 🌅 ${dayData.sunrise} • 🌇 ${dayData.sunset} (${dayData.daylight}h light)`}
+                                    </p>
+                                </div>
+                                <div class="text-right border-t md:border-t-0 md:border-l border-gray-100 md:pl-4 pt-3 md:pt-0 min-w-[120px]">
+                                    <p class="text-2xl mb-1">${weatherCodes[dayData.code] || 'Unknown'}</p>
+                                    <div class="text-lg font-bold">
+                                        <span class="text-gray-900">${Math.round(dayData.tempMax)}°</span> 
+                                        <span class="text-gray-300">/</span> 
+                                        <span class="text-blue-500">${Math.round(dayData.tempMin)}°</span>
+                                    </div>
+                                    ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-full">💧 ${dayData.rain}mm</p>` : '<p class="text-xs text-gray-400 mt-1">Dry</p>'}
+                                </div>
+                            </div>
+                        `;
+                        resultsDiv.innerHTML += html;
+                    }
+                }
+
+                // 4. Generate & Show Summary
+                const avgTemp = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
+                let summaryMsg = `Expect an average high of <b>${avgTemp}°C</b>. `;
+                
+                if (summaryRainDays === 0) summaryMsg += `<span class="text-green-600 font-bold">Great news: It looks completely dry! ☀️</span>`;
+                else if (summaryRainDays <= 2) summaryMsg += `<span class="text-blue-600 font-bold">Pack light rain gear: Some rain expected on ${summaryRainDays} days. 🌦️</span>`;
+                else summaryMsg += `<span class="text-orange-600 font-bold">Prepare for wet weather: Rain expected on ${summaryRainDays} days. ☔</span>`;
+
+                document.getElementById('summaryText').innerHTML = summaryMsg;
+                summaryBox.classList.remove('hidden');
+
+                // 5. Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error(error);
+                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm font-bold">Error loading weather data. Please try again.</div>`;
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
