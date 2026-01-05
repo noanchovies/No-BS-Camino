@@ -3,56 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Route Weather</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <title>No BS Camino | 2026 Reality Check</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Google Sans', sans-serif; background-color: #ffffff; color: #202124; }
+        
+        /* Google Flights Gradient Text */
+        .google-gradient {
+            background: -webkit-linear-gradient(45deg, #1967d2, #4285f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+        /* Nav Pill Active State */
+        .nav-pill:hover { background-color: #f1f3f4; color: #1967d2; }
+
+        /* Card Styling - The "No BS" Hybrid */
+        .card-flight { 
+            border: 1px solid #dadce0; 
+            border-radius: 16px; 
+            background: white;
+            transition: all 0.2s ease;
+        }
+        .card-flight:hover { 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); 
+            border-color: #bdc1c6;
+            transform: translateY(-2px);
+        }
+
+        /* The Reality Box (Blue Line Style) */
+        .reality-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1967d2;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Hide scrollbar for the horizontal scrolls */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body>
+<body class="antialiased pb-20">
 
-    <header class="app-header">
-        <div class="header-content">
-            <h1 id="app-title">Loading...</h1>
-            <div class="header-actions">
-                <button id="print-btn" class="btn-secondary" title="Print / Save PDF">🖨️ Print/PDF</button>
-                <a id="coffee-btn" href="#" target="_blank" class="btn-primary">☕ Support</a>
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <div class="flex items-center gap-2">
+                    <svg class="w-6 h-6 text-[#1967d2]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    <span class="font-bold text-gray-700 text-lg tracking-tight">No BS <span class="text-[#1967d2]">Camino</span></span>
+                </div>
+                <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md uppercase tracking-wider md:hidden">Beta</span>
             </div>
+
+            <nav class="flex gap-2 overflow-x-auto no-scrollbar">
+                <a href="weather.html" class="nav-pill px-4 py-2 rounded-full border border-blue-100 bg-blue-50 text-sm font-bold text-[#1967d2] whitespace-nowrap transition-colors hover:bg-blue-100">
+                    Weather Planner 🌤️
+                </a>
+                <a href="#faq-grid" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap transition-colors">
+                    All Fact Checks
+                </a>
+                <a href="#routes" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap transition-colors">
+                    Routes
+                </a>
+                <a href="#logistics" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap transition-colors">
+                    Logistics
+                </a>
+                <a href="#access" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap transition-colors">
+                    Links & Map Downloads
+                </a>
+            </nav>
         </div>
     </header>
 
-    <div id="pwa-install-banner" class="pwa-banner hidden">
-        <span>Get the App for easier access!</span>
-        <button id="install-btn">Install</button>
-        <button id="close-install">✕</button>
-    </div>
+    <main class="max-w-4xl mx-auto px-4 pt-12">
 
-    <main class="container">
-        <div id="map-section">
-            <div id="map"></div>
-            <p class="hint-text">Tap any point to see details. Zoom in to explore.</p>
+        <div class="text-center mb-16">
+            <h1 class="text-3xl md:text-4xl font-bold google-gradient tracking-tight leading-tight mb-6">
+                Camino Planning Made Easy
+            </h1>
+            <h2 class="text-sm md:text-base font-medium text-gray-500 mb-4 max-w-2xl mx-auto leading-relaxed">
+                 <span class="text-black font-bold">NO ADS, Affiliate Scams or "get your map here" Clickbait <u>(FU StinkyNomads)</u></span>
+            </h2>
         </div>
 
-        <div id="weather-container">
+        <div id="faq-grid" class="mb-20 scroll-mt-24">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">Rapid Fire FAQ</h3>
+                    <span class="text-xs text-gray-400 font-medium">Top 10 Myths Debunked</span>
+                </div>
             </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">GEAR</div>
+                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">COMMON MYTH</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Trail Runners vs. Boots"</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">90% of veteran pilgrims now recommend non-waterproof trail runners. The Gore-tex membrane traps heat and sweat = sweat and blisters. While they excel in wet, muddy, or cold weather, they sacrifice breathability.</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: r/CaminoDeSantiago</span>
+                        <a href="myths.html#gear-boots" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">RULES</div>
+                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">2025 UPDATE</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"2025> Rule Changes (Compostela)"</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">"One stamp a day is enough". Not anymore. You <strong>must</strong> get 2 stamps per day (one at lunch, one at sleep) or the Pilgrim Office <em>will</em> deny your Compostela.</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Pilgrim Office</span>
+                        <a href="myths.html#rules-stamps" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">LOGISTICS</div>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Book IN ADVANCEEEE via Booking.com."</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">Nonsense. If you must..do it the day before.<br/>  Nowadays the best albergues aren't online and use <strong>WhatsApp</strong> to save on fees. Install "Gronze" (the bible). If you see a line of backpacks at 1 PM, that's the bed race. <br/>The community has shifted from "Wise Pilgrim" to Gronze.com (best data) and Camino Ninja (most user-friendly).
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Veteran Walkers</span>
+                        <a href="myths.html#logistics-booking" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">MONEY</div>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Costs & Logistics (Money vs Card)"</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">The €50 Rule: The "Budget" Camino (€25/day) is almost dead due to inflation in Spain. The 2025/2026 "Standard" budget is now €50/day (Albergue + Menu del Dia + Coffee/Laundry).<br/> 
+
+<strong>Transport:</strong> Casa Ivar in Santiago is still the gold standard for shipping your suitcase ahead so it's waiting for you at the end.</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Experience</span>
+                        <a href="myths.html#money-cash" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">WEIGHT</div>
+                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">COMMON MYTH</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Pack for every emergency."</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">Your pack should be 10% of body weight (5-7kg).<br/><strong>If it's more, you're carrying fear.</strong> Light is right, there are plenty of shops every few KM to buy the essentials.</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Ivar</span>
+                        <a href="myths.html#weight-10percent" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">SLEEP</div>
+                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">FEAR FACTOR</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Albergues are dirty."</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">Even hotels get bed bugs. It's a volume issue. <strong>Permethrin</strong> is your best friend. Spray your bag before you leave home.</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Science</span>
+                        <a href="myths.html#sleep-bedbugs" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">SAFETY</div>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"It's dangerous solo."</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">Statistically safer than your hometown. You will be "alone" for exactly 4 hours until you meet your "Tramily". Again - it's Spain not Antarctica, regardless of being Summer or Winter.</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Crime Stats</span>
+                        <a href="myths.html#safety-solo" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+               <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">FITNESS</div>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"I need to run marathons."</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">The first week <em>is</em> the training. Start slow. Rushing causes injuries, not fitness.<br/>Reality Check: You'll be <strong>walking</strong> through mostly flat well maintained paths. <br/>People need to chill (don't get me started on the "altitude drama")</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Physiology</span>
+                        <a href="myths.html#fitness-training" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">TECH</div>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"I'll use Google Maps."</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">Google sends you to highways. Use <strong>Mapy.cz</strong> or Organic Maps for trails. Buy a cheap Spanish Sim in any corner shop. Europeans roam for free, look it up.</p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: Navigation</span>
+                        <a href="myths.html#tech-maps" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-flight p-6 flex flex-col h-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">THE VIBE</div>
+                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">TOXIC MYTH</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">"The last 100km isn't real."</h4>
+                    <div class="reality-box mb-4 flex-grow">
+                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700 leading-relaxed">Ignore the gatekeepers. Whether you walk 800km or 100km, you're already doing more than the internet experts. Who cares anyway </p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                        <span class="text-xs text-gray-400 font-medium">Source: The Spirit</span>
+                        <a href="myths.html#vibe-gatekeeping" class="text-sm font-bold text-[#1967d2] hover:underline flex items-center">
+                            Read Full Breakdown <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="text-center mt-10">
+                <a href="myths.html" class="inline-flex items-center text-sm font-bold text-gray-500 hover:text-[#1967d2] transition-colors border-b border-gray-300 hover:border-[#1967d2] pb-1">
+                    See full list of nonsense & myths
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+        </div>
+
+        <div id="routes" class="mb-20 scroll-mt-24">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Routes</h3>
+            
+            <div class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
+                
+                <div class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer">
+                    <div class="h-40 bg-gray-100 relative overflow-hidden flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Camino_frances_map.svg/1280px-Camino_frances_map.svg.png" class="w-full h-full object-contain p-4 bg-slate-50 group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100">The Classic</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h4 class="text-lg font-bold text-gray-900">Francés</h4>
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">790km</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">St. Jean → Santiago</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Varied Terrain
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                High Traffic
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                Fly: Biarritz
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                May - Oct
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer">
+                    <div class="h-40 bg-gray-100 relative overflow-hidden flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Caminho_Portugues.svg/640px-Caminho_Portugues.svg.png" class="w-full h-full object-contain p-4 bg-slate-50 group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100">Coastal</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h4 class="text-lg font-bold text-gray-900">Português</h4>
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">260km</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Porto → Santiago</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Flat / Easy
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                Medium Traffic
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                Fly: Porto
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                All Year
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer">
+                    <div class="h-40 bg-gray-100 relative overflow-hidden flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Camino_del_Norte_Route.png/640px-Camino_del_Norte_Route.png" class="w-full h-full object-contain p-4 bg-slate-50 group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100">Hard Mode</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h4 class="text-lg font-bold text-gray-900">Norte</h4>
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">820km</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Irún → Santiago</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Very Hilly
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Low Traffic
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                Fly: San Seb.
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                Summer Only
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="live-feed" class="mb-20 scroll-mt-24">
+            <div class="flex items-center gap-2 mb-6">
+                <svg class="w-6 h-6 text-pink-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <h3 class="text-xl font-bold text-gray-800">Live from the Trail</h3>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1562601579-599dec564e06?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1518182170546-07661fd94144?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-200 text-gray-400 text-sm font-medium hover:border-[#1967d2] hover:text-[#1967d2] transition-colors">
+                    <a href="#">@NoBSCamino</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="logistics" class="mb-20 scroll-mt-24">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">How much does it REALLY cost?</h3>
+            
+            <div class="card-flight overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 font-medium">Category</th>
+                                <th class="px-6 py-4 font-medium text-red-500">What the spammers say*</th>
+                                <th class="px-6 py-4 font-bold text-blue-600 bg-blue-50/50">2026 Reality</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                                    Bed (Albergue)
+                                </td>
+                                <td class="px-6 py-4 text-gray-500">€5 - €8</td>
+                                <td class="px-6 py-4 font-bold text-gray-800 bg-blue-50/30">€12 - €18</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Menu del Dia
+                                </td>
+                                <td class="px-6 py-4 text-gray-500">€10</td>
+                                <td class="px-6 py-4 font-bold text-gray-800 bg-blue-50/30">€14 - €18</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    Coffee / Beer
+                                </td>
+                                <td class="px-6 py-4 text-gray-500">€1.00</td>
+                                <td class="px-6 py-4 font-bold text-gray-800 bg-blue-50/30">€1.80 - €3.00</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors bg-gray-50">
+                                <td class="px-6 py-4 font-bold text-gray-900">Total Daily</td>
+                                <td class="px-6 py-4 text-gray-400 line-through decoration-red-400 decoration-2">€25 / day</td>
+                                <td class="px-6 py-4 font-black text-[#1967d2] bg-blue-50/30">€45 - €55 / day</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-4 bg-gray-50 text-[10px] text-gray-500 border-t border-gray-100 leading-tight">
+                    <span class="font-bold text-red-500">* The Lie:</span> Most "Budget Guide" blogs haven't walked since 2018. They keep prices low to sell you ads. Post-2022 inflation hit rural Spain hard. Budget properly or go home early.
+                </div>
+            </div>
+        </div>
+
+        <div id="access" class="mb-20 scroll-mt-24">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Direct Links</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <div class="space-y-3">
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Planning</div>
+                    <a href="#" class="flex justify-between items-center p-3 rounded-lg border border-gray-200 hover:border-[#1967d2] hover:bg-blue-50 transition-colors group bg-white">
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#1967d2]">Gronze (Maps)</span>
+                        <svg class="w-4 h-4 text-gray-300 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                    <a href="#" class="flex justify-between items-center p-3 rounded-lg border border-gray-200 hover:border-[#1967d2] hover:bg-blue-50 transition-colors group bg-white">
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#1967d2]">Wise (Best Card)</span>
+                        <svg class="w-4 h-4 text-gray-300 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Docs</div>
+                    <a href="#" class="flex justify-between items-center p-3 rounded-lg border border-gray-200 hover:border-[#1967d2] hover:bg-blue-50 transition-colors group bg-white">
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#1967d2]">Credencial (Passport)</span>
+                        <svg class="w-4 h-4 text-gray-300 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                    <a href="#" class="flex justify-between items-center p-3 rounded-lg border border-gray-200 hover:border-[#1967d2] hover:bg-blue-50 transition-colors group bg-white">
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#1967d2]">Packing List PDF</span>
+                        <svg class="w-4 h-4 text-gray-300 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Transport</div>
+                    <a href="#" class="flex justify-between items-center p-3 rounded-lg border border-gray-200 hover:border-[#1967d2] hover:bg-blue-50 transition-colors group bg-white">
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#1967d2]">ALSA Bus</span>
+                        <svg class="w-4 h-4 text-gray-300 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                    <a href="#" class="flex justify-between items-center p-3 rounded-lg border border-gray-200 hover:border-[#1967d2] hover:bg-blue-50 transition-colors group bg-white">
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#1967d2]">Renfe Trains</span>
+                        <svg class="w-4 h-4 text-gray-300 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
     </main>
 
-    <div class="ad-sticky-footer">
-        <div class="ad-placeholder">Advert Space (Support the Dev)</div>
-    </div>
+    <footer class="border-t border-gray-200 bg-gray-50 py-10 text-center">
+        <p class="text-sm text-gray-400">© 2026 No BS Camino. Built on caffeine and spite.</p>
+    </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="config.js"></script>
-    <script src="script.js"></script>
-    
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
 </body>
 </html>
