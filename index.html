@@ -16,6 +16,10 @@
         .reality-box { background-color: #f8f9fa; border-left: 4px solid #1967d2; padding: 16px; border-radius: 0 8px 8px 0; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Pins for the static map preview */
+        .pin-start { top: 38%; left: 88%; } /* St Jean approx */
+        .pin-end { top: 40%; left: 85%; }   /* Roncesvalles approx */
     </style>
 </head>
 <body class="antialiased pb-20">
@@ -80,7 +84,6 @@
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">790km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">St. Jean → Santiago</p>
-                        
                         <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -113,7 +116,6 @@
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">260km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Porto → Santiago</p>
-                        
                         <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -146,7 +148,6 @@
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">820km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Irún → Santiago</p>
-                        
                         <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -184,38 +185,50 @@
                 <div class="bg-blue-50/50 border border-blue-100 rounded-2xl p-6 relative overflow-hidden">
                     
                     <div class="h-48 w-full bg-blue-100 rounded-xl mb-6 relative overflow-hidden border border-blue-200">
-                         <div class="absolute inset-0 opacity-50 bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Camino_frances_map.svg/1280px-Camino_frances_map.svg.png')] bg-cover bg-center"></div>
+                        <div class="absolute inset-0 opacity-50 bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Camino_frances_map.svg/1280px-Camino_frances_map.svg.png')] bg-cover bg-center"></div>
                         <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-2 rounded-lg shadow-sm">
                             <p class="text-[10px] text-gray-500 font-bold uppercase">Selected Stage:</p>
-                            <p class="text-xs font-bold text-[#1967d2]">Mérida → Aljucén</p>
+                            <p class="text-xs font-bold text-[#1967d2]">St. Jean → Roncesvalles</p>
                         </div>
-                        <div class="absolute top-1/2 left-1/3 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-md"></div>
-                        <div class="absolute top-1/2 left-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
+                        <div class="absolute pin-start w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-md animate-pulse"></div>
+                        <div class="absolute pin-end w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                     </div>
 
                     <div class="mb-6 bg-white p-4 rounded-xl border-l-4 border-[#1967d2] shadow-sm">
-                        <h4 class="text-xs font-bold text-[#1967d2] uppercase mb-1">Trip Overview (Example)</h4>
-                        <p class="text-gray-700 text-sm font-medium">Expect an average high of 13°C. <span class="text-blue-600 font-bold">Pack light rain gear: Rain expected on 2 days. </span></p>
+                        <h4 class="text-xs font-bold text-[#1967d2] uppercase mb-1">Trip Overview</h4>
+                        <p class="text-gray-700 text-sm font-medium">Expect an average high of 9°C. <span class="text-blue-600 font-bold">Prepare for wet weather: Rain expected on 5 days.</span> <svg class="w-4 h-4 inline text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg></p>
                     </div>
 
-                    <div class="space-y-3 opacity-90">
+                    <div class="space-y-3 opacity-90 relative">
                         <div class="flex flex-col md:flex-row gap-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
                             <div class="flex-1">
                                 <span class="text-xs font-bold bg-gray-50 border border-gray-200 px-2 py-1 rounded text-gray-600">Fri, Jan 9</span>
-                                <h4 class="font-bold text-gray-800 mt-2">Mérida <span class="text-gray-300">→</span> Aljucén</h4>
-                                <p class="text-xs text-gray-500">16km approx • 08:43 ☀️ 18:20</p>
+                                <h4 class="font-bold text-gray-800 mt-2">Saint-Jean <span class="text-gray-300">→</span> Roncesvalles</h4>
+                                <p class="text-xs text-gray-500">25km approx • 08:35 ☀️ 17:47</p>
                             </div>
-                            <div class="text-right min-w-[80px]">
-                                <div class="text-lg font-bold">13° <span class="text-gray-300">/</span> <span class="text-blue-500">7°</span></div>
-                                <p class="text-xs text-gray-400 mt-1">Overcast</p>
+                            <div class="text-right min-w-[100px] flex flex-col items-end">
+                                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                <div class="text-lg font-bold mt-1">10° <span class="text-gray-300">/</span> <span class="text-blue-500">6°</span></div>
+                                <p class="text-xs text-blue-600 font-bold mt-1 bg-blue-50 px-2 rounded-full">💧 14.7mm</p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-white/40 to-transparent flex items-end justify-center pb-8">
-                        <span class="bg-[#1967d2] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform group-hover:scale-105">
-                            Plan Your Specific Dates
-                        </span>
+                        <div class="flex flex-col md:flex-row gap-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm opacity-50" style="mask-image: linear-gradient(to bottom, black 20%, transparent 90%); -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 90%);">
+                            <div class="flex-1">
+                                <span class="text-xs font-bold bg-gray-50 border border-gray-200 px-2 py-1 rounded text-gray-600">Sat, Jan 10</span>
+                                <h4 class="font-bold text-gray-800 mt-2">Roncesvalles <span class="text-gray-300">→</span> Zubiri</h4>
+                            </div>
+                            <div class="text-right min-w-[100px] flex flex-col items-end">
+                                <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                <div class="text-lg font-bold mt-1">3° <span class="text-gray-300">/</span> <span class="text-blue-500">1°</span></div>
+                            </div>
+                        </div>
+
+                        <div class="absolute inset-0 flex items-end justify-center pb-2 z-10">
+                            <span class="bg-[#1967d2] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform group-hover:scale-105">
+                                Plan Your Specific Dates
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -238,7 +251,6 @@
             </div>
             
             <div id="faq-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
-                
                 <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
                     <div class="flex justify-between items-start mb-4">
                         <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">GEAR</div>
@@ -254,146 +266,20 @@
                         <a href="myths.html#gear-boots" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
                     </div>
                 </div>
-
                 <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
                     <div class="flex justify-between items-start mb-4">
                         <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">RULES</div>
-                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">2025 UPDATE</span>
                     </div>
                     <h4 class="text-xl font-bold text-gray-900 mb-4">"2025 Stamp Rules"</h4>
                     <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">You <strong>must</strong> get 2 stamps per day (start & end) for the last 100km, or no Compostela.</p>
+                         <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+                        <p class="text-sm text-gray-700">You must get 2 stamps/day for the last 100km.</p>
                     </div>
                     <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Pilgrim Office</span>
-                        <a href="myths.html#rules-stamps" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+                         <span class="text-xs text-gray-400 font-medium">Source: Pilgrim Office</span>
+                         <a href="#" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
                     </div>
                 </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">LOGISTICS</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Book IN ADVAAAANCEEEE"</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">Nonsense. Book 1 day ahead via WhatsApp. Use Gronze.com for numbers.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Veteran Walkers</span>
-                        <a href="myths.html#logistics-booking" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">MONEY</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Costs & Cash vs Card"</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">Budget €50/day. The €25/day "budget camino" is dead due to inflation.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Experience</span>
-                        <a href="myths.html#money-cash" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">WEIGHT</div>
-                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">MYTH</span>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Pack for every emergency."</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">Pack 10% of your body weight (5-7kg). Light is right.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Ivar</span>
-                        <a href="myths.html#weight-10percent" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">SLEEP</div>
-                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">FEAR</span>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"Albergues are dirty."</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">Bed bugs happen everywhere. Use <strong>Permethrin</strong> spray before leaving home.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Science</span>
-                        <a href="myths.html#sleep-bedbugs" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">SAFETY</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"It's dangerous solo."</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">Statistically safer than your hometown. You will meet a "Tramily" quickly.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Crime Stats</span>
-                        <a href="myths.html#safety-solo" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">FITNESS</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"I need to run marathons."</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">The first week <em>is</em> the training. Start slow. Most paths are flat.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Physiology</span>
-                        <a href="myths.html#fitness-training" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">TECH</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"I'll use Google Maps."</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">Google sends you to highways. Use <strong>Mapy.cz</strong> or Organic Maps.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: Navigation</span>
-                        <a href="myths.html#tech-maps" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">THE VIBE</div>
-                        <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">TOXIC MYTH</span>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">"The last 100km isn't real."</h4>
-                    <div class="reality-box mb-4 flex-grow">
-                        <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
-                        <p class="text-sm text-gray-700">Ignore the gatekeepers. Walking 100km is still a huge achievement.</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-                        <span class="text-xs text-gray-400 font-medium">Source: The Spirit</span>
-                        <a href="myths.html#vibe-gatekeeping" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
-                    </div>
-                </div>
-
             </div>
             
             <div class="text-center mt-10">
@@ -409,7 +295,6 @@
                 <svg class="w-5 h-5 text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 Real Cost (2026)
             </h3>
-            
             <div class="card-flight overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
@@ -421,7 +306,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            <tr class="hover:bg-gray-50/50 transition-colors">
+                            <tr class="hover:bg-gray-50/50">
                                 <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                                     Bed (Albergue)
@@ -429,7 +314,7 @@
                                 <td class="px-6 py-4 text-gray-500">€5 - €8</td>
                                 <td class="px-6 py-4 font-bold text-gray-800 bg-blue-50/30">€12 - €18</td>
                             </tr>
-                            <tr class="hover:bg-gray-50/50 transition-colors">
+                            <tr class="hover:bg-gray-50/50">
                                 <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     Menu del Dia
@@ -437,24 +322,16 @@
                                 <td class="px-6 py-4 text-gray-500">€10</td>
                                 <td class="px-6 py-4 font-bold text-gray-800 bg-blue-50/30">€14 - €18</td>
                             </tr>
-                            <tr class="hover:bg-gray-50/50 transition-colors">
-                                <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                    Coffee / Beer
-                                </td>
-                                <td class="px-6 py-4 text-gray-500">€1.00</td>
-                                <td class="px-6 py-4 font-bold text-gray-800 bg-blue-50/30">€1.80 - €3.00</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50/50 transition-colors bg-gray-50">
+                            <tr class="hover:bg-gray-50/50 bg-gray-50">
                                 <td class="px-6 py-4 font-bold text-gray-900">Total Daily</td>
-                                <td class="px-6 py-4 text-gray-400 line-through decoration-red-400 decoration-2">€25 / day</td>
+                                <td class="px-6 py-4 text-gray-400 line-through decoration-red-400">€25 / day</td>
                                 <td class="px-6 py-4 font-black text-[#1967d2] bg-blue-50/30">€45 - €55 / day</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="px-6 py-4 bg-gray-50 text-[10px] text-gray-500 border-t border-gray-100 leading-tight">
-                    <span class="font-bold text-red-500">* The Misconception:</span> Most "Budget Guide" blogs haven't walked since 2018. They keep prices low to sell you ads. Post-2022 inflation hit rural Spain hard.
+                <div class="px-6 py-4 bg-gray-50 text-[10px] text-gray-500 border-t border-gray-100">
+                    <span class="font-bold text-red-500">* The Misconception:</span> Most blogs are outdated. Post-2022 inflation hit Spain hard.
                 </div>
             </div>
         </div>
@@ -486,46 +363,19 @@
     </footer>
 
     <script>
-        // 1. Carousel Scroll Logic
         function scrollFaq(direction) {
-            const container = document.getElementById('faq-carousel');
-            const scrollAmount = 320; 
-            if (direction === 'left') {
-                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            } else {
-                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            }
+            document.getElementById('faq-carousel').scrollBy({ left: direction === 'left' ? -320 : 320, behavior: 'smooth' });
         }
-
-        // 2. PWA Install Logic
+        
         let deferredPrompt;
-        const installBanner = document.getElementById('installBanner');
-        const installBtn = document.getElementById('installBtn');
-
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBanner.classList.remove('hidden');
+            e.preventDefault(); deferredPrompt = e;
+            document.getElementById('installBanner').classList.remove('hidden');
         });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    installBanner.classList.add('hidden');
-                }
-                deferredPrompt = null;
-            }
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) { deferredPrompt.prompt(); document.getElementById('installBanner').classList.add('hidden'); }
         });
-
-        // 3. Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js');
-            });
-        }
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
     </script>
-
 </body>
 </html>
