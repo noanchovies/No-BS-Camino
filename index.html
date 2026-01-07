@@ -67,20 +67,32 @@
         </div>
 
         <div id="routes" class="mb-20 scroll-mt-24">
-            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <svg class="w-5 h-5 text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                Routes
-            </h3>
-            <div class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
+            
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                    Routes
+                </h3>
+                <div class="flex gap-2">
+                    <button onclick="scrollRoutes('left')" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 hover:text-[#1967d2] transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button onclick="scrollRoutes('right')" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 hover:text-[#1967d2] transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="routes-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
                 
-                <div class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer">
-                    <div class="h-40 bg-gray-100 relative overflow-hidden flex items-center justify-center">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Camino_frances_map.svg/1280px-Camino_frances_map.svg.png" class="w-full h-full object-contain p-4 bg-slate-50 group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100">The Classic</div>
+                <a href="route-frances.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+                    <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+                        <div id="map-frances" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">The Classic</div>
                     </div>
                     <div class="p-5">
                         <div class="flex justify-between items-baseline mb-1">
-                            <h4 class="text-lg font-bold text-gray-900">Francés</h4>
+                            <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Francés</h4>
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">790km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">St. Jean → Santiago</p>
@@ -93,26 +105,18 @@
                                 <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                                 High Traffic
                             </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                                Fly: Biarritz
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                May - Oct
-                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer">
-                    <div class="h-40 bg-gray-100 relative overflow-hidden flex items-center justify-center">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Caminho_Portugues.svg/640px-Caminho_Portugues.svg.png" class="w-full h-full object-contain p-4 bg-slate-50 group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100">Coastal</div>
+                <a href="route-portugues.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+                    <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+                        <div id="map-portugues" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">Coastal</div>
                     </div>
                     <div class="p-5">
                         <div class="flex justify-between items-baseline mb-1">
-                            <h4 class="text-lg font-bold text-gray-900">Português</h4>
+                            <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Português</h4>
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">260km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Porto → Santiago</p>
@@ -125,26 +129,18 @@
                                 <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                                 Medium Traffic
                             </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                                Fly: Porto
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                All Year
-                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer">
-                    <div class="h-40 bg-gray-100 relative overflow-hidden flex items-center justify-center">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Camino_del_Norte_Route.png/640px-Camino_del_Norte_Route.png" class="w-full h-full object-contain p-4 bg-slate-50 group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100">Hard Mode</div>
+                <a href="route-norte.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+                    <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+                        <div id="map-norte" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">Hard Mode</div>
                     </div>
                     <div class="p-5">
                         <div class="flex justify-between items-baseline mb-1">
-                            <h4 class="text-lg font-bold text-gray-900">Norte</h4>
+                            <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Norte</h4>
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">820km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Irún → Santiago</p>
@@ -157,17 +153,33 @@
                                 <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Low Traffic
                             </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="route-plata.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+                    <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+                        <div id="map-plata" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">The Longest</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Via de la Plata</h4>
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">1000km</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Seville → Santiago</p>
+                        <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
                             <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                                Fly: San Seb.
+                                <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                Very Hot
                             </div>
                             <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                Summer Only
+                                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Solitary
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
             </div>
         </div>
@@ -620,6 +632,91 @@
                 L.marker(coord, {icon: icon}).addTo(previewMap);
             });
         });
+        // --- NEW: ROUTES SECTION LOGIC ---
+
+    // 1. Scroll Logic for Routes Buttons
+    function scrollRoutes(direction) {
+        const container = document.getElementById('routes-carousel');
+        const scrollAmount = 320; 
+        if (direction === 'left') {
+            container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        } else {
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+    }
+
+    // 2. Initialize Route Maps (Red Lines)
+    function initRouteMaps() {
+        
+        const mapOptions = {
+            zoomControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            attributionControl: false,
+            zoomSnap: 0.1 
+        };
+
+        const redLineStyle = {
+            color: '#dc2626', // This is the Red color
+            weight: 4,
+            opacity: 0.8,
+            smoothFactor: 1
+        };
+
+        // --- Francés ---
+        // Checks if element exists to prevent errors
+        if(document.getElementById('map-frances')) {
+            const mapFrances = L.map('map-frances', mapOptions);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(mapFrances);
+            const pathFrances = [
+                [43.16, -1.23], [42.81, -1.64], [42.46, -2.44], [42.34, -3.69], 
+                [42.60, -5.56], [42.54, -6.59], [42.88, -8.54]
+            ];
+            const lineFrances = L.polyline(pathFrances, redLineStyle).addTo(mapFrances);
+            mapFrances.fitBounds(lineFrances.getBounds(), {padding: [20, 20]});
+        }
+
+        // --- Portugués ---
+        if(document.getElementById('map-portugues')) {
+            const mapPortugues = L.map('map-portugues', mapOptions);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(mapPortugues);
+            const pathPortugues = [
+                [41.15, -8.62], [41.69, -8.83], [42.24, -8.72], [42.88, -8.54]
+            ];
+            const linePortugues = L.polyline(pathPortugues, redLineStyle).addTo(mapPortugues);
+            mapPortugues.fitBounds(linePortugues.getBounds(), {padding: [20, 20]});
+        }
+
+        // --- Norte ---
+        if(document.getElementById('map-norte')) {
+            const mapNorte = L.map('map-norte', mapOptions);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(mapNorte);
+            const pathNorte = [
+                [43.33, -1.78], [43.31, -1.98], [43.26, -2.93], [43.46, -3.80], 
+                [43.53, -5.66], [43.55, -7.04], [42.88, -8.54]
+            ];
+            const lineNorte = L.polyline(pathNorte, redLineStyle).addTo(mapNorte);
+            mapNorte.fitBounds(lineNorte.getBounds(), {padding: [20, 20]});
+        }
+
+        // --- Via de la Plata ---
+        if(document.getElementById('map-plata')) {
+            const mapPlata = L.map('map-plata', mapOptions);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(mapPlata);
+            const pathPlata = [
+                [37.38, -5.98], [38.91, -6.34], [40.96, -5.66], [42.02, -5.66], 
+                [42.45, -6.05], [42.88, -8.54]
+            ];
+            const linePlata = L.polyline(pathPlata, redLineStyle).addTo(mapPlata);
+            mapPlata.fitBounds(linePlata.getBounds(), {padding: [20, 20]});
+        }
+    }
+
+    // Run the function
+    initRouteMaps();
+        
     </script>
 
 </body>
