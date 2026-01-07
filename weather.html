@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Planner | No BS Camino</title>
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     
     <style>
@@ -14,67 +14,60 @@
         .google-gradient { background: -webkit-linear-gradient(45deg, #1967d2, #4285f4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-pill:hover { background-color: #f1f3f4; color: #1967d2; }
         .card-flight { border: 1px solid #dadce0; border-radius: 16px; background: white; transition: all 0.2s ease; }
-        
-        /* Map Container Height */
         #map { height: 400px; width: 100%; border-radius: 0 0 16px 16px; z-index: 1; }
-        
-        /* PIN STYLING: SELECTED STATE */
-        /* Takes standard blue leaflet marker and rotates hue to make it Red */
         .img-selected-pin { filter: hue-rotate(140deg) saturate(1.5) brightness(0.9); }
+
+        /* PRINT STYLES */
+        @media print {
+            body { background: white; }
+            header, #map-container, #controls-container, #installBanner, footer, #printBtn { display: none !important; }
+            #results { display: block !important; }
+            .card-flight { border: none !important; border-bottom: 1px solid #eee !important; box-shadow: none !important; border-radius: 0 !important; page-break-inside: avoid; }
+            #summaryBox { border: 1px solid #ccc; background: #fff !important; }
+        }
     </style>
 </head>
 <body class="antialiased pb-20">
 
+    <div id="installBanner" class="hidden bg-[#1967d2] text-white px-4 py-3 shadow-md flex justify-between items-center sticky top-0 z-[60]">
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-sm">Get the App</span>
+        </div>
+        <button id="installBtn" class="bg-white text-[#1967d2] px-3 py-1 rounded-full text-xs font-bold">Install</button>
+    </div>
+
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
                 <svg class="w-6 h-6 text-[#1967d2]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                <span class="font-bold text-gray-700 text-lg tracking-tight">No BS <span class="text-[#1967d2]">Camino</span></span>
+                <span class="font-bold text-gray-700 text-lg md:block hidden">No BS <span class="text-[#1967d2]">Camino</span></span>
             </div>
-            <nav class="flex gap-2 overflow-x-auto">
-                <a href="index.html" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap">Home</a>
-                <a href="#" class="nav-pill px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-sm font-bold text-[#1967d2] whitespace-nowrap">Weather Planner 🌤️</a>
-            </nav>
+            <div class="flex items-center gap-2">
+                <button id="printBtn" onclick="window.print()" class="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-bold text-gray-600 bg-gray-50 border border-gray-200 rounded-full hover:bg-gray-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2-4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Print / PDF
+                </button>
+                <a href="index.html" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600">Back Home</a>
+            </div>
         </div>
     </header>
 
     <main class="max-w-3xl mx-auto px-4 pt-8">
         
-        <div class="text-center mb-8">
+        <div class="text-center mb-8" id="controls-container">
             <h1 class="text-3xl font-bold google-gradient tracking-tight mb-3">Smart Weather Planner</h1>
-            <p class="text-gray-600">We calculate your daily position and pull accurate data for that specific location.</p>
+            <p class="text-gray-600">We calculate your daily position and pull accurate data.</p>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 md:gap-8 mb-8 text-center px-2">
-            <div class="flex flex-col items-center group">
-                <div class="w-12 h-12 rounded-full bg-blue-50 text-[#1967d2] flex items-center justify-center mb-3 group-hover:bg-[#1967d2] group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                </div>
-                <h3 class="text-sm font-bold text-gray-800">1. Select Route</h3>
-            </div>
-            <div class="flex flex-col items-center group">
-                <div class="w-12 h-12 rounded-full bg-blue-50 text-[#1967d2] flex items-center justify-center mb-3 group-hover:bg-[#1967d2] group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                </div>
-                <h3 class="text-sm font-bold text-gray-800">2. Pick Start Pin</h3>
-            </div>
-            <div class="flex flex-col items-center group">
-                <div class="w-12 h-12 rounded-full bg-blue-50 text-[#1967d2] flex items-center justify-center mb-3 group-hover:bg-[#1967d2] group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                </div>
-                <h3 class="text-sm font-bold text-gray-800">3. Set Date</h3>
-            </div>
-        </div>
-
-        <div class="card-flight shadow-sm mb-8 overflow-hidden z-10 relative">
+        <div class="card-flight shadow-sm mb-8 overflow-hidden z-10 relative" id="map-container">
             <div class="p-4 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row gap-4 items-end">
                 <div class="w-full">
                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Select Route</label>
                     <select id="routeSelect" onchange="changeRoute()" class="w-full p-2 border border-gray-300 rounded-md text-gray-800 font-bold focus:outline-none focus:border-[#1967d2]">
-                        <option value="frances">Camino Francés (The Classic)</option>
-                        <option value="norte">Camino del Norte (Coastal)</option>
-                        <option value="plata">Via de la Plata (Sevilla)</option>
-                        <option value="lusitana">Via Lusitana (Portugal)</option>
+                        <option value="frances">Camino Francés</option>
+                        <option value="norte">Camino del Norte</option>
+                        <option value="plata">Via de la Plata</option>
+                        <option value="lusitana">Via Lusitana</option>
                     </select>
                 </div>
                 <div class="w-full">
@@ -87,57 +80,47 @@
                 <input type="checkbox" id="addRestDays" class="w-4 h-4 text-[#1967d2] rounded focus:ring-blue-500 border-gray-300">
                 <label for="addRestDays" class="text-xs text-gray-600 cursor-pointer select-none">
                     <span class="font-bold text-gray-800">Add "Smart Rest Days"</span> (Recommended)
-                    <br/><span class="text-gray-500">Automatically adds a rest day at major cities (e.g., Burgos, León) for a realistic plan.</span>
                 </label>
             </div>
 
             <div class="relative">
                 <div id="map"></div>
                 <div class="absolute top-4 right-4 z-[999] bg-white/95 backdrop-blur px-3 py-2 rounded-lg shadow-md border border-gray-200 pointer-events-none">
-                    <p class="text-xs text-gray-500 font-bold uppercase">Selected Start:</p>
-                    <p id="selectedLocationText" class="text-sm font-bold text-[#1967d2]">Click a pin on map</p>
+                    <p class="text-xs text-gray-500 font-bold uppercase">Start:</p>
+                    <p id="selectedLocationText" class="text-sm font-bold text-[#1967d2]">Click a pin</p>
                 </div>
             </div>
 
             <div class="p-4 bg-white border-t border-gray-100">
-                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                    <span>Get 10-Day Forecast</span>
+                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2">
+                    Get 10-Day Forecast
                 </button>
             </div>
         </div>
 
-        <div id="summaryBox" class="hidden mb-6 p-4 rounded-xl border-l-4 border-[#1967d2] bg-blue-50/50 shadow-sm animate-fade-in">
+        <div id="summaryBox" class="hidden mb-6 p-4 rounded-xl border-l-4 border-[#1967d2] bg-blue-50/50 shadow-sm">
             <h4 class="text-sm font-bold text-[#1967d2] uppercase mb-1">Trip Overview</h4>
             <p id="summaryText" class="text-gray-700 text-sm font-medium">Calculating...</p>
         </div>
 
         <div id="loading" class="hidden text-center py-10">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
-            <p class="text-sm text-gray-400 mt-2">Checking caches & fetching data...</p>
         </div>
         
-        <div id="results" class="space-y-3 pb-10 scroll-mt-20"></div>
+        <div id="results" class="space-y-3 pb-10"></div>
 
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- 1. CONFIG & DATA ---
-        
-        // Define major "Rest Cities" where pilgrims usually stop
-        const restCities = [
-            "Burgos", "León", "Logroño", // Francés
-            "Bilbao", "Santander", "Gijón", "Ribadeo", // Norte
-            "Salamanca", "Mérida", "Zamora", "Ourense", // Plata
-            "Coimbra", "Porto", "Pontevedra" // Lusitana
-        ];
-
+        // --- DATA ---
+        const restCities = ["Burgos", "León", "Logroño", "Bilbao", "Santander", "Salamanca", "Porto"];
         const routes = {
             frances: {
                 name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
                 stages: [
-                    { start: "Saint-Jean-Pied-de-Port", end: "Roncesvalles", dist: "25km", lat: 43.163, lon: -1.235 },
+                    { start: "Saint-Jean", end: "Roncesvalles", dist: "25km", lat: 43.163, lon: -1.235 },
                     { start: "Roncesvalles", end: "Zubiri", dist: "21km", lat: 43.009, lon: -1.319 },
                     { start: "Zubiri", end: "Pamplona", dist: "20km", lat: 42.929, lon: -1.503 },
                     { start: "Pamplona", end: "Puente la Reina", dist: "24km", lat: 42.812, lon: -1.646 },
@@ -174,7 +157,7 @@
             norte: {
                 name: "Camino del Norte", center: [43.4, -4.0], zoom: 7,
                 stages: [
-                    { start: "Irún", end: "San Sebastián", dist: "26km", lat: 43.338, lon: -1.788 },
+                     { start: "Irún", end: "San Sebastián", dist: "26km", lat: 43.338, lon: -1.788 },
                     { start: "San Sebastián", end: "Zarautz", dist: "22km", lat: 43.318, lon: -1.981 },
                     { start: "Zarautz", end: "Deba", dist: "22km", lat: 43.284, lon: -2.172 },
                     { start: "Deba", end: "Markina", dist: "24km", lat: 43.296, lon: -2.355 },
@@ -211,7 +194,7 @@
             plata: {
                 name: "Vía de la Plata", center: [39.5, -6.0], zoom: 6,
                 stages: [
-                    { start: "Sevilla", end: "Guillena", dist: "22km", lat: 37.389, lon: -5.984 },
+                     { start: "Sevilla", end: "Guillena", dist: "22km", lat: 37.389, lon: -5.984 },
                     { start: "Guillena", end: "Castilblanco", dist: "18km", lat: 37.555, lon: -6.056 },
                     { start: "Castilblanco", end: "Almadén", dist: "29km", lat: 37.674, lon: -5.955 },
                     { start: "Almadén", end: "El Real", dist: "15km", lat: 37.872, lon: -6.071 },
@@ -254,7 +237,7 @@
             lusitana: {
                 name: "Via Lusitana", center: [40.5, -8.5], zoom: 7,
                 stages: [
-                    { start: "Lisboa", end: "Alverca", dist: "28km", lat: 38.722, lon: -9.139 },
+                     { start: "Lisboa", end: "Alverca", dist: "28km", lat: 38.722, lon: -9.139 },
                     { start: "Alverca", end: "Azambuja", dist: "29km", lat: 38.895, lon: -9.040 },
                     { start: "Azambuja", end: "Santarém", dist: "32km", lat: 39.069, lon: -8.870 },
                     { start: "Santarém", end: "Golegã", dist: "30km", lat: 39.236, lon: -8.686 },
@@ -283,16 +266,30 @@
             }
         };
 
-        const weatherCodes = {
-            0: '☀️ Clear sky', 1: '🌤️ Mainly clear', 2: '⛅ Partly cloudy', 3: '☁️ Overcast',
-            45: '🌫️ Fog', 48: '🌫️ Fog', 51: '🌧️ Drizzle', 53: '🌧️ Drizzle', 55: '🌧️ Drizzle',
-            61: '☔ Slight Rain', 63: '☔ Rain', 65: '☔ Heavy Rain',
-            71: '❄️ Snow', 73: '❄️ Snow', 75: '❄️ Heavy Snow',
-            80: '🌦️ Showers', 81: '🌦️ Showers', 82: '⛈️ Violent Showers',
-            95: '⚡ Thunderstorm', 96: '⚡ Hail'
+        // --- ICON SYSTEM (SVG STRINGS) ---
+        const icons = {
+            sun: '<svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
+            cloud: '<svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>',
+            rain: '<svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>',
+            snow: '<svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>', // using sun as base for snow placeholder or just text
+            fog: '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>'
         };
 
-        // --- 2. LOGIC ---
+        const weatherCodes = {
+            0: { label: 'Clear Sky', icon: icons.sun },
+            1: { label: 'Mainly Clear', icon: icons.sun },
+            2: { label: 'Partly Cloudy', icon: icons.cloud },
+            3: { label: 'Overcast', icon: icons.cloud },
+            45: { label: 'Fog', icon: icons.fog },
+            48: { label: 'Fog', icon: icons.fog },
+            51: { label: 'Drizzle', icon: icons.rain },
+            61: { label: 'Rain', icon: icons.rain },
+            63: { label: 'Rain', icon: icons.rain },
+            71: { label: 'Snow', icon: icons.snow },
+            95: { label: 'Storm', icon: icons.rain }
+        };
+
+        // --- APP LOGIC ---
         let map;
         let markers = [];
         let currentRouteId = 'frances';
@@ -303,12 +300,29 @@
             
             map = L.map('map').setView([42.6, -4.0], 7);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap &copy; CARTO',
-                subdomains: 'abcd',
+                attribution: '&copy; OpenStreetMap',
                 maxZoom: 19
             }).addTo(map);
 
             changeRoute();
+            
+            // PWA Logic
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js');
+            }
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                document.getElementById('installBanner').classList.remove('hidden');
+            });
+            document.getElementById('installBtn').addEventListener('click', async () => {
+                if(deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt = null;
+                    document.getElementById('installBanner').classList.add('hidden');
+                }
+            });
         };
 
         function changeRoute() {
@@ -317,36 +331,20 @@
             const routeData = routes[currentRouteId];
 
             map.flyTo(routeData.center, routeData.zoom);
-
             markers.forEach(m => map.removeLayer(m));
             markers = [];
 
             routeData.stages.forEach((stage, index) => {
                 const marker = L.marker([stage.lat, stage.lon]).addTo(map);
-                
-                // Add Click Logic for Red Pin
                 marker.on('click', () => {
                     selectedStageIndex = index;
                     document.getElementById('selectedLocationText').innerText = stage.start;
-                    document.getElementById('selectedLocationText').classList.add('animate-pulse');
-                    setTimeout(() => document.getElementById('selectedLocationText').classList.remove('animate-pulse'), 500);
-                    
-                    // Reset all icons
-                    markers.forEach(m => {
-                        if (m._icon) m._icon.classList.remove('img-selected-pin');
-                    });
-                    
-                    // Set this icon to red (using class with css filter)
+                    markers.forEach(m => { if (m._icon) m._icon.classList.remove('img-selected-pin'); });
                     if (marker._icon) marker._icon.classList.add('img-selected-pin');
-                    
-                    marker.openPopup();
                 });
-
-                marker.bindPopup(`<b>${stage.start}</b><br>Stage ${index + 1}`);
                 markers.push(marker);
             });
             
-            // Auto-select first stage
             selectedStageIndex = 0;
             document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
         }
@@ -359,137 +357,81 @@
             const startDateStr = document.getElementById('startDate').value;
             const addRestDays = document.getElementById('addRestDays').checked;
 
-            // Debounce to save API calls
             btn.disabled = true;
-            setTimeout(() => btn.disabled = false, 2000);
-
             resultsDiv.innerHTML = '';
             summaryBox.classList.add('hidden');
             loading.classList.remove('hidden');
 
             try {
-                // 1. Build the Itinerary (Insert Rest Days if needed)
+                // Build Itinerary
                 const routeData = routes[currentRouteId];
-                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12); // Grab 12 to ensure we fill 10 days if rest days exist
+                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12);
                 let itinerary = [];
                 let dayOffset = 0;
 
                 for (let i = 0; i < rawStages.length; i++) {
-                    if (itinerary.length >= 10) break; // Limit to 10 display days
-
-                    const stage = rawStages[i];
-                    
-                    // Add Walk Day
-                    itinerary.push({ type: 'walk', stage: stage, dayOffset: dayOffset });
-                    dayOffset++;
-
-                    // Check for Rest Day insertion
-                    if (addRestDays && restCities.includes(stage.end) && i < rawStages.length - 1) {
-                        itinerary.push({ type: 'rest', stage: stage, dayOffset: dayOffset }); // Rest in the "End" city
-                        dayOffset++;
+                    if (itinerary.length >= 10) break;
+                    itinerary.push({ type: 'walk', stage: rawStages[i], dayOffset: dayOffset++ });
+                    if (addRestDays && restCities.includes(rawStages[i].end) && i < rawStages.length - 1) {
+                        itinerary.push({ type: 'rest', stage: rawStages[i], dayOffset: dayOffset++ });
                     }
                 }
 
-                // 2. Determine Date Mode (Forecast vs Historical)
+                // Check Dates
                 const startObj = new Date(startDateStr);
-                const today = new Date();
-                const diffTime = startObj - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                const diffDays = Math.ceil((startObj - new Date()) / (1000 * 60 * 60 * 24));
+                const isHistorical = diffDays > 10;
                 
-                let isHistorical = false;
-                let fetchYear = startObj.getFullYear();
-                
-                if (diffDays > 10) {
-                    isHistorical = true;
-                    fetchYear = 2025; // Force fallback to previous year data
-                }
-
-                // 3. Process each day
                 let summaryRainDays = 0;
                 let summaryTemps = [];
 
                 for (let item of itinerary) {
-                    // Calculate Date
                     const current = new Date(startDateStr);
                     current.setDate(current.getDate() + item.dayOffset);
-                    
-                    // If historical, we fetch specific date from 2025
                     let dateQuery = current.toISOString().split('T')[0];
                     if (isHistorical) {
-                        const histDate = new Date(current);
-                        histDate.setFullYear(2025); // Hardcode to 2025
-                        dateQuery = histDate.toISOString().split('T')[0];
+                        const h = new Date(current); h.setFullYear(2025);
+                        dateQuery = h.toISOString().split('T')[0];
                     }
 
-                    // CACHING: Check LocalStorage
-                    const cacheKey = `weather_${item.stage.lat}_${dateQuery}`;
-                    const cached = localStorage.getItem(cacheKey);
-                    let data;
-
-                    if (cached && (Date.now() - JSON.parse(cached).timestamp < 3600000)) { // 1 hour cache
-                        data = JSON.parse(cached).data;
-                    } else {
-                        // Fetch fresh
-                        const url = isHistorical 
-                            ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
-                            : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
-                        
-                        const res = await fetch(url);
-                        if(!res.ok) continue;
-                        const json = await res.json();
-                        data = json;
-                        // Save to cache
-                        localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: json }));
-                    }
-
-                    if (data.daily) {
-                        const dayData = {
-                            dateDisplay: current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-                            tempMax: data.daily.temperature_2m_max[0],
-                            tempMin: data.daily.temperature_2m_min[0],
-                            rain: data.daily.precipitation_sum[0],
-                            code: data.daily.weathercode[0],
-                            sunrise: data.daily.sunrise[0].split('T')[1],
-                            sunset: data.daily.sunset[0].split('T')[1],
-                            daylight: (data.daily.daylight_duration[0] / 3600).toFixed(1)
-                        };
-
-                        // Aggregate for Summary
-                        if (dayData.rain > 1.0) summaryRainDays++;
-                        summaryTemps.push(dayData.tempMax);
-
-                        // Render Card
+                    // Fetch
+                    const url = isHistorical 
+                         ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
+                        : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                    
+                    const res = await fetch(url);
+                    const json = await res.json();
+                    
+                    if (json.daily) {
+                        const d = json.daily;
+                        const code = d.weathercode[0];
+                        const wInfo = weatherCodes[code] || { label: 'Unknown', icon: icons.cloud };
+                        const rain = d.precipitation_sum[0];
+                        const max = d.temperature_2m_max[0];
+                        const min = d.temperature_2m_min[0];
                         const isRest = item.type === 'rest';
-                        const cardColor = isRest ? 'bg-green-50 border-green-200' : 'bg-white border-gray-100';
-                        const badgeHtml = isHistorical 
-                            ? `<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded">Historical (2025)</span>` 
-                            : `<span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">Forecast</span>`;
+
+                        if(rain > 1.0) summaryRainDays++;
+                        summaryTemps.push(max);
 
                         const html = `
-                            <div class="flex flex-col md:flex-row gap-4 p-4 ${cardColor} rounded-xl border hover:border-blue-300 transition-colors shadow-sm">
+                            <div class="flex flex-col md:flex-row gap-4 p-4 ${isRest ? 'bg-green-50 border-green-100' : 'bg-white border-gray-100'} rounded-xl border shadow-sm page-break-avoid">
                                 <div class="flex-1">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600 shadow-sm">${dayData.dateDisplay}</span>
-                                            ${isRest ? '<span class="text-xs font-bold text-green-600">🛌 Rest Day</span>' : `<span class="text-xs text-gray-400">Day ${item.dayOffset+1}</span>`}
-                                        </div>
-                                        ${badgeHtml}
-                                    </div>
-                                    <h4 class="font-bold text-gray-800 text-lg">
+                                    <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600">${current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                                    <h4 class="font-bold text-gray-800 mt-2 text-lg">
                                         ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
                                     </h4>
                                     <p class="text-xs text-gray-500 mt-1">
-                                        ${isRest ? 'Recharge your batteries.' : `${item.stage.dist} approx • 🌅 ${dayData.sunrise} • 🌇 ${dayData.sunset} (${dayData.daylight}h light)`}
+                                        ${isRest ? 'Rest Day' : `${item.stage.dist} • 🌅 ${d.sunrise[0].split('T')[1]} • 🌇 ${d.sunset[0].split('T')[1]}`}
                                     </p>
                                 </div>
-                                <div class="text-right border-t md:border-t-0 md:border-l border-gray-100 md:pl-4 pt-3 md:pt-0 min-w-[120px]">
-                                    <p class="text-2xl mb-1">${weatherCodes[dayData.code] || 'Unknown'}</p>
-                                    <div class="text-lg font-bold">
-                                        <span class="text-gray-900">${Math.round(dayData.tempMax)}°</span> 
-                                        <span class="text-gray-300">/</span> 
-                                        <span class="text-blue-500">${Math.round(dayData.tempMin)}°</span>
+                                <div class="text-right min-w-[100px] flex flex-col items-end">
+                                    ${wInfo.icon}
+                                    <div class="text-lg font-bold mt-1">
+                                        ${Math.round(max)}° <span class="text-gray-300">/</span> <span class="text-blue-500">${Math.round(min)}°</span>
                                     </div>
-                                    ${dayData.rain > 0 ? `<p class="text-xs text-blue-600 font-bold mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-full">💧 ${dayData.rain}mm</p>` : '<p class="text-xs text-gray-400 mt-1">Dry</p>'}
+                                    <p class="text-xs text-gray-500">${wInfo.label}</p>
+                                    ${rain > 0 ? `<p class="text-xs text-blue-600 font-bold bg-blue-50 px-2 rounded-full mt-1">💧 ${rain}mm</p>` : ''}
                                 </div>
                             </div>
                         `;
@@ -497,25 +439,22 @@
                     }
                 }
 
-                // 4. Generate & Show Summary
-                const avgTemp = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
-                let summaryMsg = `Expect an average high of <b>${avgTemp}°C</b>. `;
+                // Summary
+                const avg = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
+                let msg = `Average high: <b>${avg}°C</b>. `;
+                if (summaryRainDays === 0) msg += `<span class="text-green-600 font-bold">Looks dry! ☀️</span>`;
+                else msg += `<span class="text-blue-600 font-bold">Rain expected on ${summaryRainDays} days.</span>`;
                 
-                if (summaryRainDays === 0) summaryMsg += `<span class="text-green-600 font-bold">Great news: It looks completely dry! ☀️</span>`;
-                else if (summaryRainDays <= 2) summaryMsg += `<span class="text-blue-600 font-bold">Pack light rain gear: Some rain expected on ${summaryRainDays} days. 🌦️</span>`;
-                else summaryMsg += `<span class="text-orange-600 font-bold">Prepare for wet weather: Rain expected on ${summaryRainDays} days. ☔</span>`;
-
-                document.getElementById('summaryText').innerHTML = summaryMsg;
+                document.getElementById('summaryText').innerHTML = msg;
                 summaryBox.classList.remove('hidden');
+                resultsDiv.scrollIntoView({ behavior: 'smooth' });
 
-                // 5. Scroll to results
-                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-
-            } catch (error) {
-                console.error(error);
-                resultsDiv.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm font-bold">Error loading weather data. Please try again.</div>`;
+            } catch (e) {
+                console.error(e);
+                resultsDiv.innerHTML = `<div class="text-red-500 text-center font-bold">Error loading data.</div>`;
             } finally {
                 loading.classList.add('hidden');
+                btn.disabled = false;
             }
         }
     </script>
