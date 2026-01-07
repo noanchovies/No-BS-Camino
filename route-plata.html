@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vía de la Plata | The Executive Summary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <style>
+        body { font-family: 'Google Sans', sans-serif; background-color: #ffffff; color: #202124; }
+        .risk-winter { display: none; }
+        .mode-winter .risk-winter { display: block; }
+        .mode-winter .risk-summer { display: none; }
+        
+        .custom-scroll::-webkit-scrollbar { height: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-gray-500 hover:text-[#1967d2] transition-colors font-bold text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Overview
+            </a>
+            <div class="font-bold text-gray-800">Vía de la <span class="text-[#1967d2]">Plata</span></div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 pt-8">
+
+        <div class="mb-10">
+            <div class="flex flex-col md:flex-row gap-6 items-end mb-6">
+                <div class="flex-1">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">The Longest Way</h1>
+                    <p class="text-lg text-gray-600 leading-relaxed">The ancient Roman road. Famous for extreme solitude, Roman ruins, vast open spaces, and relentless heat.</p>
+                </div>
+                <div class="flex gap-4 text-sm font-bold text-gray-500">
+                    <div class="px-3 py-1 bg-gray-100 rounded-full">1000 km</div>
+                    <div class="px-3 py-1 bg-gray-100 rounded-full">40-50 Days</div>
+                    <div class="px-3 py-1 bg-gray-100 rounded-full">Low Traffic</div>
+                </div>
+            </div>
+            
+            <div class="h-48 md:h-64 bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-200 shadow-sm">
+                <div id="map-detail-plata" class="w-full h-full z-0 mix-blend-multiply"></div>
+                <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur text-[10px] text-gray-500 font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10 pointer-events-none">
+                    Seville → Santiago
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-12">
+            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">The Route Sections</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="p-4 bg-gray-50 rounded-xl border-l-4 border-yellow-500">
+                    <div class="text-xs font-bold text-gray-500 uppercase mb-1">Andalusia</div>
+                    <div class="font-bold text-gray-900">The Oven</div>
+                    <p class="text-xs text-gray-600 mt-1">Olive groves, white villages, and extreme heat in summer.</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl border-l-4 border-orange-400">
+                    <div class="text-xs font-bold text-gray-500 uppercase mb-1">Extremadura</div>
+                    <div class="font-bold text-gray-900">The Romans</div>
+                    <p class="text-xs text-gray-600 mt-1">Mérida & Cáceres. Roman bridges, aqueducts, and empty "dehesa".</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl border-l-4 border-yellow-600">
+                    <div class="text-xs font-bold text-gray-500 uppercase mb-1">Castile</div>
+                    <div class="font-bold text-gray-900">The Golden</div>
+                    <p class="text-xs text-gray-600 mt-1">Salamanca & Zamora. Flat, dry plains and golden stone cities.</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl border-l-4 border-green-600">
+                    <div class="text-xs font-bold text-gray-500 uppercase mb-1">Galicia</div>
+                    <div class="font-bold text-gray-900">The Green</div>
+                    <p class="text-xs text-gray-600 mt-1">The Sanabria mountains. Lush, hilly, granite, and cooler.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-16 border-b border-gray-200 pb-12">
+            <div>
+                <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span class="bg-green-100 text-green-700 p-1 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></span>
+                    Best For
+                </h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex gap-2"><span class="text-gray-400">•</span> Solitude seekers (you might walk alone all day).</li>
+                    <li class="flex gap-2"><span class="text-gray-400">•</span> History buffs (Roman ruins are everywhere).</li>
+                    <li class="flex gap-2"><span class="text-gray-400">•</span> Spring/Autumn pilgrims (wildflowers are stunning).</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span class="bg-red-100 text-red-700 p-1 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg></span>
+                    Skip If
+                </h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex gap-2"><span class="text-gray-400">•</span> It is July/August (dangerous 40°C+ heat).</li>
+                    <li class="flex gap-2"><span class="text-gray-400">•</span> You need frequent cafes (often 20km with nothing).</li>
+                    <li class="flex gap-2"><span class="text-gray-400">•</span> You hate flat walking (central Spain is very flat).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tactical-planner" class="mb-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Tactical Stage Planner</h2>
+                    <p class="text-sm text-gray-500">Granular data for your daily planning.</p>
+                </div>
+                <div class="bg-gray-100 p-1 rounded-lg flex text-sm font-medium">
+                    <button onclick="setMode('summer')" id="btn-summer" class="px-4 py-1.5 rounded-md bg-white shadow-sm text-gray-800 transition-all">☀️ Summer</button>
+                    <button onclick="setMode('winter')" id="btn-winter" class="px-4 py-1.5 rounded-md text-gray-500 hover:text-gray-800 transition-all">❄️ Winter</button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 text-xs text-gray-500 mb-4 px-2">
+                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Bed Rush (Book Ahead)</div>
+                <div class="flex items-center gap-1"><span class="text-yellow-500">★★★★★</span> High Difficulty</div>
+                <div class="flex items-center gap-1"><svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg> Steep Climb</div>
+                <div class="flex items-center gap-1"><span class="text-orange-500 font-bold">⚠ No Water</span> Carry 2L+</div>
+            </div>
+
+            <div class="overflow-x-auto custom-scroll border border-gray-200 rounded-xl bg-white shadow-sm">
+                <table class="w-full text-left border-collapse" id="stages-table">
+                    <thead class="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
+                        <tr>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-12">#</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase min-w-[140px]">Route</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-24">Diff</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase min-w-[120px]">Seasonal Risk</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-24 text-center">Services</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-24 text-center">Bed Alert</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">01</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Sevilla → Guillena</div>
+                                <div class="text-xs text-gray-500 mt-0.5">23km • Industrial Exit</div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4">
+                                <span class="risk-summer text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Extreme Heat</span>
+                                <span class="risk-winter text-xs text-gray-600">Muddy Tracks</span>
+                            </td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded">Med</span></td>
+                        </tr>
+
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">02</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Guillena → Castilblanco</div>
+                                <div class="text-xs text-gray-500 mt-0.5">18km • <span class="text-orange-500 font-bold">No Water</span></div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4">
+                                <span class="risk-summer text-xs text-gray-600">No Shade</span>
+                                <span class="risk-winter text-xs text-gray-600">Road Walk</span>
+                            </td>
+                            <td class="px-4 py-4 text-center"><span class="text-xs font-bold text-red-400">Zero</span></td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded">Med</span></td>
+                        </tr>
+
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">03</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Castilblanco → Almadén</div>
+                                <div class="text-xs text-gray-500 mt-0.5">29km • Park Nature</div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4">
+                                <span class="risk-summer text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded">Park Hours</span>
+                                <span class="risk-winter text-xs text-gray-600">Muddy Trails</span>
+                            </td>
+                            <td class="px-4 py-4 text-center"><span class="text-xs font-bold text-red-400">Zero</span></td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded border border-red-100">High</span></td>
+                        </tr>
+
+                        <tr class="bg-blue-50/50 border-y border-blue-100 cursor-pointer hover:bg-blue-50 transition-colors" onclick="document.getElementById('smart-starts').scrollIntoView({behavior: 'smooth'})">
+                            <td colspan="6" class="px-4 py-3">
+                                <div class="flex items-center justify-center gap-2 text-sm text-[#1967d2] font-medium">
+                                    <span class="bg-white p-1 rounded-full border border-blue-100 shadow-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></span>
+                                    <span>Seville too hot? <span class="underline font-bold decoration-2">Start North in Salamanca or Ourense</span></span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr id="expand-trigger" onclick="toggleMiddleStages()" class="bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors border-y-2 border-gray-100 group">
+                            <td colspan="6" class="px-4 py-6 text-center">
+                                <div class="flex flex-col items-center gap-2">
+                                    <span class="text-sm font-bold text-gray-600 group-hover:text-[#1967d2] transition-colors">
+                                        Show 34 Middle Stages (Mérida, Cáceres, Salamanca...)
+                                    </span>
+                                    <svg class="w-5 h-5 text-gray-400 group-hover:text-[#1967d2] animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tbody id="middle-stages" class="hidden bg-gray-50/30 divide-y divide-gray-100 text-sm">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">09</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Torremejía → Mérida</div>
+                                <div class="text-xs text-gray-500 mt-0.5">16km • Roman City</div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Open Sun</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">13</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Valdesalor → Cáceres</div>
+                                <div class="text-xs text-gray-500 mt-0.5">24km • UNESCO</div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">No Shade</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">22</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Morille → Salamanca</div>
+                                <div class="text-xs text-gray-500 mt-0.5">18km • Golden City</div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">City Heat</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="bg-blue-50/50">
+                            <td colspan="6" class="px-4 py-2 text-center text-[10px] text-blue-400 font-mono">
+                                ... (This is where the long stretches of Castile & Sanabria live) ...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tbody class="divide-y divide-gray-100 text-sm border-t-2 border-gray-100">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">37</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Xunqueira → Ourense</div>
+                                <div class="text-xs text-gray-500 mt-0.5">22km • Hot Springs</div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Boiling Bowl</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">38</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-gray-900">Ourense → Cea</div>
+                                <div class="text-xs text-gray-500 mt-0.5">22km • Steep Climb</div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Steep & Hot</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors border-l-4 border-[#1967d2]">
+                            <td class="px-4 py-4 font-bold text-gray-400">41</td>
+                            <td class="px-4 py-4">
+                                <div class="font-bold text-[#1967d2]">Ponte Ulla → Santiago</div>
+                                <div class="text-xs text-gray-500 mt-0.5">21km • <span class="text-green-600 font-bold">Victory</span></div>
+                            </td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Emotional</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Book</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="smart-starts" class="scroll-mt-24 mb-20">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Smart Start Logistics</h2>
+            <p class="text-gray-600 mb-8 max-w-2xl">The full route is huge (1000km). Many pilgrims start further north to fit it into 2-3 weeks.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+                
+                <div class="border border-gray-200 rounded-xl p-5 hover:border-[#1967d2] hover:shadow-md transition-all bg-white group cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Full Experience</span>
+                        <svg class="w-5 h-5 text-gray-400 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">Seville</h3>
+                    <p class="text-xs text-gray-500 mb-4">~1000 km to Santiago</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-600 font-medium">
+                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">✈️ SVQ</span>
+                        <span>20m Commute (Bus EA)</span>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl p-5 hover:border-[#1967d2] hover:shadow-md transition-all bg-white group cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-orange-100 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Halfway</span>
+                        <svg class="w-5 h-5 text-gray-400 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">Salamanca</h3>
+                    <p class="text-xs text-gray-500 mb-4">~500 km to Santiago</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-600 font-medium">
+                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">🚆 Train</span>
+                        <span>Direct from Madrid (1.5h)</span>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl p-5 hover:border-[#1967d2] hover:shadow-md transition-all bg-white group cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Last 100km</span>
+                        <svg class="w-5 h-5 text-gray-400 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">Ourense</h3>
+                    <p class="text-xs text-gray-500 mb-4">~105 km to Santiago</p>
+                    <div class="flex items-center gap-2 text-xs text-gray-600 font-medium">
+                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">🚆 AVE</span>
+                        <span>High Speed from Madrid</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto border border-gray-200 rounded-xl bg-white shadow-sm">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 border-b border-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">City / Stop</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Dist Left</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Best Connection</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Commute</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-bold text-gray-900">Sevilla</td>
+                            <td class="px-4 py-3 text-gray-500">~1000 km</td>
+                            <td class="px-4 py-3"><span class="bg-gray-100 px-2 py-1 rounded text-xs font-bold text-gray-700">✈️ SVQ</span></td>
+                            <td class="px-4 py-3 text-gray-500">20m Bus</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-bold text-gray-900">Mérida</td>
+                            <td class="px-4 py-3 text-gray-500">~790 km</td>
+                            <td class="px-4 py-3"><span class="bg-blue-50 px-2 py-1 rounded text-xs font-bold text-blue-600">🚆 Train / Bus</span></td>
+                            <td class="px-4 py-3 text-gray-500">From Madrid/Sevilla</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-bold text-gray-900">Salamanca</td>
+                            <td class="px-4 py-3 text-gray-500">~500 km</td>
+                            <td class="px-4 py-3"><span class="bg-blue-50 px-2 py-1 rounded text-xs font-bold text-blue-600">🚆 Alvia Train</span></td>
+                            <td class="px-4 py-3 text-gray-500">1.5h from Madrid</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-bold text-gray-900">Puebla de Sanabria</td>
+                            <td class="px-4 py-3 text-gray-500">~250 km</td>
+                            <td class="px-4 py-3"><span class="bg-blue-50 px-2 py-1 rounded text-xs font-bold text-blue-600">🚆 AVE Train</span></td>
+                            <td class="px-4 py-3 text-gray-500">Fast from Madrid</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-bold text-gray-900">Ourense</td>
+                            <td class="px-4 py-3 text-gray-500">~105 km</td>
+                            <td class="px-4 py-3"><span class="bg-blue-50 px-2 py-1 rounded text-xs font-bold text-blue-600">🚆 AVE Train</span></td>
+                            <td class="px-4 py-3 text-gray-500">High Speed Hub</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-gray-200 bg-gray-50 py-10 text-center mt-20">
+        <p class="text-sm text-gray-400">© 2026 No BS Camino.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('map-detail-plata', {
+                zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false
+            });
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
+
+            // Path traces the Roman road (Sevilla -> Mérida -> Salamanca -> Ourense -> Santiago)
+            const pathPlata = [
+                [37.38, -5.98], // Sevilla
+                [38.91, -6.34], // Merida
+                [39.47, -6.37], // Caceres
+                [40.97, -5.66], // Salamanca
+                [41.50, -5.74], // Zamora
+                [42.08, -6.68], // Puebla de Sanabria
+                [42.33, -7.86], // Ourense
+                [42.88, -8.54]  // Santiago
+            ];
+            
+            const redLineStyle = { color: '#dc2626', weight: 4, opacity: 0.8 };
+            const line = L.polyline(pathPlata, redLineStyle).addTo(map);
+            map.fitBounds(line.getBounds(), {padding: [40, 40]});
+
+            window.setMode = function(mode) {
+                const table = document.getElementById('stages-table');
+                const btnSummer = document.getElementById('btn-summer');
+                const btnWinter = document.getElementById('btn-winter');
+
+                if (mode === 'summer') {
+                    table.classList.remove('mode-winter');
+                    btnSummer.classList.add('bg-white', 'shadow-sm', 'text-gray-800');
+                    btnSummer.classList.remove('text-gray-500');
+                    btnWinter.classList.remove('bg-white', 'shadow-sm', 'text-gray-800');
+                    btnWinter.classList.add('text-gray-500');
+                } else {
+                    table.classList.add('mode-winter');
+                    btnWinter.classList.add('bg-white', 'shadow-sm', 'text-gray-800');
+                    btnWinter.classList.remove('text-gray-500');
+                    btnSummer.classList.remove('bg-white', 'shadow-sm', 'text-gray-800');
+                    btnSummer.classList.add('text-gray-500');
+                }
+            };
+
+            window.toggleMiddleStages = function() {
+                const hiddenRows = document.getElementById('middle-stages');
+                const triggerRow = document.getElementById('expand-trigger');
+                hiddenRows.classList.remove('hidden');
+                triggerRow.style.display = 'none';
+            };
+        });
+    </script>
+</body>
+</html>
