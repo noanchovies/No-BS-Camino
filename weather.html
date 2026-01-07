@@ -17,23 +17,22 @@
         #map { height: 400px; width: 100%; border-radius: 0 0 16px 16px; z-index: 1; }
         .img-selected-pin { filter: hue-rotate(140deg) saturate(1.5) brightness(0.9); }
 
-        /* Sparkline Chart */
-        .sparkline-container { display: flex; align-items: flex-end; height: 50px; gap: 4px; margin-top: 12px; }
-        .sparkline-bar { width: 100%; border-radius: 2px 2px 0 0; opacity: 0.8; position: relative; }
-        .sparkline-bar:hover { opacity: 1; }
-        
+        /* PRINT STYLES */
         @media print {
             body { background: white; }
-            header, #map-container, #controls-container, #installBanner, footer, #printBtn, #loadMoreBtn { display: none !important; }
-            #results, #summaryBox { display: block !important; }
+            header, #map-container, #controls-container, #installBanner, footer, #printBtn { display: none !important; }
+            #results { display: block !important; }
             .card-flight { border: none !important; border-bottom: 1px solid #eee !important; box-shadow: none !important; border-radius: 0 !important; page-break-inside: avoid; }
+            #summaryBox { border: 1px solid #ccc; background: #fff !important; }
         }
     </style>
 </head>
 <body class="antialiased pb-20">
 
     <div id="installBanner" class="hidden bg-[#1967d2] text-white px-4 py-3 shadow-md flex justify-between items-center sticky top-0 z-[60]">
-        <div class="flex items-center gap-3"><span class="font-bold text-sm">Get the App</span></div>
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-sm">Get the App</span>
+        </div>
         <button id="installBtn" class="bg-white text-[#1967d2] px-3 py-1 rounded-full text-xs font-bold">Install</button>
     </div>
 
@@ -94,18 +93,14 @@
 
             <div class="p-4 bg-white border-t border-gray-100">
                 <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2">
-                    Get Forecast
+                    Get 10-Day Forecast
                 </button>
             </div>
         </div>
 
         <div id="summaryBox" class="hidden mb-6 p-4 rounded-xl border-l-4 border-[#1967d2] bg-blue-50/50 shadow-sm">
             <h4 class="text-sm font-bold text-[#1967d2] uppercase mb-1">Trip Overview</h4>
-            <div id="summaryText" class="text-gray-700 text-sm font-medium leading-relaxed">Calculating...</div>
-            <div class="mt-4">
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Temperature Trend (10 Days)</p>
-                <div id="tempChart" class="sparkline-container"></div>
-            </div>
+            <p id="summaryText" class="text-gray-700 text-sm font-medium">Calculating...</p>
         </div>
 
         <div id="loading" class="hidden text-center py-10">
@@ -114,22 +109,12 @@
         
         <div id="results" class="space-y-3 pb-10"></div>
 
-        <div id="loadMoreContainer" class="hidden text-center pb-20">
-            <button id="loadMoreBtn" onclick="loadMoreDays()" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-600 font-bold rounded-full hover:border-[#1967d2] hover:text-[#1967d2] transition-colors shadow-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Load Next 20 Days (Historical Data)
-            </button>
-            <p class="text-xs text-gray-400 mt-3 max-w-md mx-auto">
-                Note: Short-term forecasts (1-10 days) use live meteorological models. Long-term dates use historical statistical data (2025) to provide accurate averages.
-            </p>
-        </div>
-
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- DATA & ICONS ---
+        // --- DATA ---
         const restCities = ["Burgos", "León", "Logroño", "Bilbao", "Santander", "Salamanca", "Porto"];
         const routes = {
             frances: {
@@ -281,12 +266,12 @@
             }
         };
 
-        // --- ICONS (SVG) ---
+        // --- ICON SYSTEM (SVG STRINGS) ---
         const icons = {
             sun: '<svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
             cloud: '<svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>',
             rain: '<svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>',
-            snow: '<svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
+            snow: '<svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>', // using sun as base for snow placeholder or just text
             fog: '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>'
         };
 
@@ -304,33 +289,51 @@
             95: { label: 'Storm', icon: icons.rain }
         };
 
-        // --- APP STATE ---
-        let map, markers = [];
+        // --- APP LOGIC ---
+        let map;
+        let markers = [];
         let currentRouteId = 'frances';
         let selectedStageIndex = 0;
-        let globalItinerary = []; // Stores the full itinerary logic
-        let renderedDays = 0;
 
         window.onload = function() {
             document.getElementById('startDate').valueAsDate = new Date();
+            
             map = L.map('map').setView([42.6, -4.0], 7);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap',
+                maxZoom: 19
+            }).addTo(map);
+
             changeRoute();
             
-            // PWA
-            if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+            // PWA Logic
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js');
+            }
             let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBanner').classList.remove('hidden'); });
-            document.getElementById('installBtn').addEventListener('click', async () => { if(deferredPrompt) deferredPrompt.prompt(); document.getElementById('installBanner').classList.add('hidden'); });
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                document.getElementById('installBanner').classList.remove('hidden');
+            });
+            document.getElementById('installBtn').addEventListener('click', async () => {
+                if(deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt = null;
+                    document.getElementById('installBanner').classList.add('hidden');
+                }
+            });
         };
 
         function changeRoute() {
             const select = document.getElementById('routeSelect');
             currentRouteId = select.value;
             const routeData = routes[currentRouteId];
+
             map.flyTo(routeData.center, routeData.zoom);
             markers.forEach(m => map.removeLayer(m));
             markers = [];
+
             routeData.stages.forEach((stage, index) => {
                 const marker = L.marker([stage.lat, stage.lon]).addTo(map);
                 marker.on('click', () => {
@@ -341,6 +344,7 @@
                 });
                 markers.push(marker);
             });
+            
             selectedStageIndex = 0;
             document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
         }
@@ -355,184 +359,103 @@
 
             btn.disabled = true;
             resultsDiv.innerHTML = '';
-            document.getElementById('loadMoreContainer').classList.add('hidden');
             summaryBox.classList.add('hidden');
             loading.classList.remove('hidden');
 
             try {
-                // Build Itinerary up to 30 days max
+                // Build Itinerary
                 const routeData = routes[currentRouteId];
-                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 30);
-                globalItinerary = [];
+                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12);
+                let itinerary = [];
                 let dayOffset = 0;
 
                 for (let i = 0; i < rawStages.length; i++) {
-                    if (globalItinerary.length >= 30) break;
-                    globalItinerary.push({ type: 'walk', stage: rawStages[i], dayOffset: dayOffset++ });
+                    if (itinerary.length >= 10) break;
+                    itinerary.push({ type: 'walk', stage: rawStages[i], dayOffset: dayOffset++ });
                     if (addRestDays && restCities.includes(rawStages[i].end) && i < rawStages.length - 1) {
-                        globalItinerary.push({ type: 'rest', stage: rawStages[i], dayOffset: dayOffset++ });
+                        itinerary.push({ type: 'rest', stage: rawStages[i], dayOffset: dayOffset++ });
                     }
                 }
 
-                renderedDays = 0;
-                await fetchAndRender(10); // Initial Fetch
+                // Check Dates
+                const startObj = new Date(startDateStr);
+                const diffDays = Math.ceil((startObj - new Date()) / (1000 * 60 * 60 * 24));
+                const isHistorical = diffDays > 10;
+                
+                let summaryRainDays = 0;
+                let summaryTemps = [];
+
+                for (let item of itinerary) {
+                    const current = new Date(startDateStr);
+                    current.setDate(current.getDate() + item.dayOffset);
+                    let dateQuery = current.toISOString().split('T')[0];
+                    if (isHistorical) {
+                        const h = new Date(current); h.setFullYear(2025);
+                        dateQuery = h.toISOString().split('T')[0];
+                    }
+
+                    // Fetch
+                    const url = isHistorical 
+                         ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
+                        : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                    
+                    const res = await fetch(url);
+                    const json = await res.json();
+                    
+                    if (json.daily) {
+                        const d = json.daily;
+                        const code = d.weathercode[0];
+                        const wInfo = weatherCodes[code] || { label: 'Unknown', icon: icons.cloud };
+                        const rain = d.precipitation_sum[0];
+                        const max = d.temperature_2m_max[0];
+                        const min = d.temperature_2m_min[0];
+                        const isRest = item.type === 'rest';
+
+                        if(rain > 1.0) summaryRainDays++;
+                        summaryTemps.push(max);
+
+                        const html = `
+                            <div class="flex flex-col md:flex-row gap-4 p-4 ${isRest ? 'bg-green-50 border-green-100' : 'bg-white border-gray-100'} rounded-xl border shadow-sm page-break-avoid">
+                                <div class="flex-1">
+                                    <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600">${current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                                    <h4 class="font-bold text-gray-800 mt-2 text-lg">
+                                        ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
+                                    </h4>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        ${isRest ? 'Rest Day' : `${item.stage.dist} • 🌅 ${d.sunrise[0].split('T')[1]} • 🌇 ${d.sunset[0].split('T')[1]}`}
+                                    </p>
+                                </div>
+                                <div class="text-right min-w-[100px] flex flex-col items-end">
+                                    ${wInfo.icon}
+                                    <div class="text-lg font-bold mt-1">
+                                        ${Math.round(max)}° <span class="text-gray-300">/</span> <span class="text-blue-500">${Math.round(min)}°</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">${wInfo.label}</p>
+                                    ${rain > 0 ? `<p class="text-xs text-blue-600 font-bold bg-blue-50 px-2 rounded-full mt-1">💧 ${rain}mm</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                        resultsDiv.innerHTML += html;
+                    }
+                }
+
+                // Summary
+                const avg = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
+                let msg = `Average high: <b>${avg}°C</b>. `;
+                if (summaryRainDays === 0) msg += `<span class="text-green-600 font-bold">Looks dry! ☀️</span>`;
+                else msg += `<span class="text-blue-600 font-bold">Rain expected on ${summaryRainDays} days.</span>`;
+                
+                document.getElementById('summaryText').innerHTML = msg;
+                summaryBox.classList.remove('hidden');
+                resultsDiv.scrollIntoView({ behavior: 'smooth' });
 
             } catch (e) {
                 console.error(e);
-                resultsDiv.innerHTML = `<div class="text-red-500 text-center font-bold">Error. Please try again.</div>`;
+                resultsDiv.innerHTML = `<div class="text-red-500 text-center font-bold">Error loading data.</div>`;
             } finally {
                 loading.classList.add('hidden');
                 btn.disabled = false;
             }
-        }
-
-        async function loadMoreDays() {
-            document.getElementById('loadMoreContainer').classList.add('hidden');
-            document.getElementById('loading').classList.remove('hidden');
-            await fetchAndRender(20); // Fetch next 20
-            document.getElementById('loading').classList.add('hidden');
-        }
-
-        async function fetchAndRender(count) {
-            const resultsDiv = document.getElementById('results');
-            const startDateStr = document.getElementById('startDate').value;
-            const startObj = new Date(startDateStr);
-            const today = new Date();
-            
-            // Slice itinerary to fetch
-            const batch = globalItinerary.slice(renderedDays, renderedDays + count);
-            if(batch.length === 0) return;
-
-            // Temp storage for summary calc
-            let tempSummary = { temps: [], rains: [], sun: [], uv: 0 };
-            
-            for (let item of batch) {
-                const current = new Date(startDateStr);
-                current.setDate(current.getDate() + item.dayOffset);
-                const diffDays = Math.ceil((current - today) / (1000 * 60 * 60 * 24));
-                const isHistorical = diffDays > 10;
-                
-                let dateQuery = current.toISOString().split('T')[0];
-                if (isHistorical) {
-                    const h = new Date(current); h.setFullYear(2025); // Force 2025 for history
-                    dateQuery = h.toISOString().split('T')[0];
-                }
-
-                // UV only available in archive for past days, or forecast. 
-                // We simplify by asking for it, if null we ignore.
-                const url = isHistorical 
-                    ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
-                    : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration,uv_index_max&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
-
-                const res = await fetch(url);
-                const json = await res.json();
-                
-                if (json.daily) {
-                    const d = json.daily;
-                    const max = d.temperature_2m_max[0];
-                    const min = d.temperature_2m_min[0];
-                    const rain = d.precipitation_sum[0];
-                    const code = d.weathercode[0];
-                    const uv = d.uv_index_max ? d.uv_index_max[0] : 0;
-                    
-                    // Collect stats for Summary (only for first 10 days)
-                    if (renderedDays < 10) {
-                        tempSummary.temps.push(max);
-                        tempSummary.rains.push({ rain: rain, day: item.dayOffset + 1, city: item.stage.end });
-                        tempSummary.sun.push({ day: d.daylight_duration[0], rise: d.sunrise[0], set: d.sunset[0] });
-                        if(uv > tempSummary.uv) tempSummary.uv = uv;
-                    }
-
-                    const wInfo = weatherCodes[code] || { label: 'Unknown', icon: icons.cloud };
-                    const isRest = item.type === 'rest';
-
-                    const html = `
-                        <div class="flex flex-col md:flex-row gap-4 p-4 ${isRest ? 'bg-green-50 border-green-100' : 'bg-white border-gray-100'} rounded-xl border shadow-sm page-break-avoid">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600">${current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                                    ${isHistorical ? '<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded">Historical (2025)</span>' : '<span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">Forecast</span>'}
-                                </div>
-                                <h4 class="font-bold text-gray-800 text-lg">
-                                    ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
-                                </h4>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    ${isRest ? 'Rest Day' : `${item.stage.dist} • 🌅 ${d.sunrise[0].split('T')[1]} • 🌇 ${d.sunset[0].split('T')[1]}`}
-                                </p>
-                            </div>
-                            <div class="text-right min-w-[100px] flex flex-col items-end">
-                                ${wInfo.icon}
-                                <div class="text-lg font-bold mt-1">
-                                    ${Math.round(max)}° <span class="text-gray-300">/</span> <span class="text-blue-500">${Math.round(min)}°</span>
-                                </div>
-                                <p class="text-xs text-gray-500">${wInfo.label}</p>
-                                ${rain > 0 ? `<p class="text-xs text-blue-600 font-bold bg-blue-50 px-2 rounded-full mt-1">💧 ${rain}mm</p>` : ''}
-                            </div>
-                        </div>
-                    `;
-                    resultsDiv.insertAdjacentHTML('beforeend', html);
-                }
-                renderedDays++;
-            }
-
-            // Update Summary (Only on first render)
-            if (count === 10) {
-                updateSummary(tempSummary);
-                document.getElementById('summaryBox').classList.remove('hidden');
-                document.getElementById('loadMoreContainer').classList.remove('hidden');
-            }
-        }
-
-        function updateSummary(data) {
-            // 1. Avg Temp
-            const avg = Math.round(data.temps.reduce((a,b)=>a+b,0)/data.temps.length);
-            
-            // 2. Rain Clusters
-            let rainMsg = `<span class="text-green-600 font-bold">Looks dry! ☀️</span>`;
-            const wetDays = data.rains.filter(r => r.rain > 1.0);
-            if (wetDays.length > 0) {
-                // Find cluster (simplified: just grab first city of rain)
-                rainMsg = `<span class="text-blue-600 font-bold">Prepare for rain: Expected around ${wetDays[0].city} (Day ${wetDays[0].day}).</span>`;
-            }
-
-            // 3. Sun Stats
-            const avgLightSec = data.sun.reduce((a,b)=>a+b.day,0)/data.sun.length;
-            const avgHrs = Math.floor(avgLightSec/3600);
-            const avgMins = Math.round((avgLightSec%3600)/60);
-            // Rough avg times (taking middle day)
-            const mid = Math.floor(data.sun.length/2);
-            const sunMsg = `${avgHrs}h ${avgMins}m Avg Light (${data.sun[mid].rise.split('T')[1]} - ${data.sun[mid].set.split('T')[1]})`;
-
-            // 4. UV
-            const uvMsg = data.uv > 5 ? `<span class="text-red-500 font-bold ml-2">⚠️ High UV Index (${data.uv})</span>` : '';
-
-            // Render Text
-            document.getElementById('summaryText').innerHTML = `
-                Expect an average high of <b>${avg}°C</b>. ${rainMsg} ☂️<br/>
-                <div class="mt-2 text-xs text-gray-500 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    ${sunMsg} ${uvMsg}
-                </div>
-            `;
-
-            // 5. Render Sparkline
-            const chart = document.getElementById('tempChart');
-            chart.innerHTML = '';
-            data.temps.forEach(t => {
-                const bar = document.createElement('div');
-                bar.className = 'sparkline-bar';
-                // Color Logic
-                if(t < 10) bar.style.backgroundColor = '#3b82f6'; // blue
-                else if(t < 20) bar.style.backgroundColor = '#10b981'; // green
-                else if(t < 28) bar.style.backgroundColor = '#f59e0b'; // orange
-                else bar.style.backgroundColor = '#ef4444'; // red
-                
-                // Height Logic (scale 0-40 deg)
-                const h = Math.max(10, (t / 40) * 100);
-                bar.style.height = `${h}%`;
-                bar.title = `${Math.round(t)}°C`;
-                chart.appendChild(bar);
-            });
         }
     </script>
 </body>
