@@ -7,6 +7,10 @@
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <style>
         body { font-family: 'Google Sans', sans-serif; background-color: #ffffff; color: #202124; }
         .google-gradient { background: -webkit-linear-gradient(45deg, #1967d2, #4285f4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -17,8 +21,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body class="antialiased pb-20">
 
@@ -82,7 +84,6 @@
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">790km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">St. Jean → Santiago</p>
-                        
                         <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -115,7 +116,6 @@
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">260km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Porto → Santiago</p>
-                        
                         <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -148,7 +148,6 @@
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">820km</span>
                         </div>
                         <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Irún → Santiago</p>
-                        
                         <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
                             <div class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -189,7 +188,12 @@
 
                     <div class="mb-6 bg-white p-4 rounded-xl border-l-4 border-[#1967d2] shadow-sm">
                         <h4 class="text-xs font-bold text-[#1967d2] uppercase mb-1">Trip Overview</h4>
-                        <p class="text-gray-700 text-sm font-medium">Expect an average high of 13°C. <span class="text-blue-600 font-bold">Pack light rain gear: Rain expected on 5 days.</span></p>
+                        <p class="text-gray-700 text-sm font-medium mb-2">Expect an average high of 13°C. <span class="text-blue-600 font-bold">Pack light rain gear: Rain expected on 5 days.</span></p>
+                        
+                        <div class="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                            <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            9h 18m Avg Light (08:36 - 17:56)
+                        </div>
                     </div>
 
                     <div class="space-y-3 opacity-90">
@@ -223,17 +227,8 @@
 
                     </div>
 
-                    <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-white/40 to-transparent flex items-end justify-center pb-8 z-20">
+                    <div class="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-white via-white/70 to-transparent flex items-end justify-center pb-8 z-20 rounded-b-2xl">
                         <span class="bg-[#1967d2] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform group-hover:scale-105 flex items-center gap-2">
-                            Plan Your Specific Dates
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-white/40 to-transparent flex items-end justify-center pb-8">
-                        <span class="bg-[#1967d2] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform group-hover:scale-105">
                             Plan Your Specific Dates
                         </span>
                     </div>
@@ -546,9 +541,9 @@
             });
         }
     </script>
-<script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Frozen Map for Camino Frances
             var previewMap = L.map('preview-map', {
                 zoomControl: false,
                 dragging: false,
@@ -556,13 +551,12 @@
                 doubleClickZoom: false,
                 boxZoom: false,
                 attributionControl: false
-            }).setView([42.8, -2.5], 7); // Center on Northern Spain
+            }).setView([42.8, -2.5], 7); 
 
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 maxZoom: 19
             }).addTo(previewMap);
 
-            // Add Pins for St Jean (Start) and Roncesvalles (End)
             var redIcon = new L.Icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -584,5 +578,6 @@
             L.marker([42.671, -2.024], {icon: blueIcon}).addTo(previewMap); // Estella
         });
     </script>
+
 </body>
 </html>
