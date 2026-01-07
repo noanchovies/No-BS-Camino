@@ -214,13 +214,14 @@
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm relative overflow-hidden">
-                             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white/90 z-10"></div>
-                            <div class="flex-1 opacity-50">
+                             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-white/60 z-10"></div>
+                            
+                            <div class="flex-1">
                                 <span class="text-xs font-bold bg-gray-50 border border-gray-200 px-2 py-1 rounded text-gray-600">Sat, May 13</span>
                                 <h4 class="font-bold text-gray-800 mt-2">Roncesvalles <span class="text-gray-300">→</span> Zubiri</h4>
                                 <p class="text-xs text-gray-500 mt-1">21km • 06:44... </p>
                             </div>
-                            <div class="text-right min-w-[80px] opacity-50">
+                            <div class="text-right min-w-[80px]">
                                 <div class="text-lg font-bold">15° <span class="text-gray-300">/</span> <span class="text-blue-500">9°</span></div>
                             </div>
                         </div>
@@ -569,14 +570,45 @@
                 iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
             });
 
-            // Francés Route Pins
-            L.marker([43.163, -1.235], {icon: redIcon}).addTo(previewMap); // St Jean
-            L.marker([43.009, -1.319], {icon: blueIcon}).addTo(previewMap); // Roncesvalles
-            L.marker([42.929, -1.503], {icon: blueIcon}).addTo(previewMap); // Zubiri
-            L.marker([42.812, -1.646], {icon: blueIcon}).addTo(previewMap); // Pamplona
-            L.marker([42.690, -1.815], {icon: blueIcon}).addTo(previewMap); // Puente la Reina
-            L.marker([42.671, -2.024], {icon: blueIcon}).addTo(previewMap); // Estella
-        });
+            // Francés Route Pins (Complete)
+            const stages = [
+                [43.163, -1.235], // St Jean
+                [43.009, -1.319], // Roncesvalles
+                [42.929, -1.503], // Zubiri
+                [42.812, -1.646], // Pamplona
+                [42.690, -1.815], // Puente la Reina
+                [42.671, -2.024], // Estella
+                [42.564, -2.196], // Los Arcos
+                [42.465, -2.443], // Logroño
+                [42.415, -2.735], // Nájera
+                [42.439, -2.948], // Santo Domingo
+                [42.420, -3.176], // Belorado
+                [42.368, -3.483], // Agés
+                [42.343, -3.696], // Burgos
+                [42.290, -4.066], // Hontanas
+                [42.261, -4.373], // Boadilla
+                [42.341, -4.614], // Carrión
+                [42.366, -4.956], // Terradillos
+                [42.470, -5.416], // Bercianos/Mansilla area
+                [42.598, -5.567], // León
+                [42.483, -5.766], // San Martín
+                [42.455, -6.056], // Astorga
+                [42.493, -6.340], // Foncebadón
+                [42.547, -6.593], // Ponferrada
+                [42.607, -6.811], // Villafranca
+                [42.708, -7.042], // O Cebreiro
+                [42.756, -7.240], // Triacastela
+                [42.778, -7.414], // Sarria
+                [42.807, -7.616], // Portomarín
+                [42.873, -7.868], // Palas de Rei
+                [42.926, -8.164], // Arzúa
+                [42.909, -8.361], // O Pedrouzo
+                [42.880, -8.544]  // Santiago
+            ];
+                 stages.forEach((coord, index) => {
+                const icon = index === 0 ? redIcon : blueIcon;
+                L.marker(coord, {icon: icon}).addTo(previewMap);
+            });
     </script>
 
 </body>
