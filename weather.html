@@ -7,23 +7,59 @@
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     
     <style>
         body { font-family: 'Google Sans', sans-serif; background-color: #ffffff; color: #202124; }
         .google-gradient { background: -webkit-linear-gradient(45deg, #1967d2, #4285f4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-pill:hover { background-color: #f1f3f4; color: #1967d2; }
-        .card-flight { border: 1px solid #dadce0; border-radius: 16px; background: white; transition: all 0.2s ease; }
-        #map { height: 400px; width: 100%; border-radius: 0 0 16px 16px; z-index: 1; }
+        
+        /* Icon Colors */
+        .icon-sun { color: #fdb813; }
+        .icon-rain { color: #1967d2; }
+        .icon-gray { color: #9aa0a6; }
+        .icon-hazard { color: #d93025; }
+        .icon-cold { color: #1a73e8; }
+        
+        /* Rain Drop Styles */
+        .drop-empty { color: #e8eaed; fill: none; stroke: currentColor; stroke-width: 2.5; }
+        .drop-filled { color: #1967d2; fill: currentColor; stroke: none; }
+        
+        /* Timeline "Pill" Styles */
+        .day-pill {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e8eaed;
+            line-height: 1;
+        }
+        .timeline-line {
+            width: 2px;
+            background-color: #f1f3f4;
+            flex-grow: 1;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            border-radius: 2px;
+        }
+        .card-flight { 
+            border: 1px solid #dadce0; 
+            border-radius: 16px; 
+            background: white; 
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .card-rest {
+            border: 1px dashed #86efac; 
+            background-color: #f0fdf4; 
+            border-radius: 16px;
+        }
+
+        #map { height: 350px; width: 100%; border-radius: 0 0 12px 12px; z-index: 1; }
         .img-selected-pin { filter: hue-rotate(140deg) saturate(1.5) brightness(0.9); }
 
-        /* PRINT STYLES */
         @media print {
             body { background: white; }
-            header, #map-container, #controls-container, #installBanner, footer, #printBtn { display: none !important; }
+            header, #map-container, #controls-container, #installBanner, footer { display: none !important; }
             #results { display: block !important; }
             .card-flight { border: none !important; border-bottom: 1px solid #eee !important; box-shadow: none !important; border-radius: 0 !important; page-break-inside: avoid; }
-            #summaryBox { border: 1px solid #ccc; background: #fff !important; }
         }
     </style>
 </head>
@@ -42,80 +78,111 @@
                 <svg class="w-6 h-6 text-[#1967d2]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                 <span class="font-bold text-gray-700 text-lg md:block hidden">No BS <span class="text-[#1967d2]">Camino</span></span>
             </div>
-            <div class="flex items-center gap-2">
-                <button id="printBtn" onclick="window.print()" class="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-bold text-gray-600 bg-gray-50 border border-gray-200 rounded-full hover:bg-gray-100">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2-4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    Print / PDF
-                </button>
-                <a href="index.html" class="nav-pill px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600">Back Home</a>
-            </div>
+            <a href="index.html" class="px-4 py-2 rounded-full border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">Back Home</a>
         </div>
     </header>
 
     <main class="max-w-3xl mx-auto px-4 pt-8">
         
         <div class="text-center mb-8" id="controls-container">
-            <h1 class="text-3xl font-bold google-gradient tracking-tight mb-3">Smart Weather Planner</h1>
-            <p class="text-gray-600">We calculate your daily position and pull accurate data.</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-2">Smart Weather Planner</h1>
+            <p class="text-gray-500 text-sm">Real-time data for your next 10 stages.</p>
         </div>
 
         <div class="card-flight shadow-sm mb-8 overflow-hidden z-10 relative" id="map-container">
             <div class="p-4 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row gap-4 items-end">
                 <div class="w-full">
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Select Route</label>
-                    <select id="routeSelect" onchange="changeRoute()" class="w-full p-2 border border-gray-300 rounded-md text-gray-800 font-bold focus:outline-none focus:border-[#1967d2]">
-                        <option value="frances">Camino Francés</option>
-                        <option value="norte">Camino del Norte</option>
-                        <option value="plata">Via de la Plata</option>
-                        <option value="lusitana">Via Lusitana</option>
-                    </select>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1 tracking-wider">Select Route</label>
+                    <div class="relative">
+                        <select id="routeSelect" onchange="changeRoute()" class="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 font-bold focus:outline-none focus:border-[#1967d2] appearance-none">
+                            <option value="frances">Camino Francés</option>
+                            <option value="norte">Camino del Norte</option>
+                            <option value="plata">Via de la Plata</option>
+                            <option value="lusitana">Via Lusitana</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
                 </div>
                 <div class="w-full">
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start Date</label>
-                    <input type="date" id="startDate" class="w-full p-2 border border-gray-300 rounded-md text-gray-800 font-medium focus:outline-none focus:border-[#1967d2]">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1 tracking-wider">Start Date</label>
+                    <input type="date" id="startDate" class="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 font-medium focus:outline-none focus:border-[#1967d2]">
                 </div>
             </div>
 
-            <div class="px-4 py-2 bg-blue-50/50 border-b border-gray-100 flex items-center gap-3">
-                <input type="checkbox" id="addRestDays" class="w-4 h-4 text-[#1967d2] rounded focus:ring-blue-500 border-gray-300">
-                <label for="addRestDays" class="text-xs text-gray-600 cursor-pointer select-none">
-                    <span class="font-bold text-gray-800">Add "Smart Rest Days"</span> (Recommended)
+            <div class="px-4 py-2 bg-blue-50 border-b border-blue-100 flex items-center gap-2">
+                <input type="checkbox" id="addRestDays" class="w-4 h-4 text-[#1967d2] rounded focus:ring-[#1967d2] border-gray-300">
+                <label for="addRestDays" class="text-xs text-gray-700 cursor-pointer select-none font-medium">
+                    Add "Smart Rest Days" <span class="text-blue-600">(Every ~135km)</span>
                 </label>
             </div>
 
             <div class="relative">
                 <div id="map"></div>
-                <div class="absolute top-4 right-4 z-[999] bg-white/95 backdrop-blur px-3 py-2 rounded-lg shadow-md border border-gray-200 pointer-events-none">
-                    <p class="text-xs text-gray-500 font-bold uppercase">Start:</p>
+                <div class="absolute top-4 right-4 z-[999] bg-white/95 backdrop-blur px-3 py-2 rounded-lg shadow-sm border border-gray-200 pointer-events-none">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Start Location</p>
                     <p id="selectedLocationText" class="text-sm font-bold text-[#1967d2]">Click a pin</p>
                 </div>
             </div>
 
             <div class="p-4 bg-white border-t border-gray-100">
-                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2">
+                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm flex justify-center items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>
                     Get 10-Day Forecast
                 </button>
             </div>
         </div>
 
-        <div id="summaryBox" class="hidden mb-6 p-4 rounded-xl border-l-4 border-[#1967d2] bg-blue-50/50 shadow-sm">
-            <h4 class="text-sm font-bold text-[#1967d2] uppercase mb-1">Trip Overview</h4>
-            <p id="summaryText" class="text-gray-700 text-sm font-medium">Calculating...</p>
+        <div id="summaryBox" class="hidden mb-10 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                <h4 class="text-xs font-bold text-[#1967d2] uppercase tracking-wider">Trip Analysis</h4>
+            </div>
+            
+            <div class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="border-r border-gray-100 last:border-0 pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Rain Days</div>
+                    <div id="sumRainCount" class="text-xl font-bold text-gray-900">0/10</div>
+                    <div id="sumRainDays" class="text-[10px] text-gray-400 font-medium truncate mt-0.5">None</div>
+                </div>
+                
+                <div class="border-r border-gray-100 last:border-0 pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Avg Daylight</div>
+                    <div id="sumAvgDaylight" class="text-xl font-bold text-gray-900">--</div>
+                    <div class="text-[10px] text-gray-400 font-medium mt-0.5">Hours</div>
+                </div>
+
+                <div class="border-r border-gray-100 last:border-0 pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Avg Sunrise</div>
+                    <div id="sumSunrise" class="text-xl font-bold text-gray-900">--:--</div>
+                    <div id="sumSunriseTemp" class="text-[10px] text-blue-500 font-bold mt-0.5">--°C</div>
+                </div>
+
+                <div class="pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Avg Sunset</div>
+                    <div id="sumSunset" class="text-xl font-bold text-gray-900">--:--</div>
+                    <div id="sumSunsetTemp" class="text-[10px] text-gray-500 font-bold mt-0.5">--°C</div>
+                </div>
+            </div>
+            
+            <div id="sumRecs" class="px-4 py-3 bg-blue-50/30 border-t border-blue-50 text-xs text-gray-700 font-medium flex flex-col gap-1">
+                </div>
         </div>
 
         <div id="loading" class="hidden text-center py-10">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
+            <p class="text-xs text-gray-400 mt-3 font-medium">Fetching satellite data...</p>
         </div>
         
-        <div id="results" class="space-y-3 pb-10"></div>
+        <div id="results" class="space-y-0 pb-20"></div>
 
     </main>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
     <script>
         // --- DATA ---
-        const restCities = ["Burgos", "León", "Logroño", "Bilbao", "Santander", "Salamanca", "Porto"];
+        // restCities Removed - Logic is now pure distance based.
         const routes = {
             frances: {
                 name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
@@ -266,22 +333,34 @@
             }
         };
 
-        // --- ICON SYSTEM (SVG STRINGS) ---
+        // --- GOOGLE STYLE SVGs ---
         const icons = {
-            sun: '<svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
-            cloud: '<svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>',
-            rain: '<svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>',
-            snow: '<svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>', // using sun as base for snow placeholder or just text
-            fog: '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>'
+            sun: '<svg class="w-8 h-8 icon-sun" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 9c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000 1.41.996.996 0 001.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06z"/></svg>',
+            
+            partCloud: '<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none"><path d="M19.36 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96z" fill="#E8E8E8"/><circle cx="8" cy="8" r="4" fill="#FDB813"/></svg>',
+            
+            cloud: '<svg class="w-8 h-8 icon-gray" viewBox="0 0 24 24" fill="currentColor"><path d="M19.36 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96z"/></svg>',
+            
+            rain: '<svg class="w-8 h-8 icon-rain" viewBox="0 0 24 24" fill="currentColor"><path d="M4.13 12.04C3.47 12.59 3 13.43 3 14.4c0 1.99 1.61 3.6 3.6 3.6s3.6-1.61 3.6-3.6c0-.97-.47-1.81-1.13-2.36h-4.94zm9.33 0C12.8 12.59 12.33 13.43 12.33 14.4c0 1.99 1.61 3.6 3.6 3.6s3.6-1.61 3.6-3.6c0-.97-.47-1.81-1.13-2.36h-4.94zM19.36 6.04C18.67 2.59 15.64 0 12 0 9.11 0 6.6 1.64 5.35 4.04 2.34 4.36 0 6.91 0 10c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96z"/></svg>',
+            
+            snow: '<svg class="w-8 h-8 icon-rain" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm0 2.83L19.17 12H17v6h-2v-6H9v6H7v-6H4.83L12 4.83z"/></svg>',
+            
+            fog: '<svg class="w-8 h-8 icon-gray" viewBox="0 0 24 24" fill="currentColor"><path d="M19.36 6.04C18.67 2.59 15.64 0 12 0 9.11 0 6.6 1.64 5.35 4.04 2.34 4.36 0 6.91 0 10c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96zM6 18h12v-2H6v2zm0 4h12v-2H6v2z"/></svg>',
+            
+            hot: '<svg class="w-4 h-4 icon-hazard" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-3.31 0-6 2.69-6 6 0 2.61 1.67 4.83 4 5.66v5.84c-1.3-.84-2-2.34-2-4.09 0-2.54 1.93-4.64 4.4-4.9 1.62-.17 3.2.34 4.29 1.54 1.25 1.38 1.63 3.33 1.03 5.09-.34 1.01-.99 1.86-1.8 2.49v-5.97c2.33-.83 4-3.05 4-5.66 0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4 0 1.67-1.03 3.1-2.52 3.71l-.14.06-.14-.06C11.75 11.1 10.72 9.67 10.72 8c0-2.21 1.79-4 4-4z"/></svg>',
+            
+            cold: '<svg class="w-4 h-4 icon-cold" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm0 2.83L19.17 12H17v6h-2v-6H9v6H7v-6H4.83L12 4.83z"/></svg>',
+            
+            home: '<svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'
         };
 
         const weatherCodes = {
-            0: { label: 'Clear Sky', icon: icons.sun },
-            1: { label: 'Mainly Clear', icon: icons.sun },
-            2: { label: 'Partly Cloudy', icon: icons.cloud },
+            0: { label: 'Clear', icon: icons.sun },
+            1: { label: 'Sunny', icon: icons.sun },
+            2: { label: 'Partly Cloudy', icon: icons.partCloud },
             3: { label: 'Overcast', icon: icons.cloud },
-            45: { label: 'Fog', icon: icons.fog },
-            48: { label: 'Fog', icon: icons.fog },
+            45: { label: 'Foggy', icon: icons.fog },
+            48: { label: 'Foggy', icon: icons.fog },
             51: { label: 'Drizzle', icon: icons.rain },
             61: { label: 'Rain', icon: icons.rain },
             63: { label: 'Rain', icon: icons.rain },
@@ -289,7 +368,56 @@
             95: { label: 'Storm', icon: icons.rain }
         };
 
-        // --- APP LOGIC ---
+        // --- VISUALIZATION HELPERS ---
+        function getRainVisual(mm) {
+            let drops = 0;
+            let label = "Dry";
+            if(mm > 0.1 && mm < 2) { drops = 1; label = "Drizzle"; }
+            else if(mm >= 2 && mm < 10) { drops = 2; label = "Rain"; }
+            else if(mm >= 10) { drops = 3; label = "Heavy"; }
+            
+            let html = `<div class="flex flex-col items-center justify-center">`;
+            html += `<div class="flex gap-0.5 mb-1">`;
+            
+            for(let i=0; i<3; i++) {
+                if(i < drops) {
+                    html += `<svg class="w-3 h-3 drop-filled" viewBox="0 0 24 24"><path d="M12 22c4.97 0 9-4.03 9-9-9 0-9-9-9-9S3 13 3 13c0 4.97 4.03 9 9 9z"/></svg>`;
+                } else {
+                    html += `<svg class="w-3 h-3 drop-empty" viewBox="0 0 24 24"><path d="M12 22c4.97 0 9-4.03 9-9-9 0-9-9-9-9S3 13 3 13c0 4.97 4.03 9 9 9z"/></svg>`;
+                }
+            }
+            html += `</div>`;
+            html += `<span class="text-[9px] font-bold uppercase tracking-wide ${drops > 0 ? 'text-[#1967d2]' : 'text-gray-300'}">${label}</span>`;
+            if(mm > 0) html += `<span class="text-[9px] text-blue-400 font-medium">${mm}mm</span>`;
+            html += `</div>`;
+            return html;
+        }
+
+        // --- TIME FORMATTING (AM/PM) ---
+        function formatAMPM(dateStr) {
+            let [hours, mins] = dateStr.split(':');
+            hours = parseInt(hours);
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            return `${hours}:${mins} ${ampm}`;
+        }
+
+        function parseTime(timeStr) {
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function formatTimeFromMins(minutes) {
+            const h = Math.floor(minutes / 60);
+            const m = Math.round(minutes % 60);
+            const date = new Date();
+            date.setHours(h);
+            date.setMinutes(m);
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+
+        // --- MAP LOGIC ---
         let map;
         let markers = [];
         let currentRouteId = 'frances';
@@ -306,23 +434,7 @@
 
             changeRoute();
             
-            // PWA Logic
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js');
-            }
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                document.getElementById('installBanner').classList.remove('hidden');
-            });
-            document.getElementById('installBtn').addEventListener('click', async () => {
-                if(deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt = null;
-                    document.getElementById('installBanner').classList.add('hidden');
-                }
-            });
+            if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
         };
 
         function changeRoute() {
@@ -349,6 +461,7 @@
             document.getElementById('selectedLocationText').innerText = routeData.stages[0].start;
         }
 
+        // --- FORECAST LOGIC ---
         async function getForecast() {
             const btn = document.getElementById('getForecastBtn');
             const resultsDiv = document.getElementById('results');
@@ -363,29 +476,49 @@
             loading.classList.remove('hidden');
 
             try {
-                // Build Itinerary
+                // Build Itinerary (Rest Logic: Pure Distance Based)
                 const routeData = routes[currentRouteId];
-                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 12);
+                let rawStages = routeData.stages.slice(selectedStageIndex, selectedStageIndex + 10);
                 let itinerary = [];
                 let dayOffset = 0;
+                let kmSinceRest = 0;
 
                 for (let i = 0; i < rawStages.length; i++) {
                     if (itinerary.length >= 10) break;
+                    
+                    let stageDistVal = parseInt(rawStages[i].dist.replace('km',''));
+                    
+                    // Add Walk Day
                     itinerary.push({ type: 'walk', stage: rawStages[i], dayOffset: dayOffset++ });
-                    if (addRestDays && restCities.includes(rawStages[i].end) && i < rawStages.length - 1) {
+                    
+                    // Add Dist
+                    kmSinceRest += stageDistVal;
+
+                    // Rest Trigger: >135km walked
+                    if (addRestDays && kmSinceRest > 135 && i < rawStages.length - 1) {
                         itinerary.push({ type: 'rest', stage: rawStages[i], dayOffset: dayOffset++ });
+                        kmSinceRest = 0; // Reset
                     }
                 }
 
-                // Check Dates
                 const startObj = new Date(startDateStr);
                 const diffDays = Math.ceil((startObj - new Date()) / (1000 * 60 * 60 * 24));
                 const isHistorical = diffDays > 10;
                 
-                let summaryRainDays = 0;
-                let summaryTemps = [];
+                // Aggregators
+                let rainDayIndices = [];
+                let hotDayIndices = [];
+                let coldDayIndices = [];
+                let totalHigh = 0;
+                let minTemp = 100;
+                let maxTemp = -100;
+                let totalSunriseMins = 0;
+                let totalSunsetMins = 0;
+                let sunriseTemps = [];
+                let sunsetTemps = [];
+                let totalDaylightHrs = 0;
 
-                for (let item of itinerary) {
+                for (let [idx, item] of itinerary.entries()) {
                     const current = new Date(startDateStr);
                     current.setDate(current.getDate() + item.dayOffset);
                     let dateQuery = current.toISOString().split('T')[0];
@@ -394,10 +527,9 @@
                         dateQuery = h.toISOString().split('T')[0];
                     }
 
-                    // Fetch
                     const url = isHistorical 
-                         ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
-                        : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                         ? `https://archive-api.open-meteo.com/v1/archive?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&hourly=temperature_2m&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`
+                        : `https://api.open-meteo.com/v1/forecast?latitude=${item.stage.lat}&longitude=${item.stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&hourly=temperature_2m&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
                     
                     const res = await fetch(url);
                     const json = await res.json();
@@ -407,51 +539,150 @@
                         const code = d.weathercode[0];
                         const wInfo = weatherCodes[code] || { label: 'Unknown', icon: icons.cloud };
                         const rain = d.precipitation_sum[0];
-                        const max = d.temperature_2m_max[0];
-                        const min = d.temperature_2m_min[0];
-                        const isRest = item.type === 'rest';
+                        const max = Math.round(d.temperature_2m_max[0]);
+                        const min = Math.round(d.temperature_2m_min[0]);
+                        
+                        // Time & Daylight
+                        const sunriseIso = d.sunrise[0].split('T')[1];
+                        const sunsetIso = d.sunset[0].split('T')[1];
+                        const sunriseAMPM = formatAMPM(sunriseIso.slice(0,5));
+                        const sunsetAMPM = formatAMPM(sunsetIso.slice(0,5));
+                        
+                        const dlSeconds = d.daylight_duration[0];
+                        const dlHours = Math.floor(dlSeconds / 3600);
+                        const dlMins = Math.round((dlSeconds % 3600) / 60);
+                        totalDaylightHrs += dlSeconds / 3600;
 
-                        if(rain > 1.0) summaryRainDays++;
-                        summaryTemps.push(max);
+                        // Hourly Temp (Sunrise/Sunset)
+                        if(json.hourly && json.hourly.temperature_2m) {
+                            const sunriseHour = parseInt(sunriseIso.split(':')[0]);
+                            const sunsetHour = parseInt(sunsetIso.split(':')[0]);
+                            sunriseTemps.push(json.hourly.temperature_2m[sunriseHour]);
+                            sunsetTemps.push(json.hourly.temperature_2m[sunsetHour]);
+                        }
 
-                        const html = `
-                            <div class="flex flex-col md:flex-row gap-4 p-4 ${isRest ? 'bg-green-50 border-green-100' : 'bg-white border-gray-100'} rounded-xl border shadow-sm page-break-avoid">
-                                <div class="flex-1">
-                                    <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded text-gray-600">${current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                                    <h4 class="font-bold text-gray-800 mt-2 text-lg">
-                                        ${isRest ? `Relax in ${item.stage.end}` : `${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}`}
-                                    </h4>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        ${isRest ? 'Rest Day' : `${item.stage.dist} • 🌅 ${d.sunrise[0].split('T')[1]} • 🌇 ${d.sunset[0].split('T')[1]}`}
-                                    </p>
+                        // Collect Stats
+                        totalHigh += max;
+                        if(max > maxTemp) maxTemp = max;
+                        if(min < minTemp) minTemp = min;
+                        totalSunriseMins += parseTime(sunriseIso);
+                        totalSunsetMins += parseTime(sunsetIso);
+
+                        if(rain > 1.0) rainDayIndices.push(idx + 1);
+                        if(max >= 30) hotDayIndices.push(idx + 1);
+                        if(min <= 0) coldDayIndices.push(idx + 1);
+
+                        // Visuals
+                        const rainVisual = getRainVisual(rain);
+                        let hazardIcon = '';
+                        if(max >= 30) hazardIcon = icons.hot;
+                        else if(min <= 0) hazardIcon = icons.cold;
+
+                        let html = '';
+
+                        if (item.type === 'rest') {
+                            // --- REST CARD ---
+                            html = `
+                            <div class="flex gap-4 items-stretch h-24">
+                                <div class="flex flex-col items-center justify-center w-8 flex-shrink-0">
+                                    <div class="day-pill text-green-300">${idx + 1}</div>
+                                    <div class="timeline-line bg-green-100"></div>
                                 </div>
-                                <div class="text-right min-w-[100px] flex flex-col items-end">
-                                    ${wInfo.icon}
-                                    <div class="text-lg font-bold mt-1">
-                                        ${Math.round(max)}° <span class="text-gray-300">/</span> <span class="text-blue-500">${Math.round(min)}°</span>
+                                <div class="flex-1 card-rest p-4 flex flex-row items-center justify-between gap-4">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="text-[10px] font-bold text-green-600 bg-white border border-green-200 px-2 py-0.5 rounded uppercase tracking-wide">
+                                                ${current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                                            </span>
+                                        </div>
+                                        <h4 class="font-bold text-green-800 text-lg">Rest Day in ${item.stage.end}</h4>
+                                        <p class="text-[10px] text-green-600 font-medium">Recharge your batteries.</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">${wInfo.label}</p>
-                                    ${rain > 0 ? `<p class="text-xs text-blue-600 font-bold bg-blue-50 px-2 rounded-full mt-1">💧 ${rain}mm</p>` : ''}
+                                    <div class="w-12 h-12 flex items-center justify-center bg-white rounded-full border border-green-200 shadow-sm">
+                                        ${icons.home}
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
+                        } else {
+                            // --- WALKING CARD ---
+                            html = `
+                            <div class="flex gap-4 items-stretch h-32">
+                                <div class="flex flex-col items-center justify-center w-8 flex-shrink-0">
+                                    <div class="day-pill">${idx + 1}</div>
+                                    <div class="timeline-line"></div>
+                                </div>
+                                <div class="flex-1 card-flight p-4 flex flex-row items-center justify-between gap-4">
+                                    <div class="flex-1 min-w-0 flex flex-col justify-center h-full">
+                                        <div class="mb-1">
+                                            <span class="text-[10px] font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded border border-gray-200 uppercase tracking-wide">
+                                                ${current.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                                            </span>
+                                        </div>
+                                        <h4 class="font-bold text-gray-900 text-lg truncate mb-1">
+                                            ${item.stage.start} <span class="text-gray-300">→</span> ${item.stage.end}
+                                        </h4>
+                                        <div class="flex items-center gap-3 text-[10px] text-gray-500 font-medium mt-1">
+                                            <span class="font-bold text-gray-700 bg-gray-50 px-1.5 rounded border border-gray-100">${item.stage.dist}</span>
+                                            <span class="flex items-center gap-1"><svg class="w-3 h-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg> ${sunriseAMPM}</span>
+                                            <span class="flex items-center gap-1"><svg class="w-3 h-3 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg> ${sunsetAMPM}</span>
+                                            <span>${dlHours}h & ${dlMins}m Daylight</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-4 border-l border-gray-100 pl-4">
+                                        ${hazardIcon}
+                                        <div class="w-10 h-10 flex items-center justify-center">${wInfo.icon}</div>
+                                        <div class="text-right w-12">
+                                            <div class="text-xl font-bold text-gray-900 leading-none">${max}°</div>
+                                            <div class="text-[11px] font-bold text-blue-500 mt-1">${min}°</div>
+                                        </div>
+                                        <div class="w-14">${rainVisual}</div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }
                         resultsDiv.innerHTML += html;
                     }
                 }
 
-                // Summary
-                const avg = Math.round(summaryTemps.reduce((a,b)=>a+b,0)/summaryTemps.length);
-                let msg = `Average high: <b>${avg}°C</b>. `;
-                if (summaryRainDays === 0) msg += `<span class="text-green-600 font-bold">Looks dry! ☀️</span>`;
-                else msg += `<span class="text-blue-600 font-bold">Rain expected on ${summaryRainDays} days.</span>`;
+                // --- DASHBOARD LOGIC ---
+                const totalDays = itinerary.length;
+                const avgRise = formatTimeFromMins(totalSunriseMins / totalDays);
+                const avgSet = formatTimeFromMins(totalSunsetMins / totalDays);
+                const avgRiseTemp = Math.round(sunriseTemps.reduce((a,b)=>a+b,0) / sunriseTemps.length);
+                const avgSetTemp = Math.round(sunsetTemps.reduce((a,b)=>a+b,0) / sunsetTemps.length);
+                const avgDL = Math.round(totalDaylightHrs / totalDays);
+
+                document.getElementById('sumRainCount').innerText = `${rainDayIndices.length}/${totalDays}`;
+                if (rainDayIndices.length === 0) {
+                    document.getElementById('sumRainDays').innerText = "None";
+                    document.getElementById('sumRainDays').className = "text-[10px] text-green-600 font-bold mt-0.5";
+                } else {
+                    document.getElementById('sumRainDays').innerText = `Days: ${rainDayIndices.join(', ')}`;
+                    document.getElementById('sumRainDays').className = "text-[10px] text-blue-600 font-bold mt-0.5";
+                }
+
+                document.getElementById('sumAvgDaylight').innerText = avgDL;
+                document.getElementById('sumSunrise').innerText = avgRise;
+                document.getElementById('sumSunriseTemp').innerText = `${avgRiseTemp}°C`; 
+                document.getElementById('sumSunset').innerText = avgSet;
+                document.getElementById('sumSunsetTemp').innerText = `${avgSetTemp}°C`; 
+
+                let recsHTML = '';
+                if(rainDayIndices.length > 3) recsHTML += `<div class="flex items-center gap-2"><span class="text-blue-500 font-bold">Rainy:</span> Bring a poncho. Wet week ahead.</div>`;
+                else if(rainDayIndices.length > 0) recsHTML += `<div class="flex items-center gap-2"><span class="text-blue-400 font-bold">Showers:</span> Light shell recommended.</div>`;
                 
-                document.getElementById('summaryText').innerHTML = msg;
+                if(hotDayIndices.length > 0) recsHTML += `<div class="flex items-center gap-2"><span class="text-red-500 font-bold">Heat Alert:</span> Days ${hotDayIndices.join(', ')} above 30°C. Hydrate.</div>`;
+                if(coldDayIndices.length > 0) recsHTML += `<div class="flex items-center gap-2"><span class="text-blue-600 font-bold">Cold Alert:</span> Days ${coldDayIndices.join(', ')} freezing.</div>`;
+                
+                if(recsHTML === '') recsHTML = `<div class="flex items-center gap-2 text-green-600 font-bold">Conditions look great! Enjoy the walk.</div>`;
+                document.getElementById('sumRecs').innerHTML = recsHTML;
+                
                 summaryBox.classList.remove('hidden');
                 resultsDiv.scrollIntoView({ behavior: 'smooth' });
 
             } catch (e) {
                 console.error(e);
-                resultsDiv.innerHTML = `<div class="text-red-500 text-center font-bold">Error loading data.</div>`;
+                resultsDiv.innerHTML = `<div class="text-red-500 text-center font-bold py-10">Error loading weather data. Please try again.</div>`;
             } finally {
                 loading.classList.add('hidden');
                 btn.disabled = false;
