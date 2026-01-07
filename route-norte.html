@@ -10,11 +10,10 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <style>
         body { font-family: 'Google Sans', sans-serif; background-color: #ffffff; color: #202124; }
-        .risk-winter { display: none; } /* Default hidden */
+        .risk-winter { display: none; }
         .mode-winter .risk-winter { display: block; }
         .mode-winter .risk-summer { display: none; }
         
-        /* Custom scrollbar for table */
         .custom-scroll::-webkit-scrollbar { height: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
@@ -131,7 +130,7 @@
                         <tr>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-12">#</th>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase min-w-[140px]">Route</th>
-                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-24">Diff</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-24">Difficulty</th>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase min-w-[120px]">Seasonal Risk</th>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-24 text-center">Services</th>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase w-24 text-center">Bed Alert</th>
@@ -208,10 +207,7 @@
                     <tbody id="middle-stages" class="hidden bg-gray-50/30 divide-y divide-gray-100 text-sm">
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-4 font-bold text-gray-400">04</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Deba → Markina</div>
-                                <div class="text-xs text-gray-500 mt-0.5">24km • Inland Turn</div>
-                            </td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Deba → Markina</div><div class="text-xs text-gray-500 mt-0.5">24km</div></td>
                             <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
                             <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Steep Climb</span></td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
@@ -219,21 +215,23 @@
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-4 font-bold text-gray-400">05</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Markina → Gernika</div>
-                                <div class="text-xs text-gray-500 mt-0.5">25km • Forest</div>
-                            </td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Markina → Gernika</div><div class="text-xs text-gray-500 mt-0.5">25km</div></td>
                             <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
-                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Muddy Tracks</span></td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Muddy</span></td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">06</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Gernika → Lezama</div><div class="text-xs text-gray-500 mt-0.5">21km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Hills</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors border-t border-blue-100">
                             <td class="px-4 py-4 font-bold text-gray-400">07</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Lezama → Bilbao</div>
-                                <div class="text-xs text-gray-500 mt-0.5">12km • Short Day</div>
-                            </td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Lezama → Bilbao</div><div class="text-xs text-gray-500 mt-0.5">12km • City</div></td>
                             <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
                             <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Urban Heat</span></td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
@@ -241,61 +239,198 @@
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-4 font-bold text-gray-400">08</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Bilbao → Portugalete</div>
-                                <div class="text-xs text-gray-500 mt-0.5">20km • <span class="text-gray-400">Industrial</span></div>
-                            </td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Bilbao → Portugalete</div><div class="text-xs text-gray-500 mt-0.5">20km • <span class="text-gray-400">Ind.</span></div></td>
                             <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★☆☆☆☆</td>
-                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Tarmac Burn</span></td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Tarmac</span></td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-4 font-bold text-gray-400">12</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Castro Urdiales → Laredo</div>
-                                <div class="text-xs text-gray-500 mt-0.5">30km • Long</div>
-                            </td>
+                            <td class="px-4 py-4 font-bold text-gray-400">09</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Portugalete → Pobeña</div><div class="text-xs text-gray-500 mt-0.5">12km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Coastal</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">10</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Pobeña → Castro Urdiales</div><div class="text-xs text-gray-500 mt-0.5">23km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Exposed</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Book</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">11</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Castro → Laredo</div><div class="text-xs text-gray-500 mt-0.5">30km • Long</div></td>
                             <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
                             <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Open Sun</span></td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-4 font-bold text-gray-400">14</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Somo → Santander</div>
-                                <div class="text-xs text-gray-500 mt-0.5">5km • <span class="text-blue-500 font-bold">Ferry Ride</span></div>
-                            </td>
+                            <td class="px-4 py-4 font-bold text-gray-400">12</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Laredo → Güemes</div><div class="text-xs text-gray-500 mt-0.5">29km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Road</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Albergue</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">13</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Güemes → Santander</div><div class="text-xs text-gray-500 mt-0.5">15km • <span class="text-blue-500 font-bold">Ferry</span></div></td>
                             <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★☆☆☆☆</td>
-                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Tourist Crowds</span></td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Crowds</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">14</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Santander → Santillana</div><div class="text-xs text-gray-500 mt-0.5">37km • Long</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Pavement</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Book</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">15</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Santillana → Comillas</div><div class="text-xs text-gray-500 mt-0.5">22km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Rolling</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">16</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Comillas → Unquera</div><div class="text-xs text-gray-500 mt-0.5">28km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Hills</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">17</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Unquera → Llanes</div><div class="text-xs text-gray-500 mt-0.5">25km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Coastal</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Book</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">18</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Llanes → Ribadesella</div><div class="text-xs text-gray-500 mt-0.5">31km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Beach Walk</span></td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-4 font-bold text-gray-400">19</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Santillana → Comillas</div>
-                                <div class="text-xs text-gray-500 mt-0.5">22km • Rolling</div>
-                            </td>
-                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
-                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Rain Likely</span></td>
-                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
-                            <td class="px-4 py-4 text-center"><span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Book</span></td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Ribadesella → Sebrayo</div><div class="text-xs text-gray-500 mt-0.5">31km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Hilly</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
                         </tr>
-                        <tr class="hover:bg-gray-50 transition-colors border-t border-indigo-100">
-                            <td class="px-4 py-4 font-bold text-gray-400">25</td>
-                            <td class="px-4 py-4">
-                                <div class="font-bold text-gray-900">Tapia → Ribadeo</div>
-                                <div class="text-xs text-gray-500 mt-0.5">12km • Enter Galicia</div>
-                            </td>
-                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★☆☆☆☆</td>
-                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Bridge Wind</span></td>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">20</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Sebrayo → Gijón</div><div class="text-xs text-gray-500 mt-0.5">34km • Big City</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Climb</span></td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
                             <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">21</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Gijón → Avilés</div><div class="text-xs text-gray-500 mt-0.5">25km • <span class="text-gray-400">Industrial</span></div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Smog/Road</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">22</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Avilés → Muros de Nalón</div><div class="text-xs text-gray-500 mt-0.5">23km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Rolling</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">23</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Muros → Soto de Luiña</div><div class="text-xs text-gray-500 mt-0.5">16km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Forest</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">24</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Soto → Cadavedo</div><div class="text-xs text-gray-500 mt-0.5">19km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Road/Trail</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">25</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Cadavedo → Luarca</div><div class="text-xs text-gray-500 mt-0.5">16km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Seaside</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">26</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Luarca → La Caridad</div><div class="text-xs text-gray-500 mt-0.5">29km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Undulating</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">27</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">La Caridad → Ribadeo</div><div class="text-xs text-gray-500 mt-0.5">22km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Bridge</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">28</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Ribadeo → Lourenzá</div><div class="text-xs text-gray-500 mt-0.5">28km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Climb</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-4 font-bold text-gray-400">29</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Lourenzá → Abadín</div><div class="text-xs text-gray-500 mt-0.5">25km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★★★☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Mondoñedo</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">30</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Abadín → Vilalba</div><div class="text-xs text-gray-500 mt-0.5">20km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Flat</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">31</td>
+                            <td class="px-4 py-4"><div class="font-bold text-gray-900">Vilalba → Baamonde</div><div class="text-xs text-gray-500 mt-0.5">20km</div></td>
+                            <td class="px-4 py-4 text-xs text-yellow-500 tracking-tighter">★★☆☆☆</td>
+                            <td class="px-4 py-4"><span class="risk-summer text-xs text-gray-600">Forest</span></td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Med</td>
+                            <td class="px-4 py-4 text-center text-xs text-gray-400">Low</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 font-bold text-gray-400">32</td>
                             <td class="px-4 py-4">
                                 <div class="font-bold text-gray-900">Baamonde → Sobrado</div>
                                 <div class="text-xs text-gray-500 mt-0.5">41km • <span class="text-red-600 font-bold">The Monster</span></div>
@@ -306,7 +441,7 @@
                             <td class="px-4 py-4 text-center text-xs text-gray-400">High</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-4 font-bold text-gray-400">30</td>
+                            <td class="px-4 py-4 font-bold text-gray-400">33</td>
                             <td class="px-4 py-4">
                                 <div class="font-bold text-gray-900">Sobrado → Arzúa</div>
                                 <div class="text-xs text-gray-500 mt-0.5">22km • Join Francés</div>
@@ -320,7 +455,7 @@
 
                     <tbody class="divide-y divide-gray-100 text-sm border-t-2 border-gray-100">
                         <tr class="hover:bg-gray-50 transition-colors border-l-4 border-[#1967d2]">
-                            <td class="px-4 py-4 font-bold text-gray-400">32</td>
+                            <td class="px-4 py-4 font-bold text-gray-400">34</td>
                             <td class="px-4 py-4">
                                 <div class="font-bold text-[#1967d2]">O Pedrouzo → Santiago</div>
                                 <div class="text-xs text-gray-500 mt-0.5">20km • <span class="text-green-600 font-bold">Victory</span></div>
@@ -341,10 +476,9 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
                 
-                <div class="border border-gray-200 rounded-xl p-5 hover:border-[#1967d2] hover:shadow-md transition-all bg-white group cursor-pointer">
+                <div class="border border-gray-200 rounded-xl p-5 bg-white">
                     <div class="flex justify-between items-start mb-2">
                         <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Most Popular</span>
-                        <svg class="w-5 h-5 text-gray-400 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 mb-1">San Sebastián</h3>
                     <p class="text-xs text-gray-500 mb-4">~808 km to Santiago</p>
@@ -354,10 +488,9 @@
                     </div>
                 </div>
 
-                <div class="border border-gray-200 rounded-xl p-5 hover:border-[#1967d2] hover:shadow-md transition-all bg-white group cursor-pointer">
+                <div class="border border-gray-200 rounded-xl p-5 bg-white">
                     <div class="flex justify-between items-start mb-2">
                         <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Major Hub</span>
-                        <svg class="w-5 h-5 text-gray-400 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 mb-1">Bilbao</h3>
                     <p class="text-xs text-gray-500 mb-4">~705 km to Santiago</p>
@@ -367,10 +500,9 @@
                     </div>
                 </div>
 
-                <div class="border border-gray-200 rounded-xl p-5 hover:border-[#1967d2] hover:shadow-md transition-all bg-white group cursor-pointer">
+                <div class="border border-gray-200 rounded-xl p-5 bg-white">
                     <div class="flex justify-between items-start mb-2">
                         <span class="bg-orange-100 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Halfway</span>
-                        <svg class="w-5 h-5 text-gray-400 group-hover:text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 mb-1">Santander</h3>
                     <p class="text-xs text-gray-500 mb-4">~595 km to Santiago</p>
@@ -386,7 +518,7 @@
                     <thead class="bg-gray-50 border-b border-gray-100">
                         <tr>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">City / Stop</th>
-                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Dist Left</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Distance Left</th>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Airport</th>
                             <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Commute</th>
                         </tr>
