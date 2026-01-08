@@ -1,9 +1,14 @@
-const CACHE_NAME = 'camino-v1';
+const CACHE_NAME = 'camino-v2'; // Bumped version number
 const urlsToCache = [
   './',
   './index.html',
-  './weather.html',
-  './manifest.json'
+  './manifest.json',
+  './camino-master-data.js',       // The new brain
+  './daily-check/daily-weather-page.html', // The new page
+  './daily-check/daily-widget.js',     // The new logic
+  'https://cdn.tailwindcss.com',   // External lib
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
 ];
 
 self.addEventListener('install', event => {
