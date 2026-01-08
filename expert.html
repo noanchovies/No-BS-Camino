@@ -11,51 +11,20 @@
     
     <style>
         body { font-family: 'Google Sans', sans-serif; background-color: #f0f2f5; color: #202124; }
-        
-        /* High Contrast Card */
-        .card-tactical { 
-            background-color: white; 
-            border: 1px solid #dadce0; 
-            border-radius: 16px; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-        
-        /* Status Bar Pill */
-        .status-pill {
-            background: #e8f0fe;
-            color: #1967d2;
-            border: 1px solid #d2e3fc;
-            padding: 4px 12px;
-            border-radius: 99px;
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
+        .card-tactical { background-color: white; border: 1px solid #dadce0; border-radius: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); overflow: hidden; }
+        .status-pill { background: #e8f0fe; color: #1967d2; border: 1px solid #d2e3fc; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
         #map { height: 250px; width: 100%; z-index: 1; border-bottom: 1px solid #eee; } 
-        
-        /* Chart Styles */
         .chart-container { position: relative; height: 160px; width: 100%; margin-top: 10px; }
         .chart-label { font-size: 10px; fill: #5f6368; font-weight: 600; text-anchor: middle; }
         .temp-label { font-size: 11px; fill: #202124; font-weight: 700; text-anchor: middle; }
-
-        /* Icon Colors */
-        .icon-sun { color: #fdb813; }
-        .icon-rain { color: #1967d2; }
-        .icon-gray { color: #5f6368; }
-        .icon-hazard { color: #d93025; }
-        .icon-cold { color: #1a73e8; }
+        /* Icons */
+        .icon-sun { color: #fdb813; } .icon-rain { color: #1967d2; } .icon-gray { color: #5f6368; }
     </style>
 </head>
 <body class="antialiased pb-24">
 
     <div id="installBanner" class="hidden bg-[#1967d2] text-white px-4 py-3 shadow-md flex justify-between items-center sticky top-0 z-[60]">
-        <div class="flex items-center gap-3">
-            <span class="font-bold text-sm">Get the App</span>
-        </div>
+        <div class="flex items-center gap-3"><span class="font-bold text-sm">Get the App</span></div>
         <button id="installBtn" class="bg-white text-[#1967d2] px-3 py-1 rounded-full text-xs font-bold">Install</button>
     </div>
 
@@ -79,23 +48,11 @@
         
         <div class="text-center mb-6">
             <h1 class="text-2xl font-bold text-gray-900 tracking-tight mb-2">Trail Companion</h1>
-            <p class="text-gray-500 text-xs mb-6 px-4">Hourly precision for the next 3 days. Find the best walking window.</p>
-            
+            <p class="text-gray-500 text-xs mb-6 px-4">Hourly precision + safety logic for the next 3 days.</p>
             <div class="flex justify-center gap-8 text-center mb-4">
-                <div class="flex flex-col items-center">
-                    <div class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-[#1967d2] mb-1 shadow-sm font-bold text-xs">1</div>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase">Select Route</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-[#1967d2] mb-1 shadow-sm font-bold text-xs">2</div>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase">Pin Location</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-[#1967d2] mb-1 shadow-sm">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase">Get Intel</span>
-                </div>
+                <div class="flex flex-col items-center"><div class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-[#1967d2] mb-1 shadow-sm font-bold text-xs">1</div><span class="text-[10px] font-bold text-gray-400 uppercase">Route</span></div>
+                <div class="flex flex-col items-center"><div class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-[#1967d2] mb-1 shadow-sm font-bold text-xs">2</div><span class="text-[10px] font-bold text-gray-400 uppercase">Pin</span></div>
+                <div class="flex flex-col items-center"><div class="w-8 h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center text-[#1967d2] mb-1 shadow-sm"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div><span class="text-[10px] font-bold text-gray-400 uppercase">Intel</span></div>
             </div>
         </div>
 
@@ -105,7 +62,10 @@
                 <option value="frances">Camino Francés</option>
                 <option value="norte">Camino del Norte</option>
                 <option value="plata">Via de la Plata</option>
-                <option value="lusitana">Via Lusitana</option>
+                <option value="lusitana">Via Lusitana (Central)</option>
+                <option value="coastal">Portuguese Coastal</option>
+                <option value="primitivo">Camino Primitivo</option>
+                <option value="invierno">Camino de Invierno</option>
             </select>
             
             <div class="relative rounded-xl overflow-hidden border border-gray-200 h-40">
@@ -123,7 +83,7 @@
 
         <div id="loading" class="hidden text-center py-10">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
-            <p class="text-xs text-gray-400 mt-3 font-medium">Analyzing hourly patterns...</p>
+            <p class="text-xs text-gray-400 mt-3 font-medium">Reading Satellite Data...</p>
         </div>
         
         <div id="results" class="space-y-6 pb-20"></div>
@@ -133,160 +93,216 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
     <script>
+        // --- FULL DATASET (UPDATED) ---
+        const routes = {
+            frances: {
+                name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
+                stages: [
+                    { start: "St-Jean", end: "Roncesvalles", dist: "24.2 km", lat: 43.05, lon: -1.27, water: 12, bailout: "Low", sRisk: "High UV/Exposure", wRisk: "Closed / Snow" },
+                    { start: "Roncesvalles", end: "Zubiri", dist: "22 km", lat: 42.96, lon: -1.45, water: 5, bailout: "Med", sRisk: "Heat in valley", wRisk: "Mud / Ice" },
+                    { start: "Zubiri", end: "Pamplona", dist: "19.8 km", lat: 42.86, lon: -1.58, water: 5, bailout: "Med", sRisk: "Urban heat (PM)", wRisk: "River flooding" },
+                    { start: "Pamplona", end: "Puente la Reina", dist: "24.3 km", lat: 42.74, lon: -1.74, water: 8, bailout: "High", sRisk: "Alto del Perdón (sun)", wRisk: "Windy on ridge" },
+                    { start: "Puente la Reina", end: "Estella", dist: "23.3 km", lat: 42.67, lon: -1.92, water: 5, bailout: "Med", sRisk: "Dry heat", wRisk: "Clay mud" },
+                    { start: "Estella", end: "Torres del Río", dist: "29 km", lat: 42.58, lon: -2.18, water: 5, bailout: "Med", sRisk: "Long exposed stretches", wRisk: "Cold mornings" },
+                    { start: "Torres del Río", end: "Logroño", dist: "21.1 km", lat: 42.49, lon: -2.35, water: 5, bailout: "Med", sRisk: "Urban heat", wRisk: "Cold wind" },
+                    { start: "Logroño", end: "Nájera", dist: "30.1 km", lat: 42.43, lon: -2.62, water: 5, bailout: "Med", sRisk: "Very High Heat", wRisk: "Cold winds" },
+                    { start: "Nájera", end: "Grañón", dist: "28.8 km", lat: 42.40, lon: -2.91, water: 5, bailout: "Med", sRisk: "Exposed fields", wRisk: "Snow possible" },
+                    { start: "Grañón", end: "Belorado", dist: "17 km", lat: 42.41, lon: -3.10, water: 5, bailout: "Med", sRisk: "Easy day", wRisk: "Cold / Ice" },
+                    { start: "Belorado", end: "San Juan de Ortega", dist: "24.8 km", lat: 42.39, lon: -3.34, water: 5, bailout: "Med", sRisk: "Sun in Montes de Oca", wRisk: "Snow Risk" },
+                    { start: "San Juan de Ortega", end: "Burgos", dist: "30.4 km", lat: 42.36, lon: -3.58, water: 10, bailout: "Med", sRisk: "Urban asphalt heat", wRisk: "Cold/Wind" },
+                    { start: "Burgos", end: "Hontanas", dist: "29.8 km", lat: 42.33, lon: -3.92, water: 10, bailout: "Med", sRisk: "Meseta Heat", wRisk: "Freezing wind" },
+                    { start: "Hontanas", end: "Ermita San Nicolás", dist: "18.7 km", lat: 42.31, lon: -4.13, water: 10, bailout: "Med", sRisk: "No Shade", wRisk: "Muddy tracks" },
+                    { start: "Ermita San Nicolás", end: "Villalcázar", dist: "29.9 km", lat: 42.31, lon: -4.43, water: 10, bailout: "Med", sRisk: "Meseta Heat", wRisk: "Exposed wind" },
+                    { start: "Villalcázar", end: "Calzadilla Cueza", dist: "23.3 km", lat: 42.35, lon: -4.71, water: 17, bailout: "Low", sRisk: "The 17km Gap", wRisk: "Harsh winds" },
+                    { start: "Calzadilla Cueza", end: "Sahagún", dist: "24.8 km", lat: 42.37, lon: -4.95, water: 10, bailout: "Med", sRisk: "Heat", wRisk: "Ice" },
+                    { start: "Sahagún", end: "Reliegos", dist: "31.1 km", lat: 42.47, lon: -5.25, water: 10, bailout: "Med", sRisk: "Long/Flat/Boring", wRisk: "Cold plateau" },
+                    { start: "Reliegos", end: "León", dist: "29.9 km", lat: 42.55, lon: -5.48, water: 10, bailout: "Med", sRisk: "Urban heat", wRisk: "Cold" },
+                    { start: "León", end: "Hospital de Órbigo", dist: "32 km", lat: 42.53, lon: -5.84, water: 5, bailout: "Med", sRisk: "Roadside heat", wRisk: "Traffic spray" },
+                    { start: "Hospital de Órbigo", end: "Sta. Catalina", dist: "26.5 km", lat: 42.48, lon: -6.11, water: 5, bailout: "Med", sRisk: "Gradual ascent heat", wRisk: "Cold nights" },
+                    { start: "Sta. Catalina", end: "El Acebo", dist: "33.9 km", lat: 42.50, lon: -6.38, water: 5, bailout: "Med", sRisk: "Mountain Sun", wRisk: "Heavy Snow" },
+                    { start: "El Acebo", end: "Ponferrada", dist: "18.1 km", lat: 42.53, lon: -6.55, water: 5, bailout: "Med", sRisk: "Knee stress (descent)", wRisk: "Ice on rocks" },
+                    { start: "Ponferrada", end: "Villafranca", dist: "25.5 km", lat: 42.58, lon: -6.74, water: 5, bailout: "Med", sRisk: "Vineyard heat", wRisk: "Damp" },
+                    { start: "Villafranca", end: "O Cebreiro", dist: "27.5 km", lat: 42.70, lon: -7.05, water: 8, bailout: "Low", sRisk: "Hard Climb", wRisk: "Snow/Blizzard" },
+                    { start: "O Cebreiro", end: "Triacastela", dist: "21.5 km", lat: 42.73, lon: -7.18, water: 5, bailout: "Med", sRisk: "Ridge sun", wRisk: "Ice/Wind" },
+                    { start: "Triacastela", end: "Barbadelo", dist: "23.7 km", lat: 42.77, lon: -7.38, water: 5, bailout: "Med", sRisk: "Humid heat", wRisk: "Muddy paths" },
+                    { start: "Barbadelo", end: "Gonzar", dist: "26.2 km", lat: 42.82, lon: -7.58, water: 5, bailout: "Med", sRisk: "Humid", wRisk: "Mud" },
+                    { start: "Gonzar", end: "Melide", dist: "31.4 km", lat: 42.88, lon: -7.88, water: 5, bailout: "Med", sRisk: "Long day", wRisk: "Mud" },
+                    { start: "Melide", end: "Santa Irene", dist: "30.7 km", lat: 42.92, lon: -8.22, water: 5, bailout: "Med", sRisk: "Eucalpytus shade", wRisk: "Mud" },
+                    { start: "Santa Irene", end: "Santiago", dist: "25.3 km", lat: 42.90, lon: -8.45, water: 5, bailout: "Med", sRisk: "Emotional fatigue", wRisk: "Rain" }
+                ]
+            },
+            norte: {
+                name: "Camino del Norte", center: [43.4, -4.0], zoom: 7,
+                stages: [
+                    { start: "Bayonne", end: "St-Jean-de-Luz", dist: "26 km", lat: 43.43, lon: -1.55, water: 5, bailout: "Med", sRisk: "High humidity", wRisk: "Rain/Wind" },
+                    { start: "St-Jean-de-Luz", end: "Irún", dist: "15.9 km", lat: 43.36, lon: -1.73, water: 5, bailout: "Med", sRisk: "Traffic on road", wRisk: "Slippery cliff path" },
+                    { start: "Irún", end: "San Sebastián", dist: "24.5 km", lat: 43.32, lon: -1.90, water: 12, bailout: "Low", sRisk: "Heat on Jaizkibel", wRisk: "Mud on descent" },
+                    { start: "San Sebastián", end: "Zarautz", dist: "22.3 km", lat: 43.29, lon: -2.10, water: 5, bailout: "Med", sRisk: "No shade on climb", wRisk: "Slippery stones" },
+                    { start: "Zarautz", end: "Deba", dist: "26 km", lat: 43.29, lon: -2.30, water: 5, bailout: "Med", sRisk: "Exposed vineyards", wRisk: "Heavy Mud" },
+                    { start: "Deba", end: "Markina-Xemein", dist: "25 km", lat: 43.27, lon: -2.45, water: 5, bailout: "Med", sRisk: "Heat in hills", wRisk: "Deep Mud" },
+                    { start: "Markina-Xemein", end: "Gernika", dist: "26.5 km", lat: 43.28, lon: -2.60, water: 5, bailout: "Med", sRisk: "Humid forest", wRisk: "Slippery clay" },
+                    { start: "Gernika", end: "Lezama", dist: "20 km", lat: 43.28, lon: -2.75, water: 5, bailout: "Med", sRisk: "Asphalt heat", wRisk: "Muddy tracks" },
+                    { start: "Lezama", end: "Bilbao", dist: "11.5 km", lat: 43.26, lon: -2.90, water: 5, bailout: "Med", sRisk: "Urban heat island", wRisk: "Wet cobbles" },
+                    { start: "Bilbao", end: "Portugalete", dist: "19 km", lat: 43.30, lon: -3.00, water: 5, bailout: "Med", sRisk: "Industrial pollution", wRisk: "River damp" },
+                    { start: "Portugalete", end: "Castro-Urdiales", dist: "25.7 km", lat: 43.35, lon: -3.15, water: 5, bailout: "Med", sRisk: "Road walking heat", wRisk: "Rain exposure" },
+                    { start: "Castro-Urdiales", end: "Liendo", dist: "20 km", lat: 43.38, lon: -3.30, water: 5, bailout: "Med", sRisk: "Highway noise", wRisk: "Mud" },
+                    { start: "Liendo", end: "Santoña", dist: "12.5 km", lat: 43.43, lon: -3.45, water: 5, bailout: "Med", sRisk: "Ferry timing risk", wRisk: "Ferry closed" },
+                    { start: "Santoña", end: "Güemes", dist: "20.6 km", lat: 43.45, lon: -3.55, water: 5, bailout: "Med", sRisk: "No shade (beach)", wRisk: "Cold wind" },
+                    { start: "Güemes", end: "Santander", dist: "11 km", lat: 43.44, lon: -3.75, water: 5, bailout: "Med", sRisk: "Boat schedule", wRisk: "Rain" },
+                    { start: "Santander", end: "Mogro", dist: "24 km", lat: 43.43, lon: -3.90, water: 5, bailout: "Med", sRisk: "Confusing exit", wRisk: "Industrial mud" },
+                    { start: "Mogro", end: "Santillana del Mar", dist: "21 km", lat: 43.40, lon: -4.05, water: 5, bailout: "Med", sRisk: "Asphalt heat", wRisk: "Slippery pipes" },
+                    { start: "Santillana del Mar", end: "Comillas", dist: "22.7 km", lat: 43.39, lon: -4.20, water: 5, bailout: "Med", sRisk: "Road traffic", wRisk: "Wind" },
+                    { start: "Comillas", end: "Serdio", dist: "18.5 km", lat: 43.37, lon: -4.40, water: 5, bailout: "Med", sRisk: "Exposed road", wRisk: "Mud" },
+                    { start: "Serdio", end: "Llanes", dist: "33.7 km", lat: 43.40, lon: -4.60, water: 5, bailout: "Med", sRisk: "Long distance", wRisk: "Rain/Wind" },
+                    { start: "Llanes", end: "Nueva", dist: "18 km", lat: 43.42, lon: -4.85, water: 5, bailout: "Med", sRisk: "Busy roads", wRisk: "Mud paths" },
+                    { start: "Nueva", end: "Ribadesella", dist: "13.5 km", lat: 43.45, lon: -5.00, water: 5, bailout: "Med", sRisk: "Beach heat", wRisk: "Damp" },
+                    { start: "Ribadesella", end: "La Isla", dist: "18 km", lat: 43.48, lon: -5.15, water: 5, bailout: "Med", sRisk: "Steep ups/downs", wRisk: "Slippery grass" },
+                    { start: "La Isla", end: "Villaviciosa", dist: "21.8 km", lat: 43.50, lon: -5.35, water: 5, bailout: "Med", sRisk: "Eucalyptus heat", wRisk: "Heavy Mud" },
+                    { start: "Villaviciosa", end: "Gijón", dist: "30 km", lat: 43.52, lon: -5.55, water: 5, bailout: "Med", sRisk: "Alto de la Cruz", wRisk: "Snow (rare)" },
+                    { start: "Gijón", end: "Avilés", dist: "25 km", lat: 43.55, lon: -5.80, water: 5, bailout: "Med", sRisk: "Industrial smog", wRisk: "Cold rain" },
+                    { start: "Avilés", end: "Muros de Nalón", dist: "23.5 km", lat: 43.55, lon: -6.05, water: 5, bailout: "Med", sRisk: "Suburban tarmac", wRisk: "Mud" },
+                    { start: "Muros de Nalón", end: "Soto de Luiña", dist: "15.5 km", lat: 43.56, lon: -6.20, water: 5, bailout: "Med", sRisk: "Humid woods", wRisk: "Slippery stone" },
+                    { start: "Soto de Luiña", end: "Cadavedo", dist: "18.4 km", lat: 43.55, lon: -6.35, water: 5, bailout: "Med", sRisk: "Ballotas (steep)", wRisk: "Landslides" },
+                    { start: "Cadavedo", end: "Luarca", dist: "16.6 km", lat: 43.54, lon: -6.50, water: 5, bailout: "Med", sRisk: "Road exposure", wRisk: "Rain" },
+                    { start: "Luarca", end: "La Caridad", dist: "32 km", lat: 43.54, lon: -6.70, water: 5, bailout: "Med", sRisk: "Long/Exposed", wRisk: "Wind/Rain" },
+                    { start: "La Caridad", end: "Ribadeo", dist: "22 km", lat: 43.54, lon: -6.95, water: 5, bailout: "Med", sRisk: "Bridge wind", wRisk: "Cold damp" },
+                    { start: "Ribadeo", end: "Lourenzá", dist: "27.8 km", lat: 43.45, lon: -7.20, water: 5, bailout: "Med", sRisk: "Inland heat shift", wRisk: "Fog" },
+                    { start: "Lourenzá", end: "Abadín", dist: "27 km", lat: 43.35, lon: -7.40, water: 5, bailout: "Med", sRisk: "Mondoñedo climb", wRisk: "Fog/Cold" },
+                    { start: "Abadín", end: "Vilalba", dist: "20 km", lat: 43.30, lon: -7.60, water: 5, bailout: "Med", sRisk: "Flat/Boring", wRisk: "Cold winds" },
+                    { start: "Vilalba", end: "Baamonde", dist: "20.6 km", lat: 43.20, lon: -7.70, water: 5, bailout: "Med", sRisk: "Roadside heat", wRisk: "Mud" },
+                    { start: "Baamonde", end: "Sobrado", dist: "40.3 km", lat: 43.10, lon: -7.90, water: 15, bailout: "Low", sRisk: "EXTREME DISTANCE", wRisk: "Snow/Ice" },
+                    { start: "Sobrado", end: "O Pedrouzo", dist: "37.7 km", lat: 42.95, lon: -8.30, water: 5, bailout: "Med", sRisk: "Long distance", wRisk: "Mud" },
+                    { start: "O Pedrouzo", end: "Santiago", dist: "20.1 km", lat: 42.90, lon: -8.50, water: 5, bailout: "Med", sRisk: "Crowds/Sun", wRisk: "Rain" }
+                ]
+            },
+            plata: {
+                name: "Vía de la Plata", center: [39.5, -6.0], zoom: 6,
+                stages: [
+                    { start: "Sevilla", end: "Guillena", dist: "22.6 km", lat: 37.47, lon: -6.02, water: 5, bailout: "Med", sRisk: "Extreme Heat", wRisk: "Mud (industrial)" },
+                    { start: "Guillena", end: "Castilblanco", dist: "18 km", lat: 37.60, lon: -6.01, water: 5, bailout: "Med", sRisk: "No Shade / Heat", wRisk: "Road walking" },
+                    { start: "Castilblanco", end: "Almadén", dist: "29.5 km", lat: 37.78, lon: -6.00, water: 20, bailout: "Zero", sRisk: "Park Restriction", wRisk: "Muddy trails" },
+                    { start: "Almadén", end: "El Real", dist: "15.4 km", lat: 37.90, lon: -6.10, water: 5, bailout: "Med", sRisk: "Heat", wRisk: "Rain" },
+                    { start: "El Real", end: "Monesterio", dist: "19.8 km", lat: 38.02, lon: -6.20, water: 5, bailout: "Med", sRisk: "Dry Heat", wRisk: "Cold wind" },
+                    { start: "Monesterio", end: "F. de Cantos", dist: "21.6 km", lat: 38.16, lon: -6.25, water: 5, bailout: "Med", sRisk: "Exposed fields", wRisk: "Wind" },
+                    { start: "F. de Cantos", end: "Zafra", dist: "25.1 km", lat: 38.32, lon: -6.35, water: 5, bailout: "Med", sRisk: "No Shade", wRisk: "Mud" },
+                    { start: "Zafra", end: "Villafranca", dist: "18.9 km", lat: 38.48, lon: -6.38, water: 5, bailout: "Med", sRisk: "Dust/Heat", wRisk: "Muddy vines" },
+                    { start: "Villafranca", end: "Torremejía", dist: "27.4 km", lat: 38.68, lon: -6.38, water: 27, bailout: "High", sRisk: "Zero Shade", wRisk: "Wind" },
+                    { start: "Torremejía", end: "Mérida", dist: "15.6 km", lat: 38.85, lon: -6.35, water: 5, bailout: "Med", sRisk: "River heat", wRisk: "Rain" },
+                    { start: "Mérida", end: "Aljucén", dist: "15.9 km", lat: 39.00, lon: -6.35, water: 5, bailout: "Med", sRisk: "Easy day", wRisk: "Mud" },
+                    { start: "Aljucén", end: "Alcuéscar", dist: "20.1 km", lat: 39.10, lon: -6.25, water: 5, bailout: "Med", sRisk: "Park heat", wRisk: "Mud" },
+                    { start: "Alcuéscar", end: "Valdesalor", dist: "25.7 km", lat: 39.25, lon: -6.25, water: 5, bailout: "Med", sRisk: "Exposed", wRisk: "Wind" },
+                    { start: "Valdesalor", end: "Casar", dist: "21.8 km", lat: 39.40, lon: -6.35, water: 5, bailout: "Med", sRisk: "City transit", wRisk: "City transit" },
+                    { start: "Casar", end: "Cañaveral", dist: "33 km", lat: 39.65, lon: -6.40, water: 5, bailout: "Med", sRisk: "No Water/Shade", wRisk: "Mud" },
+                    { start: "Cañaveral", end: "Galisteo", dist: "29.3 km", lat: 39.88, lon: -6.38, water: 5, bailout: "Med", sRisk: "Road heat", wRisk: "Wind" },
+                    { start: "Galisteo", end: "Carcaboso", dist: "11.5 km", lat: 40.00, lon: -6.30, water: 5, bailout: "Med", sRisk: "Short day", wRisk: "Rain" },
+                    { start: "Carcaboso", end: "Cáparra", dist: "40 km", lat: 40.11, lon: -6.15, water: 30, bailout: "Zero", sRisk: "Dangerous Heat", wRisk: "Boggy" },
+                    { start: "Cáparra", end: "Calzada", dist: "22.5 km", lat: 40.25, lon: -5.95, water: 5, bailout: "Med", sRisk: "Ascent heat", wRisk: "Cold" },
+                    { start: "Calzada", end: "Fuenterroble", dist: "20.3 km", lat: 40.45, lon: -5.85, water: 5, bailout: "Med", sRisk: "Plateau sun", wRisk: "Snow/Ice" },
+                    { start: "Fuenterroble", end: "San Pedro", dist: "29.9 km", lat: 40.65, lon: -5.75, water: 5, bailout: "Med", sRisk: "Pico Dueñas Sun", wRisk: "Snow" },
+                    { start: "San Pedro", end: "Salamanca", dist: "23.1 km", lat: 40.85, lon: -5.70, water: 5, bailout: "Med", sRisk: "No shade", wRisk: "Cold wind" },
+                    { start: "Salamanca", end: "Valdunciel", dist: "15 km", lat: 41.05, lon: -5.65, water: 5, bailout: "Med", sRisk: "Easy exit", wRisk: "Cold" },
+                    { start: "Valdunciel", end: "El Cubo", dist: "20 km", lat: 41.15, lon: -5.68, water: 5, bailout: "Med", sRisk: "Boring/Flat", wRisk: "Wind" },
+                    { start: "El Cubo", end: "Zamora", dist: "31.7 km", lat: 41.35, lon: -5.75, water: 5, bailout: "Med", sRisk: "Heat Exhaustion", wRisk: "Cold" },
+                    { start: "Zamora", end: "Montamarta", dist: "18.3 km", lat: 41.58, lon: -5.80, water: 5, bailout: "Med", sRisk: "Highway noise", wRisk: "Mud" },
+                    { start: "Montamarta", end: "Granja", dist: "22.5 km", lat: 41.75, lon: -5.78, water: 5, bailout: "Med", sRisk: "Exposed", wRisk: "Mud (Reserva)" },
+                    { start: "Granja", end: "Tábara", dist: "25.6 km", lat: 41.85, lon: -5.95, water: 5, bailout: "Med", sRisk: "Scrubland heat", wRisk: "Cold" },
+                    { start: "Tábara", end: "Santa Marta", dist: "22.8 km", lat: 41.95, lon: -6.05, water: 5, bailout: "Med", sRisk: "River Tera heat", wRisk: "Cold" },
+                    { start: "Santa Marta", end: "Mombuey", dist: "35.2 km", lat: 42.05, lon: -6.20, water: 5, bailout: "Med", sRisk: "Long/Exposed", wRisk: "Cold" },
+                    { start: "Mombuey", end: "Puebla", dist: "31.8 km", lat: 42.08, lon: -6.50, water: 5, bailout: "Med", sRisk: "Forest Fire risk", wRisk: "Snow" },
+                    { start: "Puebla", end: "Lubián", dist: "29.5 km", lat: 42.05, lon: -6.85, water: 5, bailout: "Med", sRisk: "Mountain Sun", wRisk: "Snow/Ice" },
+                    { start: "Lubián", end: "A Gudiña", dist: "25.7 km", lat: 42.06, lon: -7.10, water: 5, bailout: "Med", sRisk: "Padornelo Pass", wRisk: "Closed Pass" },
+                    { start: "A Gudiña", end: "Laza", dist: "35 km", lat: 42.05, lon: -7.40, water: 20, bailout: "Low", sRisk: "Heat/Remote", wRisk: "Ice" },
+                    { start: "Laza", end: "Xunqueira", dist: "33 km", lat: 42.15, lon: -7.60, water: 5, bailout: "Med", sRisk: "Alberguería climb", wRisk: "Mud" },
+                    { start: "Xunqueira", end: "Ourense", dist: "22.5 km", lat: 42.25, lon: -7.80, water: 5, bailout: "Med", sRisk: "Ind. zone heat", wRisk: "Rain" },
+                    { start: "Ourense", end: "Cea", dist: "22.5 km", lat: 42.38, lon: -7.98, water: 5, bailout: "Med", sRisk: "The Oven", wRisk: "Rain" },
+                    { start: "Cea", end: "Castro Dozón", dist: "19.5 km", lat: 42.50, lon: -8.02, water: 5, bailout: "Med", sRisk: "Monastery detour", wRisk: "Rain" },
+                    { start: "Castro", end: "Silleda", dist: "28 km", lat: 42.65, lon: -8.15, water: 5, bailout: "Med", sRisk: "Rolling hills", wRisk: "Rain/Mud" },
+                    { start: "Silleda", end: "Ponte Ulla", dist: "19.6 km", lat: 42.78, lon: -8.35, water: 5, bailout: "Med", sRisk: "Descent", wRisk: "Rain" },
+                    { start: "Ponte Ulla", end: "Santiago", dist: "20.5 km", lat: 42.82, lon: -8.50, water: 5, bailout: "Med", sRisk: "Final climb", wRisk: "Rain" }
+                ]
+            },
+            lusitana: {
+                name: "Via Lusitana", center: [40.5, -8.5], zoom: 7,
+                stages: [
+                    { start: "Lisboa", end: "Alverca", dist: "31 km", lat: 38.80, lon: -9.05, water: 5, bailout: "Med", sRisk: "Urban heat/Smog", wRisk: "Rain puddles" },
+                    { start: "Alverca", end: "Azambuja", dist: "32 km", lat: 39.00, lon: -8.90, water: 5, bailout: "Med", sRisk: "No Shade", wRisk: "Muddy paths" },
+                    { start: "Azambuja", end: "Santarém", dist: "35 km", lat: 39.15, lon: -8.75, water: 5, bailout: "Med", sRisk: "Heat/Dust", wRisk: "Flooding" },
+                    { start: "Santarém", end: "Arneiro", dist: "27 km", lat: 39.30, lon: -8.70, water: 5, bailout: "Med", sRisk: "Exposed olive trees", wRisk: "Mud" },
+                    { start: "Arneiro", end: "Minde", dist: "20 km", lat: 39.45, lon: -8.65, water: 5, bailout: "Med", sRisk: "Limestone glare", wRisk: "Slippery stone" },
+                    { start: "Minde", end: "Fátima", dist: "25 km", lat: 39.55, lon: -8.65, water: 5, bailout: "Med", sRisk: "Steep climb", wRisk: "Fog/Cold" },
+                    { start: "Fátima", end: "Caxarias", dist: "26 km", lat: 39.70, lon: -8.60, water: 5, bailout: "Med", sRisk: "Forest fire risk", wRisk: "Mud" },
+                    { start: "Caxarias", end: "Ansião", dist: "33 km", lat: 39.85, lon: -8.55, water: 5, bailout: "Med", sRisk: "Long day", wRisk: "Mud" },
+                    { start: "Ansião", end: "Condeixa", dist: "32 km", lat: 40.00, lon: -8.50, water: 5, bailout: "Low", sRisk: "Heat", wRisk: "Rain" },
+                    { start: "Condeixa", end: "Coimbra", dist: "16 km", lat: 40.15, lon: -8.45, water: 5, bailout: "Med", sRisk: "Urban heat", wRisk: "Rain" },
+                    { start: "Coimbra", end: "Sernadelo", dist: "27 km", lat: 40.30, lon: -8.45, water: 5, bailout: "Med", sRisk: "Road walking", wRisk: "Spray/Traffic" },
+                    { start: "Sernadelo", end: "Águeda", dist: "29 km", lat: 40.45, lon: -8.45, water: 5, bailout: "Med", sRisk: "Asphalt", wRisk: "Rain" },
+                    { start: "Águeda", end: "Albergaria", dist: "18 km", lat: 40.65, lon: -8.48, water: 5, bailout: "Med", sRisk: "Eucalypt heat", wRisk: "Mud" },
+                    { start: "Albergaria", end: "S. João", dist: "34 km", lat: 40.80, lon: -8.50, water: 5, bailout: "Low", sRisk: "Long/Industrial", wRisk: "Traffic" },
+                    { start: "S. João", end: "Porto", dist: "44 km", lat: 41.00, lon: -8.60, water: 5, bailout: "Low", sRisk: "Too Long", wRisk: "Rain" },
+                    { start: "Porto", end: "Vilarinho", dist: "26 km", lat: 41.25, lon: -8.65, water: 5, bailout: "Med", sRisk: "Urban sprawl", wRisk: "Wet cobbles" },
+                    { start: "Vilarinho", end: "Barcelos", dist: "30 km", lat: 41.45, lon: -8.62, water: 5, bailout: "Low", sRisk: "Road heat", wRisk: "Rain" },
+                    { start: "Barcelos", end: "Ponte Lima", dist: "34 km", lat: 41.65, lon: -8.58, water: 5, bailout: "Med", sRisk: "Cornfield Heat", wRisk: "Mud" },
+                    { start: "Ponte Lima", end: "Rubiães", dist: "19 km", lat: 41.90, lon: -8.60, water: 5, bailout: "Low", sRisk: "Labruja Climb", wRisk: "Slippery rocks" },
+                    { start: "Rubiães", end: "Tui", dist: "20 km", lat: 42.00, lon: -8.64, water: 5, bailout: "Med", sRisk: "Descent", wRisk: "Rain" },
+                    { start: "Tui", end: "O Porriño", dist: "18 km", lat: 42.10, lon: -8.62, water: 5, bailout: "Med", sRisk: "Ind. Zone Heat", wRisk: "Flooded track" },
+                    { start: "O Porriño", end: "Redondela", dist: "16 km", lat: 42.22, lon: -8.61, water: 5, bailout: "Med", sRisk: "Road heat", wRisk: "Rain" },
+                    { start: "Redondela", end: "Pontevedra", dist: "20 km", lat: 42.35, lon: -8.64, water: 5, bailout: "Low", sRisk: "Easy hills", wRisk: "Rain" },
+                    { start: "Pontevedra", end: "Caldas", dist: "23 km", lat: 42.52, lon: -8.65, water: 5, bailout: "Med", sRisk: "No shade", wRisk: "Mud" },
+                    { start: "Caldas", end: "Padrón", dist: "19 km", lat: 42.68, lon: -8.66, water: 5, bailout: "Med", sRisk: "Humid/Forest", wRisk: "Rain" },
+                    { start: "Padrón", end: "Santiago", dist: "25 km", lat: 42.80, lon: -8.60, water: 5, bailout: "Med", sRisk: "Urban approach", wRisk: "Rain" }
+                ]
+            },
+            coastal: {
+                name: "Portuguese Coastal", center: [41.8, -8.8], zoom: 8,
+                stages: [
+                    { start: "Porto", end: "Labruge", dist: "24.5 km", lat: 41.22, lon: -8.70, water: 5, bailout: "High", sRisk: "Sunburn (Sand)", wRisk: "Wind/Spray" },
+                    { start: "Labruge", end: "Póvoa", dist: "16.2 km", lat: 41.35, lon: -8.75, water: 5, bailout: "High", sRisk: "No Shade", wRisk: "Wind" },
+                    { start: "Póvoa", end: "Esposende", dist: "20.2 km", lat: 41.48, lon: -8.78, water: 8, bailout: "High", sRisk: "Cobbles/Heat", wRisk: "Wind" },
+                    { start: "Esposende", end: "Viana", dist: "25.5 km", lat: 41.65, lon: -8.82, water: 8, bailout: "High", sRisk: "Inland Heat", wRisk: "Mud" },
+                    { start: "Viana", end: "Caminha", dist: "26.8 km", lat: 41.80, lon: -8.85, water: 10, bailout: "High", sRisk: "Exposed Coast", wRisk: "Storm Surge" },
+                    { start: "Caminha", end: "Mougás", dist: "23.5 km", lat: 41.95, lon: -8.88, water: 10, bailout: "Low", sRisk: "Ferry Wait", wRisk: "Ferry Closed" },
+                    { start: "Mougás", end: "Ramallosa", dist: "16.4 km", lat: 42.08, lon: -8.85, water: 5, bailout: "High", sRisk: "Road walking", wRisk: "Wind" },
+                    { start: "Ramallosa", end: "Vigo", dist: "20.1 km", lat: 42.20, lon: -8.75, water: 5, bailout: "High", sRisk: "Urban Heat", wRisk: "Traffic" },
+                    { start: "Vigo", end: "Redondela", dist: "16.5 km", lat: 42.28, lon: -8.65, water: 5, bailout: "High", sRisk: "Steep Senda", wRisk: "Mud" },
+                    { start: "Redondela", end: "Pontevedra", dist: "20 km", lat: 42.35, lon: -8.64, water: 5, bailout: "Low", sRisk: "Easy hills", wRisk: "Rain" },
+                    { start: "Pontevedra", end: "Caldas", dist: "23 km", lat: 42.52, lon: -8.65, water: 5, bailout: "Med", sRisk: "No shade", wRisk: "Mud" },
+                    { start: "Caldas", end: "Padrón", dist: "19 km", lat: 42.68, lon: -8.66, water: 5, bailout: "High", sRisk: "Humid/Forest", wRisk: "Rain" },
+                    { start: "Padrón", end: "Santiago", dist: "25 km", lat: 42.80, lon: -8.60, water: 5, bailout: "Med", sRisk: "Urban approach", wRisk: "Rain" }
+                ]
+            },
+            primitivo: {
+                name: "Camino Primitivo", center: [43.2, -6.5], zoom: 8,
+                stages: [
+                    { start: "Oviedo", end: "Grado", dist: "25.8 km", lat: 43.38, lon: -5.95, water: 5, bailout: "High", sRisk: "Humid Heat", wRisk: "Deep Mud" },
+                    { start: "Grado", end: "Salas", dist: "22.5 km", lat: 43.40, lon: -6.15, water: 8, bailout: "Med", sRisk: "No Shade", wRisk: "Mud" },
+                    { start: "Salas", end: "Tineo", dist: "20.2 km", lat: 43.35, lon: -6.30, water: 10, bailout: "Med", sRisk: "Heat exposure", wRisk: "Snow risk" },
+                    { start: "Tineo", end: "Pola de Allande", dist: "28.2 km", lat: 43.27, lon: -6.50, water: 12, bailout: "Low", sRisk: "Heat", wRisk: "Fog/Snow" },
+                    { start: "Pola de Allande", end: "La Mesa", dist: "22.8 km", lat: 43.15, lon: -6.60, water: 15, bailout: "Zero", sRisk: "Puerto del Palo Sun", wRisk: "Blizzard/Closed" },
+                    { start: "La Mesa", end: "Grandas", dist: "16.8 km", lat: 43.18, lon: -6.80, water: 10, bailout: "Low", sRisk: "Knee Stress (Dam)", wRisk: "Ice on descent" },
+                    { start: "Grandas", end: "A Fonsagrada", dist: "28.1 km", lat: 43.15, lon: -7.00, water: 12, bailout: "Low", sRisk: "Long Climb", wRisk: "Wind/Snow" },
+                    { start: "A Fonsagrada", end: "O Cádavo", dist: "23.4 km", lat: 43.05, lon: -7.10, water: 15, bailout: "Low", sRisk: "Hospitales Route", wRisk: "Fog/Wind" },
+                    { start: "O Cádavo", end: "Lugo", dist: "30.5 km", lat: 43.02, lon: -7.35, water: 8, bailout: "High", sRisk: "Long Day", wRisk: "Mud" },
+                    { start: "Lugo", end: "Ferreira", dist: "26.5 km", lat: 42.95, lon: -7.65, water: 10, bailout: "Med", sRisk: "Boring/Road", wRisk: "Mud" },
+                    { start: "Ferreira", end: "Melide", dist: "20.2 km", lat: 42.92, lon: -7.90, water: 5, bailout: "High", sRisk: "Heat", wRisk: "Mud" }
+                ]
+            },
+            invierno: {
+                name: "Camino de Invierno", center: [42.5, -7.5], zoom: 8,
+                stages: [
+                    { start: "Ponferrada", end: "Las Médulas", dist: "27.2 km", lat: 42.48, lon: -6.75, water: 8, bailout: "Med", sRisk: "Heat in Mines", wRisk: "Mud" },
+                    { start: "Las Médulas", end: "O Barco", dist: "26.4 km", lat: 42.42, lon: -6.90, water: 10, bailout: "High", sRisk: "Descent heat", wRisk: "Rain" },
+                    { start: "O Barco", end: "A Rúa", dist: "14.2 km", lat: 42.38, lon: -7.05, water: 5, bailout: "High", sRisk: "Easy day", wRisk: "Rain" },
+                    { start: "A Rúa", end: "Quiroga", dist: "26.3 km", lat: 42.42, lon: -7.20, water: 12, bailout: "Med", sRisk: "Exposed road", wRisk: "Rain" },
+                    { start: "Quiroga", end: "Monforte", dist: "35.2 km", lat: 42.48, lon: -7.40, water: 15, bailout: "Med", sRisk: "Long Distance", wRisk: "Flooding" },
+                    { start: "Monforte", end: "Chantada", dist: "30.4 km", lat: 42.58, lon: -7.60, water: 10, bailout: "Low", sRisk: "Faro Climb Heat", wRisk: "Mud/Ice" },
+                    { start: "Chantada", end: "Rodeiro", dist: "25.8 km", lat: 42.62, lon: -7.85, water: 12, bailout: "Low", sRisk: "Faro Climb", wRisk: "Wind/Cold" },
+                    { start: "Rodeiro", end: "A Laxe", dist: "27.2 km", lat: 42.70, lon: -8.05, water: 8, bailout: "Med", sRisk: "Road heat", wRisk: "Rain" },
+                    { start: "A Laxe", end: "Outeiro", dist: "34.1 km", lat: 42.78, lon: -8.35, water: 10, bailout: "Low", sRisk: "Long/Boring", wRisk: "Rain" },
+                    { start: "Outeiro", end: "Santiago", dist: "16.5 km", lat: 42.85, lon: -8.50, water: 5, bailout: "High", sRisk: "Easy end", wRisk: "Rain" }
+                ]
+            }
+        };
 
-        // --- ROUTES ---
-
- const routes = {
-            frances: {
-                name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
-                stages: [
-                    { start: "Saint-Jean", end: "Roncesvalles", dist: "25km", lat: 43.163, lon: -1.235 },
-                    { start: "Roncesvalles", end: "Zubiri", dist: "21km", lat: 43.009, lon: -1.319 },
-                    { start: "Zubiri", end: "Pamplona", dist: "20km", lat: 42.929, lon: -1.503 },
-                    { start: "Pamplona", end: "Puente la Reina", dist: "24km", lat: 42.812, lon: -1.646 },
-                    { start: "Puente la Reina", end: "Estella", dist: "22km", lat: 42.690, lon: -1.815 },
-                    { start: "Estella", end: "Los Arcos", dist: "21km", lat: 42.671, lon: -2.024 },
-                    { start: "Los Arcos", end: "Logroño", dist: "28km", lat: 42.564, lon: -2.196 },
-                    { start: "Logroño", end: "Nájera", dist: "29km", lat: 42.465, lon: -2.443 },
-                    { start: "Nájera", end: "Santo Domingo", dist: "21km", lat: 42.415, lon: -2.735 },
-                    { start: "Santo Domingo", end: "Belorado", dist: "22km", lat: 42.439, lon: -2.948 },
-                    { start: "Belorado", end: "Agés", dist: "27km", lat: 42.420, lon: -3.176 },
-                    { start: "Agés", end: "Burgos", dist: "23km", lat: 42.368, lon: -3.483 },
-                    { start: "Burgos", end: "Hontanas", dist: "31km", lat: 42.343, lon: -3.696 },
-                    { start: "Hontanas", end: "Boadilla", dist: "28km", lat: 42.290, lon: -4.066 },
-                    { start: "Boadilla", end: "Carrión", dist: "25km", lat: 42.261, lon: -4.373 },
-                    { start: "Carrión", end: "Terradillos", dist: "26km", lat: 42.341, lon: -4.614 },
-                    { start: "Terradillos", end: "Bercianos", dist: "23km", lat: 42.366, lon: -4.956 },
-                    { start: "Bercianos", end: "Mansilla", dist: "26km", lat: 42.470, lon: -5.416 },
-                    { start: "Mansilla", end: "León", dist: "18km", lat: 42.598, lon: -5.567 },
-                    { start: "León", end: "San Martín", dist: "25km", lat: 42.483, lon: -5.766 },
-                    { start: "San Martín", end: "Astorga", dist: "24km", lat: 42.455, lon: -6.056 },
-                    { start: "Astorga", end: "Foncebadón", dist: "26km", lat: 42.493, lon: -6.340 },
-                    { start: "Foncebadón", end: "Ponferrada", dist: "27km", lat: 42.547, lon: -6.593 },
-                    { start: "Ponferrada", end: "Villafranca", dist: "24km", lat: 42.607, lon: -6.811 },
-                    { start: "Villafranca", end: "O Cebreiro", dist: "28km", lat: 42.708, lon: -7.042 },
-                    { start: "O Cebreiro", end: "Triacastela", dist: "21km", lat: 42.756, lon: -7.240 },
-                    { start: "Triacastela", end: "Sarria", dist: "18km", lat: 42.778, lon: -7.414 },
-                    { start: "Sarria", end: "Portomarín", dist: "22km", lat: 42.807, lon: -7.616 },
-                    { start: "Portomarín", end: "Palas de Rei", dist: "25km", lat: 42.873, lon: -7.868 },
-                    { start: "Palas de Rei", end: "Arzúa", dist: "29km", lat: 42.926, lon: -8.164 },
-                    { start: "Arzúa", end: "O Pedrouzo", dist: "19km", lat: 42.909, lon: -8.361 },
-                    { start: "O Pedrouzo", end: "Santiago", dist: "20km", lat: 42.880, lon: -8.544 }
-                ]
-            },
-            norte: {
-                name: "Camino del Norte", center: [43.4, -4.0], zoom: 7,
-                stages: [
-                     { start: "Irún", end: "San Sebastián", dist: "26km", lat: 43.338, lon: -1.788 },
-                    { start: "San Sebastián", end: "Zarautz", dist: "22km", lat: 43.318, lon: -1.981 },
-                    { start: "Zarautz", end: "Deba", dist: "22km", lat: 43.284, lon: -2.172 },
-                    { start: "Deba", end: "Markina", dist: "24km", lat: 43.296, lon: -2.355 },
-                    { start: "Markina", end: "Guernica", dist: "25km", lat: 43.267, lon: -2.498 },
-                    { start: "Guernica", end: "Bilbao", dist: "33km", lat: 43.315, lon: -2.680 },
-                    { start: "Bilbao", end: "Portugalete", dist: "19km", lat: 43.263, lon: -2.935 },
-                    { start: "Portugalete", end: "Castro Urdiales", dist: "27km", lat: 43.320, lon: -3.020 },
-                    { start: "Castro Urdiales", end: "Laredo", dist: "30km", lat: 43.383, lon: -3.218 },
-                    { start: "Laredo", end: "Güemes", dist: "29km", lat: 43.414, lon: -3.413 },
-                    { start: "Güemes", end: "Santander", dist: "15km", lat: 43.447, lon: -3.616 },
-                    { start: "Santander", end: "Santillana", dist: "37km", lat: 43.462, lon: -3.809 },
-                    { start: "Santillana", end: "Comillas", dist: "22km", lat: 43.389, lon: -4.107 },
-                    { start: "Comillas", end: "Unquera", dist: "28km", lat: 43.386, lon: -4.292 },
-                    { start: "Unquera", end: "Llanes", dist: "25km", lat: 43.383, lon: -4.437 },
-                    { start: "Llanes", end: "Ribadesella", dist: "31km", lat: 43.421, lon: -4.753 },
-                    { start: "Ribadesella", end: "Sebrayo", dist: "31km", lat: 43.462, lon: -5.059 },
-                    { start: "Sebrayo", end: "Gijón", dist: "35km", lat: 43.490, lon: -5.352 },
-                    { start: "Gijón", end: "Avilés", dist: "25km", lat: 43.532, lon: -5.661 },
-                    { start: "Avilés", end: "Muros de Nalón", dist: "22km", lat: 43.554, lon: -5.924 },
-                    { start: "Muros", end: "Soto de Luiña", dist: "16km", lat: 43.561, lon: -6.096 },
-                    { start: "Soto", end: "Cadavedo", dist: "23km", lat: 43.562, lon: -6.223 },
-                    { start: "Cadavedo", end: "Luarca", dist: "16km", lat: 43.546, lon: -6.402 },
-                    { start: "Luarca", end: "La Caridad", dist: "29km", lat: 43.542, lon: -6.536 },
-                    { start: "La Caridad", end: "Ribadeo", dist: "22km", lat: 43.550, lon: -6.826 },
-                    { start: "Ribadeo", end: "Lourenzá", dist: "28km", lat: 43.536, lon: -7.042 },
-                    { start: "Lourenzá", end: "Abadín", dist: "25km", lat: 43.469, lon: -7.296 },
-                    { start: "Abadín", end: "Vilalba", dist: "21km", lat: 43.363, lon: -7.458 },
-                    { start: "Vilalba", end: "Baamonde", dist: "21km", lat: 43.297, lon: -7.681 },
-                    { start: "Baamonde", end: "Sobrado", dist: "41km", lat: 43.159, lon: -7.789 },
-                    { start: "Sobrado", end: "Arzúa", dist: "21km", lat: 43.041, lon: -8.022 },
-                    { start: "Arzúa", end: "Santiago", dist: "39km", lat: 42.926, lon: -8.164 }
-                ]
-            },
-            plata: {
-                name: "Vía de la Plata", center: [39.5, -6.0], zoom: 6,
-                stages: [
-                     { start: "Sevilla", end: "Guillena", dist: "22km", lat: 37.389, lon: -5.984 },
-                    { start: "Guillena", end: "Castilblanco", dist: "18km", lat: 37.555, lon: -6.056 },
-                    { start: "Castilblanco", end: "Almadén", dist: "29km", lat: 37.674, lon: -5.955 },
-                    { start: "Almadén", end: "El Real", dist: "15km", lat: 37.872, lon: -6.071 },
-                    { start: "El Real", end: "Monesterio", dist: "20km", lat: 37.953, lon: -6.177 },
-                    { start: "Monesterio", end: "Fuente de Cantos", dist: "21km", lat: 38.087, lon: -6.274 },
-                    { start: "Fuente de Cantos", end: "Zafra", dist: "25km", lat: 38.247, lon: -6.307 },
-                    { start: "Zafra", end: "Villafranca", dist: "19km", lat: 38.425, lon: -6.417 },
-                    { start: "Villafranca", end: "Torremejía", dist: "27km", lat: 38.561, lon: -6.339 },
-                    { start: "Torremejía", end: "Mérida", dist: "16km", lat: 38.784, lon: -6.376 },
-                    { start: "Mérida", end: "Aljucén", dist: "16km", lat: 38.918, lon: -6.343 },
-                    { start: "Aljucén", end: "Alcuéscar", dist: "20km", lat: 39.027, lon: -6.295 },
-                    { start: "Alcuéscar", end: "Cáceres", dist: "38km", lat: 39.176, lon: -6.223 },
-                    { start: "Cáceres", end: "Embalse", dist: "30km", lat: 39.475, lon: -6.372 },
-                    { start: "Embalse", end: "Grimaldo", dist: "20km", lat: 39.734, lon: -6.431 },
-                    { start: "Grimaldo", end: "Carcaboso", dist: "30km", lat: 39.882, lon: -6.402 },
-                    { start: "Carcaboso", end: "Aldeanueva", dist: "38km", lat: 40.049, lon: -6.216 },
-                    { start: "Aldeanueva", end: "Calzada", dist: "22km", lat: 40.228, lon: -5.922 },
-                    { start: "Calzada", end: "Fuenterroble", dist: "20km", lat: 40.385, lon: -5.818 },
-                    { start: "Fuenterroble", end: "San Pedro", dist: "28km", lat: 40.563, lon: -5.748 },
-                    { start: "San Pedro", end: "Salamanca", dist: "24km", lat: 40.738, lon: -5.709 },
-                    { start: "Salamanca", end: "El Cubo", dist: "36km", lat: 40.970, lon: -5.663 },
-                    { start: "El Cubo", end: "Zamora", dist: "31km", lat: 41.229, lon: -5.753 },
-                    { start: "Zamora", end: "Montamarta", dist: "18km", lat: 41.503, lon: -5.746 },
-                    { start: "Montamarta", end: "Granja", dist: "22km", lat: 41.655, lon: -5.807 },
-                    { start: "Granja", end: "Tábara", dist: "25km", lat: 41.777, lon: -5.758 },
-                    { start: "Tábara", end: "Santa Marta", dist: "23km", lat: 41.890, lon: -6.046 },
-                    { start: "Santa Marta", end: "Mombuey", dist: "36km", lat: 42.029, lon: -6.096 },
-                    { start: "Mombuey", end: "Puebla de Sanabria", dist: "31km", lat: 42.022, lon: -6.327 },
-                    { start: "Puebla", end: "Lubián", dist: "29km", lat: 42.054, lon: -6.633 },
-                    { start: "Lubián", end: "A Gudiña", dist: "24km", lat: 42.032, lon: -6.919 },
-                    { start: "A Gudiña", end: "Laza", dist: "34km", lat: 42.061, lon: -7.139 },
-                    { start: "Laza", end: "Xunqueira", dist: "32km", lat: 42.062, lon: -7.461 },
-                    { start: "Xunqueira", end: "Ourense", dist: "22km", lat: 42.222, lon: -7.643 },
-                    { start: "Ourense", end: "Cea", dist: "22km", lat: 42.335, lon: -7.863 },
-                    { start: "Cea", end: "Castro Dozón", dist: "20km", lat: 42.474, lon: -7.986 },
-                    { start: "Castro", end: "Silleda", dist: "28km", lat: 42.578, lon: -8.026 },
-                    { start: "Silleda", end: "Santiago", dist: "40km", lat: 42.697, lon: -8.247 }
-                ]
-            },
-            lusitana: {
-                name: "Via Lusitana", center: [40.5, -8.5], zoom: 7,
-                stages: [
-                     { start: "Lisboa", end: "Alverca", dist: "28km", lat: 38.722, lon: -9.139 },
-                    { start: "Alverca", end: "Azambuja", dist: "29km", lat: 38.895, lon: -9.040 },
-                    { start: "Azambuja", end: "Santarém", dist: "32km", lat: 39.069, lon: -8.870 },
-                    { start: "Santarém", end: "Golegã", dist: "30km", lat: 39.236, lon: -8.686 },
-                    { start: "Golegã", end: "Tomar", dist: "30km", lat: 39.401, lon: -8.484 },
-                    { start: "Tomar", end: "Alvaiázere", dist: "31km", lat: 39.605, lon: -8.414 },
-                    { start: "Alvaiázere", end: "Rabaçal", dist: "32km", lat: 39.814, lon: -8.384 },
-                    { start: "Rabaçal", end: "Coimbra", dist: "29km", lat: 40.033, lon: -8.448 },
-                    { start: "Coimbra", end: "Mealhada", dist: "25km", lat: 40.203, lon: -8.410 },
-                    { start: "Mealhada", end: "Águeda", dist: "25km", lat: 40.380, lon: -8.450 },
-                    { start: "Águeda", end: "Albergaria", dist: "16km", lat: 40.575, lon: -8.444 },
-                    { start: "Albergaria", end: "Oliveira de Azeméis", dist: "20km", lat: 40.693, lon: -8.481 },
-                    { start: "Oliveira", end: "São João", dist: "18km", lat: 40.838, lon: -8.479 },
-                    { start: "São João", end: "Grijó", dist: "19km", lat: 40.970, lon: -8.508 },
-                    { start: "Grijó", end: "Porto", dist: "15km", lat: 41.050, lon: -8.575 },
-                    { start: "Porto", end: "Vilarinho", dist: "26km", lat: 41.149, lon: -8.611 },
-                    { start: "Vilarinho", end: "Barcelos", dist: "28km", lat: 41.328, lon: -8.697 },
-                    { start: "Barcelos", end: "Ponte de Lima", dist: "33km", lat: 41.530, lon: -8.620 },
-                    { start: "Ponte de Lima", end: "Rubiães", dist: "18km", lat: 41.767, lon: -8.583 },
-                    { start: "Rubiães", end: "Tui", dist: "19km", lat: 41.890, lon: -8.617 },
-                    { start: "Tui", end: "Redondela", dist: "31km", lat: 42.046, lon: -8.644 },
-                    { start: "Redondela", end: "Pontevedra", dist: "18km", lat: 42.285, lon: -8.611 },
-                    { start: "Pontevedra", end: "Caldas de Reis", dist: "23km", lat: 42.433, lon: -8.647 },
-                    { start: "Caldas", end: "Padrón", dist: "18km", lat: 42.604, lon: -8.643 },
-                    { start: "Padrón", end: "Santiago", dist: "25km", lat: 42.738, lon: -8.660 }
-                ]
-            }
-        };
-
-    
         // --- ICONS ---
         const icons = {
             sun: '<svg class="w-8 h-8 icon-sun" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 9c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000 1.41.996.996 0 001.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06z"/></svg>',
@@ -294,9 +310,7 @@
             cloud: '<svg class="w-8 h-8 icon-gray" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.25-10.5Z" /></svg>',
             rain: '<svg class="w-8 h-8 icon-rain" viewBox="0 0 24 24" fill="currentColor"><path d="M4.13 12.04C3.47 12.59 3 13.43 3 14.4c0 1.99 1.61 3.6 3.6 3.6s3.6-1.61 3.6-3.6c0-.97-.47-1.81-1.13-2.36h-4.94zm9.33 0C12.8 12.59 12.33 13.43 12.33 14.4c0 1.99 1.61 3.6 3.6 3.6s3.6-1.61 3.6-3.6c0-.97-.47-1.81-1.13-2.36h-4.94zM19.36 6.04C18.67 2.59 15.64 0 12 0 9.11 0 6.6 1.64 5.35 4.04 2.34 4.36 0 6.91 0 10c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96z"/></svg>',
             snow: '<svg class="w-8 h-8 icon-rain" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24q-.625 0-1.062-.438Q10.5 23.125 10.5 22.5q0-.625.438-1.062Q11.375 21 12 21t1.062.438Q13.5 21.875 13.5 22.5q0 .625-.438 1.062Q12.625 24 12 24Zm-4-4q-.625 0-1.062-.438Q6.5 19.125 6.5 18.5q0-.625.438-1.062Q7.375 17 8 17t1.062.438Q9.5 17.875 9.5 18.5q0 .625-.438 1.062Q8.625 20 8 20Zm8 0q-.625 0-1.062-.438Q14.5 19.125 14.5 18.5q0-.625.438-1.062Q15.375 17 16 17t1.062.438Q17.5 17.875 17.5 18.5q0 .625-.438 1.062Q16.625 20 16 20Zm-8-4q-.625 0-1.062-.438Q6.5 15.125 6.5 14.5q0-.625.438-1.062Q7.375 13 8 13t1.062.438Q9.5 13.875 9.5 14.5q0 .625-.438 1.062Q8.625 16 8 16Zm8 0q-.625 0-1.062-.438Q14.5 15.125 14.5 14.5q0-.625.438-1.062Q15.375 13 16 13t1.062.438Q17.5 13.875 17.5 14.5q0 .625-.438 1.062Q16.625 16 16 16ZM6 19q-2.075 0-3.537-1.463Q1 16.075 1 14q0-2.075 1.463-3.538Q3.925 9 6 9q.575 0 1.1.088t1.025.262q.725-2.225 2.65-3.725Q12.7 4.125 15.125 4.125q2.675 0 4.525 1.863Q21.5 7.85 21.5 10.525q0 .25-.025.488-.025.237-.075.462 2.025.575 3.287 2.263Q25.95 15.425 25.95 17.5q0 2.7-1.9 4.6Q22.15 24 19.45 24H6Z" transform="scale(0.8) translate(2,-4)"/></svg>',
-            fog: '<svg class="w-8 h-8 icon-gray" viewBox="0 0 24 24" fill="currentColor"><path d="M1 16v-2h22v2H1Zm4 4v-2h14v2H5Zm-3-8q-2.075 0-3.537-1.463Q1 9.075 1 7q0-2.075 1.463-3.538Q3.925 2 6 2q.575 0 1.1.088t1.025.262q.725-2.225 2.65-3.725Q12.7-2.875 15.125-2.875q2.675 0 4.525 1.863Q21.5.85 21.5 3.525q0 .25-.025.488-.025.237-.075.462 2.025.575 3.287 2.263Q25.95 8.425 25.95 10.5q0 2.7-1.9 4.6Q22.15 17 19.45 17H6Z" transform="scale(0.8) translate(2,2)"/></svg>',
-            hot: '<span class="text-xl">🌡️</span>',
-            cold: '<span class="text-xl">❄️</span>'
+            fog: '<svg class="w-8 h-8 icon-gray" viewBox="0 0 24 24" fill="currentColor"><path d="M1 16v-2h22v2H1Zm4 4v-2h14v2H5Zm-3-8q-2.075 0-3.537-1.463Q1 9.075 1 7q0-2.075 1.463-3.538Q3.925 2 6 2q.575 0 1.1.088t1.025.262q.725-2.225 2.65-3.725Q12.7-2.875 15.125-2.875q2.675 0 4.525 1.863Q21.5.85 21.5 3.525q0 .25-.025.488-.025.237-.075.462 2.025.575 3.287 2.263Q25.95 8.425 25.95 10.5q0 2.7-1.9 4.6Q22.15 17 19.45 17H6Z" transform="scale(0.8) translate(2,2)"/></svg>'
         };
 
         const weatherCodes = {
@@ -308,35 +322,38 @@
             95: { label: 'Storm', icon: icons.rain }
         };
 
-        // --- STATE ---
-        let map;
-        let markers = [];
-        let currentRouteId = 'frances';
-        let selectedStageIndex = 0;
+        // --- STATE & INIT ---
+        let map, markers = [], currentRouteId = 'frances', selectedStageIndex = 0;
 
         window.onload = function() {
             map = L.map('map', { zoomControl: false }).setView([42.6, -4.0], 7);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
             
+            // PWA RESTORE
+            const savedRoute = localStorage.getItem('camino_last_route');
+            if(savedRoute && routes[savedRoute]) {
+                document.getElementById('routeSelect').value = savedRoute;
+            }
             changeRoute();
             
-            // PWA Logic
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js');
+            // Auto-click last stage
+            const savedStage = localStorage.getItem('camino_last_stage');
+            if(savedStage) {
+                selectedStageIndex = parseInt(savedStage);
+                setTimeout(() => {
+                    if(markers[selectedStageIndex]) {
+                        markers[selectedStageIndex].fire('click');
+                        const st = routes[currentRouteId].stages[selectedStageIndex];
+                        map.flyTo([st.lat, st.lon], 10);
+                    }
+                }, 500);
             }
+
+            // PWA Install
+            if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
             let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                document.getElementById('installBanner').classList.remove('hidden');
-            });
-            document.getElementById('installBtn').addEventListener('click', async () => {
-                if(deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt = null;
-                    document.getElementById('installBanner').classList.add('hidden');
-                }
-            });
+            window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBanner').classList.remove('hidden'); });
+            document.getElementById('installBtn').addEventListener('click', async () => { if(deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; document.getElementById('installBanner').classList.add('hidden'); }});
         };
 
         function changeRoute() {
@@ -356,212 +373,165 @@
                 });
                 markers.push(marker);
             });
-            // Default
-            selectedStageIndex = 0;
-            document.getElementById('currentStageName').innerText = routeData.stages[0].start;
+            if(markers.length > 0) {
+                selectedStageIndex = 0;
+                document.getElementById('currentStageName').innerText = routeData.stages[0].start;
+            }
         }
 
-        // --- GPS LOGIC ---
         function locateUser() {
             const btn = document.getElementById('gpsBtn');
             const txt = document.getElementById('gpsText');
-            
             if(!navigator.geolocation) { alert("GPS not supported"); return; }
-            
-            txt.innerText = "Locating...";
-            btn.classList.add('bg-blue-50');
-
+            txt.innerText = "Locating..."; btn.classList.add('bg-blue-50');
             navigator.geolocation.getCurrentPosition((pos) => {
                 const userLat = pos.coords.latitude;
                 const userLon = pos.coords.longitude;
-                
-                // Find Nearest Stage
-                let nearest = null;
-                let minDist = Infinity;
+                let nearest = null; let minDist = Infinity;
                 const routeData = routes[currentRouteId];
-
                 routeData.stages.forEach((stage, idx) => {
                     const d = getDistanceFromLatLonInKm(userLat, userLon, stage.lat, stage.lon);
                     if(d < minDist) { minDist = d; nearest = idx; }
                 });
-
-                if(minDist > 100) {
-                    alert("You are far from the Camino! Using default start.");
-                } else {
+                if(minDist > 100) { alert("You are far from the Camino! Using default start."); } 
+                else {
                     selectedStageIndex = nearest;
                     const st = routeData.stages[nearest];
                     document.getElementById('currentStageName').innerText = st.start + " (GPS Found)";
                     map.flyTo([st.lat, st.lon], 10);
+                    markers[nearest].fire('click');
                 }
-                txt.innerText = "Locate Me";
-                btn.classList.remove('bg-blue-50');
-
-            }, () => {
-                alert("GPS permission denied.");
-                txt.innerText = "Locate Me";
-            });
+                txt.innerText = "Locate Me"; btn.classList.remove('bg-blue-50');
+            }, () => { alert("GPS permission denied."); txt.innerText = "Locate Me"; });
         }
 
         function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-            var R = 6371; 
-            var dLat = deg2rad(lat2-lat1);  
-            var dLon = deg2rad(lon2-lon1); 
+            var R = 6371; var dLat = deg2rad(lat2-lat1); var dLon = deg2rad(lon2-lon1); 
             var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            return R * c; 
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
         }
         function deg2rad(deg) { return deg * (Math.PI/180) }
-
-        // --- HELPERS ---
         function formatAMPM(dateStr) {
-            let [hours, mins] = dateStr.split(':');
-            hours = parseInt(hours);
-            let ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; 
+            let [hours, mins] = dateStr.split(':'); hours = parseInt(hours);
+            let ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12; hours = hours ? hours : 12; 
             return `${hours}:${mins} ${ampm}`;
         }
 
-        // --- CHART GENERATOR ---
         function generateChart(hourlyData) {
-            // Hours 6 to 18 (indices 6 to 18)
-            const hours = [];
-            const temps = [];
-            const rains = [];
-            
-            for(let h=6; h<=18; h++) {
-                hours.push(h);
-                temps.push(Math.round(hourlyData.temperature_2m[h]));
-                rains.push(hourlyData.precipitation[h]);
-            }
-
-            // Dimensions
-            const w = 400; // SVG Viewbox Width
-            const h = 100; // SVG Viewbox Height
-            const colW = w / 13; // 13 data points (6am to 6pm)
-
-            // 1. Draw Temp Line (Bezier)
-            const maxTemp = Math.max(...temps) + 2;
-            const minTemp = Math.min(...temps) - 2;
-            const range = maxTemp - minTemp || 1;
-            
+            const hours = [], temps = [], rains = [];
+            for(let h=6; h<=18; h++) { hours.push(h); temps.push(Math.round(hourlyData.temperature_2m[h])); rains.push(hourlyData.precipitation[h]); }
+            const w = 400, h = 100, colW = w / 13;
+            const maxTemp = Math.max(...temps) + 2; const minTemp = Math.min(...temps) - 2; const range = maxTemp - minTemp || 1;
             let pathD = `M ${colW/2} ${h - ((temps[0] - minTemp)/range * 60 + 20)}`;
-            
-            // Generate points
-            const points = temps.map((t, i) => {
-                const x = (i * colW) + (colW/2);
-                const y = h - ((t - minTemp)/range * 60 + 20); // Scale to keep 20px padding
-                return {x, y, t};
-            });
-
-            // Smooth curve
-            points.forEach((p, i) => {
-                if (i === 0) return;
-                pathD += ` L ${p.x} ${p.y}`;
-            });
-
+            const points = temps.map((t, i) => { const x = (i * colW) + (colW/2); const y = h - ((t - minTemp)/range * 60 + 20); return {x, y, t}; });
+            points.forEach((p, i) => { if (i !== 0) pathD += ` L ${p.x} ${p.y}`; });
             let svg = `<svg viewBox="0 0 ${w} ${h}" class="w-full h-full overflow-visible">`;
-            
-            // 2. Draw Rain Bars (Bottom Up)
-            rains.forEach((r, i) => {
-                if(r > 0) {
-                    const barH = Math.min(r * 10, 40); // Cap height
-                    const x = (i * colW) + (colW/2) - 4; // Center, 8px width
-                    const y = h - barH;
-                    svg += `<rect x="${x}" y="${y}" width="8" height="${barH}" fill="#8ab4f8" rx="2" />`;
-                    if(r > 1.0) {
-                        svg += `<text x="${x+4}" y="${y-4}" class="chart-label" style="fill:#1967d2">${r.toFixed(1)}</text>`;
-                    }
-                }
-            });
-
-            // 3. Draw Temp Line
+            rains.forEach((r, i) => { if(r > 0) {
+                const barH = Math.min(r * 10, 40); const x = (i * colW) + (colW/2) - 4; const y = h - barH;
+                svg += `<rect x="${x}" y="${y}" width="8" height="${barH}" fill="#8ab4f8" rx="2" />`;
+                if(r > 1.0) svg += `<text x="${x+4}" y="${y-4}" class="chart-label" style="fill:#1967d2">${r.toFixed(1)}</text>`;
+            }});
             svg += `<path d="${pathD}" fill="none" stroke="#fdb813" stroke-width="3" stroke-linecap="round" />`;
-
-            // 4. Labels & Dots
             points.forEach((p, i) => {
                 svg += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="white" stroke="#fdb813" stroke-width="2" />`;
                 svg += `<text x="${p.x}" y="${p.y - 8}" class="temp-label">${p.t}°</text>`;
-                if ((hours[i]) % 3 === 0) {
-                    svg += `<text x="${p.x}" y="${h + 12}" class="chart-label">${hours[i]}:00</text>`;
-                }
+                if ((hours[i]) % 3 === 0) svg += `<text x="${p.x}" y="${h + 12}" class="chart-label">${hours[i]}:00</text>`;
             });
-
-            svg += `</svg>`;
-            return svg;
+            return svg + `</svg>`;
         }
 
-        // --- MAIN LOGIC ---
+        // --- TACTICAL ENGINE V2 ---
         async function getTacticalForecast() {
             const resultsDiv = document.getElementById('results');
             const loading = document.getElementById('loading');
-            
-            resultsDiv.innerHTML = '';
-            loading.classList.remove('hidden');
+            resultsDiv.innerHTML = ''; loading.classList.remove('hidden');
+            localStorage.setItem('camino_last_route', currentRouteId);
+            localStorage.setItem('camino_last_stage', selectedStageIndex);
 
             try {
                 const routeData = routes[currentRouteId];
                 let itinerary = [];
-                for(let i=0; i<3; i++) {
-                    if (selectedStageIndex + i < routeData.stages.length) {
-                        itinerary.push({ stage: routeData.stages[selectedStageIndex + i], dayOffset: i });
-                    }
-                }
-
-                // CHECK TIME: If after 5 PM (17:00), skip 'Today' and start from 'Tomorrow'
+                for(let i=0; i<3; i++) { if (selectedStageIndex + i < routeData.stages.length) itinerary.push({ stage: routeData.stages[selectedStageIndex + i], dayOffset: i }); }
+                
                 const nowHour = new Date().getHours();
                 const startDayOffset = (nowHour >= 17) ? 1 : 0; 
+                
+                // SEASONALITY CHECK
+                const month = new Date().getMonth(); // 0-11
+                const isWinter = (month >= 10 || month <= 2); // Nov-Mar
+                const isSummer = (month >= 5 && month <= 8); // Jun-Sep
 
                 for (let i = 0; i < 3; i++) {
                     if (i >= itinerary.length) break; 
                     let item = itinerary[i];
-                    
-                    const current = new Date();
-                    current.setDate(current.getDate() + startDayOffset + i); 
+                    const current = new Date(); current.setDate(current.getDate() + startDayOffset + i); 
                     
                     let stageIndexToUse = selectedStageIndex + i; 
-                    if(nowHour >= 17) stageIndexToUse += 1; // Shift stages too if late
-                    
+                    if(nowHour >= 17) stageIndexToUse += 1;
                     if(stageIndexToUse >= routeData.stages.length) break;
                     let stage = routeData.stages[stageIndexToUse];
 
                     let dateQuery = current.toISOString().split('T')[0];
-
-                    // Fetch: Daily + Hourly + Sunrise/Sunset
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${stage.lat}&longitude=${stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&hourly=temperature_2m,precipitation,weathercode,windspeed_10m&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${stage.lat}&longitude=${stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,uv_index&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                    
                     const res = await fetch(url);
                     const json = await res.json();
 
                     if(json.hourly) {
-                        // Scan for "Prime Time" (06:00 - 15:00) logic
-                        let rainSum = 0;
-                        let maxRain = 0;
+                        let rainSum = 0, maxRain = 0, maxWind = 0, maxUV = 0, minRealFeel = 100, maxRealFeel = -100;
                         for(let h=6; h<=15; h++) {
                             rainSum += json.hourly.precipitation[h];
                             if(json.hourly.precipitation[h] > maxRain) maxRain = json.hourly.precipitation[h];
+                            if(json.hourly.windspeed_10m[h] > maxWind) maxWind = json.hourly.windspeed_10m[h];
+                            if(json.hourly.uv_index[h] > maxUV) maxUV = json.hourly.uv_index[h];
+                            const rf = json.hourly.apparent_temperature[h];
+                            if(rf > maxRealFeel) maxRealFeel = rf;
+                            if(rf < minRealFeel) minRealFeel = rf;
                         }
 
-                        let logicHTML = '';
-                        if(rainSum < 0.2) {
-                            logicHTML = `<div class="bg-green-50 text-green-700 p-2 rounded text-xs font-bold border border-green-100 flex items-center gap-2">✅ Good to Go. Dry morning.</div>`;
-                        } else if (maxRain > 1.5) {
-                            // Heavy Rain Advice
-                            logicHTML = `<div class="bg-blue-50 text-blue-700 p-2 rounded text-xs font-bold border border-blue-100 flex items-center gap-2"><span class="text-lg">🧥</span> Heavy Rain Alert. Poncho mandatory.</div>`;
+                        // --- LOGIC LAYERS ---
+                        let badgeClass = "bg-gray-50 text-gray-700 border-gray-100", icon = "☁️", message = "Normal Conditions.", subMessage = "Enjoy the trail.";
+                        
+                        // 1. SEASONAL RISK OVERRIDE
+                        let seasonRiskText = isWinter ? stage.wRisk : (isSummer ? stage.sRisk : "");
+                        
+                        // 2. DYNAMIC ALERTS
+                        if (maxWind > 50) {
+                            badgeClass = "bg-red-50 text-red-700 border-red-100"; icon = "⚠️";
+                            message = `Gale Force Winds (${Math.round(maxWind)}km/h).`; subMessage = "Avoid exposed ridges today.";
+                        } 
+                        else if (maxRealFeel > 32) {
+                            badgeClass = "bg-orange-50 text-orange-800 border-orange-100"; icon = "🔥";
+                            message = `Heat Danger (${Math.round(maxRealFeel)}°).`; subMessage = "Finish walking by 13:00.";
+                        }
+                        else if (stage.water >= 15 && maxRealFeel > 25) {
+                            badgeClass = "bg-red-50 text-red-800 border-red-100"; icon = "💧";
+                            message = "CRITICAL HYDRATION."; subMessage = `No water for ${stage.water}km in heat. Carry 3L.`;
+                        }
+                        else if (stage.bailout === "Zero" && (maxRain > 5 || maxWind > 40)) {
+                            badgeClass = "bg-red-900 text-white border-red-900"; icon = "⛔";
+                            message = "NO BAILOUT."; subMessage = "Remote stage + Bad Weather = Do not start.";
+                        }
+                        else if (isWinter && minRealFeel < 2) {
+                            badgeClass = "bg-blue-50 text-blue-800 border-blue-100"; icon = "❄️";
+                            message = "Freezing Morning."; subMessage = seasonRiskText || "Wear layers.";
+                        }
+                        else if (isSummer && stage.sRisk.includes("Heat")) {
+                             badgeClass = "bg-orange-50 text-orange-800 border-orange-100"; icon = "☀️";
+                             message = seasonRiskText; subMessage = "Hydrate frequently.";
+                        }
+                        else if (rainSum < 0.2) {
+                            badgeClass = "bg-green-50 text-green-700 border-green-100"; icon = "✅";
+                            message = "Perfect Walking Weather."; subMessage = seasonRiskText || "Dry trail.";
                         } else {
-                            // Light Showers Advice
-                            logicHTML = `<div class="bg-gray-50 text-gray-700 p-2 rounded text-xs font-bold border border-gray-100 flex items-center gap-2"><span class="text-lg">🌦️</span> Light Showers. Keep Rain Gear handy.</div>`;
+                            message = "Light Rain Expected."; subMessage = "Keep poncho handy.";
                         }
 
-                        // Logistics Data
                         const d = json.daily;
                         const sunrise = formatAMPM(d.sunrise[0].split('T')[1].slice(0,5));
                         const sunset = formatAMPM(d.sunset[0].split('T')[1].slice(0,5));
                         const dlHrs = Math.floor(d.daylight_duration[0] / 3600);
-                        const dlMins = Math.round((d.daylight_duration[0] % 3600) / 60);
-
-                        // Generate Chart
                         const chartSVG = generateChart(json.hourly);
-                        
                         const wInfo = weatherCodes[d.weathercode[0]] || { label: 'Unknown', icon: icons.cloud };
 
                         const html = `
@@ -569,18 +539,13 @@
                                 <div class="flex justify-between items-start mb-2">
                                     <div>
                                         <div class="flex items-center gap-2 mb-1">
-                                            <span class="text-[10px] font-bold bg-[#1967d2] text-white px-2 py-0.5 rounded uppercase">
-                                                ${current.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
-                                            </span>
-                                            <span class="text-[10px] text-gray-400 uppercase tracking-wide">
-                                                ${stage.start} → ${stage.end}
-                                            </span>
+                                            <span class="text-[10px] font-bold bg-[#1967d2] text-white px-2 py-0.5 rounded uppercase">${current.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}</span>
+                                            <span class="text-[10px] text-gray-400 uppercase tracking-wide truncate max-w-[120px]">${stage.start} → ${stage.end}</span>
                                         </div>
                                         <div class="flex items-center gap-3 text-[10px] text-gray-500 font-bold mt-1 mb-2">
                                             <span class="bg-gray-100 px-1.5 rounded text-gray-700">${stage.dist}</span>
                                             <span class="flex items-center gap-1"><svg class="w-3 h-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg> ${sunrise}</span>
-                                            <span class="flex items-center gap-1"><svg class="w-3 h-3 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg> ${sunset}</span>
-                                            <span>${dlHrs}h ${dlMins}m Daylight</span>
+                                            <span>${dlHrs}h Light</span>
                                         </div>
                                     </div>
                                     <div class="text-right">
@@ -589,24 +554,21 @@
                                         <div class="text-xs text-blue-500 font-bold">${Math.round(d.temperature_2m_min[0])}°</div>
                                     </div>
                                 </div>
-                                
-                                ${logicHTML}
-
-                                <div class="chart-container">
-                                    ${chartSVG}
+                                <div class="${badgeClass} p-3 rounded-lg text-xs border flex items-start gap-3 shadow-sm mb-3">
+                                    <div class="text-xl pt-0.5">${icon}</div>
+                                    <div>
+                                        <div class="font-bold text-base leading-tight">${message}</div>
+                                        <div class="opacity-90 font-medium mt-0.5">${subMessage}</div>
+                                    </div>
                                 </div>
+                                <div class="chart-container">${chartSVG}</div>
                             </div>
                         `;
                         resultsDiv.innerHTML += html;
                     }
                 }
-
-            } catch (e) {
-                console.error(e);
-                resultsDiv.innerHTML = `<div class="text-red-400 text-center font-bold py-10">Error. Check connection.</div>`;
-            } finally {
-                loading.classList.add('hidden');
-            }
+            } catch (e) { console.error(e); resultsDiv.innerHTML = `<div class="text-red-400 text-center font-bold py-10">Error. Check connection.</div>`; } 
+            finally { loading.classList.add('hidden'); }
         }
     </script>
 </body>
