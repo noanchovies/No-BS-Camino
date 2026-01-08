@@ -58,16 +58,17 @@
 
     </main>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     
-    <script src="camino-data.js"></script>
-    <script src="widget.js"></script>
+    <script src="../camino-master-data.js"></script> 
+    <script src="daily-widget.js"></script>
 
     <script>
-        // Basic Service Worker Registration for the new folder
+        // Basic Service Worker Registration
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('../sw.js');
+            navigator.serviceWorker.register('../sw.js'); // Points up to root
         }
     </script>
 </body>
 </html>
+
