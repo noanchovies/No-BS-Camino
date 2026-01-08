@@ -12,13 +12,16 @@
     <style>
         body { font-family: 'Google Sans', sans-serif; background-color: #f0f2f5; color: #202124; }
         .card-tactical { background-color: white; border: 1px solid #dadce0; border-radius: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); overflow: hidden; }
-        #map { height: 250px; width: 100%; z-index: 1; border-bottom: 1px solid #eee; } 
-        .chart-container { position: relative; height: 160px; width: 100%; margin-top: 10px; }
+        #map { height: 250px; width: 100%; z-index: 1; border-bottom: 1px solid #eee; background: #f8f9fa; } 
+        .chart-container { position: relative; height: 140px; width: 100%; margin-top: 15px; }
         .chart-label { font-size: 10px; fill: #5f6368; font-weight: 600; text-anchor: middle; }
         .temp-label { font-size: 11px; fill: #202124; font-weight: 700; text-anchor: middle; }
-        /* Icons */
-        .icon-sun { color: #fdb813; } .icon-rain { color: #1967d2; } .icon-gray { color: #5f6368; }
-        .hidden-transition { display: none; }
+        .hidden-transition { display: none !important; }
+        
+        /* AccuWeather-style Bars */
+        .rain-bar { fill: #3b82f6; opacity: 0.8; rx: 2; }
+        .temp-line { fill: none; stroke: #fdb813; stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1)); }
+        .temp-dot { fill: white; stroke: #fdb813; stroke-width: 2; }
     </style>
 </head>
 <body class="antialiased pb-24">
@@ -34,7 +37,7 @@
                 <svg class="w-6 h-6 text-[#1967d2]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                 <span class="font-bold text-gray-800 text-lg md:block hidden">No BS <span class="text-[#1967d2]">Daily Check</span></span>
             </div>
-            <a href="weather.html" class="px-3 py-1 rounded-full border border-gray-300 text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors flex items-center">Full Planner</a>
+            <a href="weather.html" class="px-3 py-1 rounded-full border border-gray-300 text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors flex items-center text-center leading-tight">Long-Term<br>Planner</a>
         </div>
     </header>
 
@@ -52,14 +55,30 @@
 
         <div class="bg-white rounded-xl border border-gray-200 p-3 mb-6 shadow-sm relative">
             
-            <div id="heroControls" class="absolute inset-0 z-[1000] bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 rounded-xl text-center hidden">
-                <button onclick="locateUser()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-base shadow-lg transition-all flex justify-center items-center gap-2 mb-3 transform hover:scale-105">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                    Locate Me
-                </button>
-                <button onclick="enableManualMode()" class="text-xs font-bold text-gray-400 hover:text-[#1967d2] underline decoration-dashed">
-                    Not on the trail? Select manually
-                </button>
+            <div id="heroControls" class="absolute inset-0 z-[1000] bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-6 rounded-xl text-center hidden">
+                <div id="locStart" class="w-full">
+                    <button onclick="locateUser()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-base shadow-lg transition-all flex justify-center items-center gap-2 mb-3 transform hover:scale-105">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        Locate Me
+                    </button>
+                    <button onclick="enableManualMode()" class="text-xs font-bold text-gray-400 hover:text-[#1967d2] underline decoration-dashed">
+                        Not on the trail? Select manually
+                    </button>
+                </div>
+
+                <div id="locError" class="hidden w-full">
+                    <div class="bg-red-50 p-4 rounded-xl border border-red-100 mb-3">
+                        <div class="text-2xl mb-1">🌍</div>
+                        <h3 class="font-bold text-gray-900 mb-1">You are far from the trail.</h3>
+                        <p class="text-xs text-gray-600">This tool is for tactical checks while hiking. For planning future trips, use the Weather Planner.</p>
+                    </div>
+                    <button onclick="window.location.href='weather.html'" class="w-full bg-white border-2 border-[#1967d2] text-[#1967d2] font-bold py-3 rounded-xl mb-2 hover:bg-blue-50 transition-colors">
+                        Go to Long-Term Planner
+                    </button>
+                    <button onclick="enableManualMode()" class="text-xs font-bold text-gray-400 underline">
+                        I just want to test this widget
+                    </button>
+                </div>
             </div>
 
             <div id="activeControls" class="mb-3 hidden-transition">
@@ -90,7 +109,7 @@
 
         <div id="loading" class="hidden text-center py-10">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
-            <p class="text-xs text-gray-400 mt-3 font-medium">Checking weather & safety risks...</p>
+            <p class="text-xs text-gray-400 mt-3 font-medium">Analyzing Satellite Data...</p>
         </div>
         
         <div id="results" class="space-y-6 pb-20"></div>
@@ -146,8 +165,8 @@
                     { start: "Irún", end: "San Sebastián", dist: "24.5 km", lat: 43.32, lon: -1.90, water: 12, bailout: "Low", sRisk: "Heat on Jaizkibel", wRisk: "Mud on descent" },
                     { start: "San Sebastián", end: "Zarautz", dist: "22.3 km", lat: 43.29, lon: -2.10, water: 5, bailout: "Med", sRisk: "No shade on climb", wRisk: "Slippery stones" },
                     { start: "Zarautz", end: "Deba", dist: "26 km", lat: 43.29, lon: -2.30, water: 5, bailout: "Med", sRisk: "Exposed vineyards", wRisk: "Heavy Mud" },
-                    { start: "Deba", end: "Markina", dist: "25 km", lat: 43.27, lon: -2.45, water: 5, bailout: "Med", sRisk: "Heat in hills", wRisk: "Deep Mud" },
-                    { start: "Markina", end: "Gernika", dist: "26.5 km", lat: 43.28, lon: -2.60, water: 5, bailout: "Med", sRisk: "Humid forest", wRisk: "Slippery clay" },
+                    { start: "Deba", end: "Markina-Xemein", dist: "25 km", lat: 43.27, lon: -2.45, water: 5, bailout: "Med", sRisk: "Heat in hills", wRisk: "Deep Mud" },
+                    { start: "Markina-Xemein", end: "Gernika", dist: "26.5 km", lat: 43.28, lon: -2.60, water: 5, bailout: "Med", sRisk: "Humid forest", wRisk: "Slippery clay" },
                     { start: "Gernika", end: "Lezama", dist: "20 km", lat: 43.28, lon: -2.75, water: 5, bailout: "Med", sRisk: "Asphalt heat", wRisk: "Muddy tracks" },
                     { start: "Lezama", end: "Bilbao", dist: "11.5 km", lat: 43.26, lon: -2.90, water: 5, bailout: "Med", sRisk: "Urban heat island", wRisk: "Wet cobbles" },
                     { start: "Bilbao", end: "Portugalete", dist: "19 km", lat: 43.30, lon: -3.00, water: 5, bailout: "Med", sRisk: "Industrial pollution", wRisk: "River damp" },
@@ -157,8 +176,8 @@
                     { start: "Santoña", end: "Güemes", dist: "20.6 km", lat: 43.45, lon: -3.55, water: 5, bailout: "Med", sRisk: "No shade (beach)", wRisk: "Cold wind" },
                     { start: "Güemes", end: "Santander", dist: "11 km", lat: 43.44, lon: -3.75, water: 5, bailout: "Med", sRisk: "Boat schedule", wRisk: "Rain" },
                     { start: "Santander", end: "Mogro", dist: "24 km", lat: 43.43, lon: -3.90, water: 5, bailout: "Med", sRisk: "Confusing exit", wRisk: "Industrial mud" },
-                    { start: "Mogro", end: "Santillana", dist: "21 km", lat: 43.40, lon: -4.05, water: 5, bailout: "Med", sRisk: "Asphalt heat", wRisk: "Slippery pipes" },
-                    { start: "Santillana", end: "Comillas", dist: "22.7 km", lat: 43.39, lon: -4.20, water: 5, bailout: "Med", sRisk: "Road traffic", wRisk: "Wind" },
+                    { start: "Mogro", end: "Santillana del Mar", dist: "21 km", lat: 43.40, lon: -4.05, water: 5, bailout: "Med", sRisk: "Asphalt heat", wRisk: "Slippery pipes" },
+                    { start: "Santillana del Mar", end: "Comillas", dist: "22.7 km", lat: 43.39, lon: -4.20, water: 5, bailout: "Med", sRisk: "Road traffic", wRisk: "Wind" },
                     { start: "Comillas", end: "Serdio", dist: "18.5 km", lat: 43.37, lon: -4.40, water: 5, bailout: "Med", sRisk: "Exposed road", wRisk: "Mud" },
                     { start: "Serdio", end: "Llanes", dist: "33.7 km", lat: 43.40, lon: -4.60, water: 5, bailout: "Med", sRisk: "Long distance", wRisk: "Rain/Wind" },
                     { start: "Llanes", end: "Nueva", dist: "18 km", lat: 43.42, lon: -4.85, water: 5, bailout: "Med", sRisk: "Busy roads", wRisk: "Mud paths" },
@@ -360,7 +379,7 @@
             linesLayer.clearLayers();
             Object.values(routes).forEach(r => {
                 const points = r.stages.map(s => [s.lat, s.lon]);
-                L.polyline(points, { color: r.color || '#666', weight: 4, opacity: 0.7 }).addTo(linesLayer);
+                L.polyline(points, { color: r.color || '#666', weight: 4, opacity: 1 }).addTo(linesLayer);
             });
             linesLayer.addTo(map);
         }
@@ -406,7 +425,7 @@
 
         function locateUser() {
             if(!navigator.geolocation) { alert("GPS not supported"); return; }
-            const btn = document.querySelector('#heroControls button'); // The hero button
+            const btn = document.querySelector('#locStart button'); 
             const oldText = btn.innerHTML;
             btn.innerHTML = "Locating...";
             
@@ -415,7 +434,6 @@
                 const userLon = pos.coords.longitude;
                 let nearestRoute = null, nearestStageIdx = 0, minGlobDist = Infinity;
 
-                // Find closest stage across ALL routes
                 Object.keys(routes).forEach(rKey => {
                     routes[rKey].stages.forEach((stage, idx) => {
                         const d = getDistanceFromLatLonInKm(userLat, userLon, stage.lat, stage.lon);
@@ -428,17 +446,16 @@
                 });
 
                 if(minGlobDist > 50) {
-                    alert("You seem far from the Camino (>50km). Switching to manual mode.");
-                    enableManualMode();
+                    document.getElementById('locStart').classList.add('hidden');
+                    document.getElementById('locError').classList.remove('hidden');
                 } else {
                     currentRouteId = nearestRoute;
                     selectedStageIndex = nearestStageIdx;
                     switchToActiveMode(nearestRoute);
-                    // Slight delay to let map init
                     setTimeout(() => {
                         map.flyTo([routes[nearestRoute].stages[nearestStageIdx].lat, routes[nearestRoute].stages[nearestStageIdx].lon], 10);
                         if(markers[nearestStageIdx]) markers[nearestStageIdx].fire('click');
-                        getTacticalForecast(); // Auto-run
+                        getTacticalForecast(); 
                     }, 500);
                 }
             }, () => {
@@ -468,16 +485,23 @@
             const points = temps.map((t, i) => { const x = (i * colW) + (colW/2); const y = h - ((t - minTemp)/range * 60 + 20); return {x, y, t}; });
             points.forEach((p, i) => { if (i !== 0) pathD += ` L ${p.x} ${p.y}`; });
             let svg = `<svg viewBox="0 0 ${w} ${h}" class="w-full h-full overflow-visible">`;
+            
+            // Grid lines (optional visual aid)
+            svg += `<line x1="0" y1="${h}" x2="${w}" y2="${h}" stroke="#e5e7eb" stroke-width="1" />`;
+
             rains.forEach((r, i) => { if(r > 0) {
-                const barH = Math.min(r * 10, 40); const x = (i * colW) + (colW/2) - 4; const y = h - barH;
-                svg += `<rect x="${x}" y="${y}" width="8" height="${barH}" fill="#8ab4f8" rx="2" />`;
-                if(r > 1.0) svg += `<text x="${x+4}" y="${y-4}" class="chart-label" style="fill:#1967d2">${r.toFixed(1)}</text>`;
+                const barH = Math.max(r * 20, 6); // Min height 6px so even drizzle is visible
+                const x = (i * colW) + (colW/2) - 6; 
+                const y = h - barH;
+                svg += `<rect x="${x}" y="${y}" width="12" height="${barH}" class="rain-bar" />`;
+                if(r > 0.5) svg += `<text x="${x+6}" y="${y-4}" class="chart-label" style="fill:#1967d2">${r.toFixed(1)}</text>`;
             }});
-            svg += `<path d="${pathD}" fill="none" stroke="#fdb813" stroke-width="3" stroke-linecap="round" />`;
+            
+            svg += `<path d="${pathD}" class="temp-line" />`;
             points.forEach((p, i) => {
-                svg += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="white" stroke="#fdb813" stroke-width="2" />`;
-                svg += `<text x="${p.x}" y="${p.y - 8}" class="temp-label">${p.t}°</text>`;
-                if ((hours[i]) % 3 === 0) svg += `<text x="${p.x}" y="${h + 12}" class="chart-label">${hours[i]}:00</text>`;
+                svg += `<circle cx="${p.x}" cy="${p.y}" r="4" class="temp-dot" />`;
+                svg += `<text x="${p.x}" y="${p.y - 10}" class="temp-label">${p.t}°</text>`;
+                if ((hours[i]) % 3 === 0) svg += `<text x="${p.x}" y="${h + 15}" class="chart-label">${hours[i]}:00</text>`;
             });
             return svg + `</svg>`;
         }
@@ -511,56 +535,86 @@
                     let stage = routeData.stages[stageIndexToUse];
 
                     let dateQuery = current.toISOString().split('T')[0];
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${stage.lat}&longitude=${stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,uv_index&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${stage.lat}&longitude=${stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,uv_index,visibility&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
                     
                     const res = await fetch(url);
                     const json = await res.json();
 
                     if(json.hourly) {
                         let rainSum = 0, maxRain = 0, maxWind = 0, maxUV = 0, minRealFeel = 100, maxRealFeel = -100;
-                        for(let h=6; h<=15; h++) {
+                        let maxRealFeelTime = 12;
+                        let maxWindTime = 12;
+                        let fogAlert = false;
+
+                        for(let h=6; h<=16; h++) {
                             rainSum += json.hourly.precipitation[h];
                             if(json.hourly.precipitation[h] > maxRain) maxRain = json.hourly.precipitation[h];
-                            if(json.hourly.windspeed_10m[h] > maxWind) maxWind = json.hourly.windspeed_10m[h];
+                            
+                            if(json.hourly.windspeed_10m[h] > maxWind) {
+                                maxWind = json.hourly.windspeed_10m[h];
+                                maxWindTime = h;
+                            }
                             if(json.hourly.uv_index[h] > maxUV) maxUV = json.hourly.uv_index[h];
+                            
                             const rf = json.hourly.apparent_temperature[h];
-                            if(rf > maxRealFeel) maxRealFeel = rf;
+                            if(rf > maxRealFeel) {
+                                maxRealFeel = rf;
+                                maxRealFeelTime = h;
+                            }
                             if(rf < minRealFeel) minRealFeel = rf;
+
+                            // Fog Check: code 45/48 AND vis < 2000m
+                            if((json.hourly.weathercode[h] === 45 || json.hourly.weathercode[h] === 48) && json.hourly.visibility[h] < 2000) {
+                                fogAlert = true;
+                            }
                         }
 
                         let badgeClass = "bg-gray-50 text-gray-700 border-gray-100", icon = "☁️", message = "Normal Conditions.", subMessage = "Enjoy the trail.";
-                        
                         let seasonRiskText = isWinter ? stage.wRisk : (isSummer ? stage.sRisk : "");
                         
-                        if (maxWind > 50) {
+                        // --- RICH LOGIC ---
+                        if (maxWind > 55) {
                             badgeClass = "bg-red-50 text-red-700 border-red-100"; icon = "⚠️";
-                            message = `Gale Force Winds (${Math.round(maxWind)}km/h).`; subMessage = "Avoid exposed ridges today.";
+                            message = `Gale Warning (${Math.round(maxWind)}km/h).`; 
+                            subMessage = `Dangerous gusts peak at <b>${maxWindTime}:00</b>. Avoid ridges.`;
                         } 
                         else if (maxRealFeel > 32) {
                             badgeClass = "bg-orange-50 text-orange-800 border-orange-100"; icon = "🔥";
-                            message = `Heat Danger (${Math.round(maxRealFeel)}°).`; subMessage = "Finish walking by 13:00.";
+                            message = `Heat Danger (Feels ${Math.round(maxRealFeel)}°C).`; 
+                            subMessage = `Heat peaks at <b>${maxRealFeelTime}:00</b>. Finish walking by 13:00.`;
+                        }
+                        else if (fogAlert && (stage.micro && stage.micro.includes("Fog"))) {
+                            badgeClass = "bg-gray-200 text-gray-800 border-gray-300"; icon = "🌫️";
+                            message = "Dense Mountain Fog."; 
+                            subMessage = "Visibility < 50m. Stay on marked path.";
                         }
                         else if (stage.water >= 15 && maxRealFeel > 25) {
                             badgeClass = "bg-red-50 text-red-800 border-red-100"; icon = "💧";
-                            message = "CRITICAL HYDRATION."; subMessage = `No water for ${stage.water}km in heat. Carry 3L.`;
+                            message = "CRITICAL HYDRATION."; 
+                            subMessage = `No water for ${stage.water}km. Carry 3L minimum.`;
                         }
-                        else if (stage.bailout === "Zero" && (maxRain > 5 || maxWind > 40)) {
+                        else if (stage.bailout === "Zero" && (maxRain > 5 || maxWind > 45)) {
                             badgeClass = "bg-red-900 text-white border-red-900"; icon = "⛔";
-                            message = "NO BAILOUT."; subMessage = "Remote stage + Bad Weather = Do not start.";
+                            message = "NO BAILOUT / TRAPPED."; 
+                            subMessage = "Remote stage + Bad Weather. Do not attempt today.";
                         }
-                        else if (isWinter && minRealFeel < 2) {
+                        else if (minRealFeel < 2) {
                             badgeClass = "bg-blue-50 text-blue-800 border-blue-100"; icon = "❄️";
-                            message = "Freezing Morning."; subMessage = seasonRiskText || "Wear layers.";
+                            message = `Freezing Start (Feels ${Math.round(minRealFeel)}°C).`; 
+                            subMessage = `Warms up after 11:00. ${seasonRiskText}`;
                         }
                         else if (isSummer && stage.sRisk && stage.sRisk.includes("Heat")) {
                              badgeClass = "bg-orange-50 text-orange-800 border-orange-100"; icon = "☀️";
-                             message = seasonRiskText; subMessage = "Hydrate frequently.";
+                             message = seasonRiskText; 
+                             subMessage = `High UV index (${maxUV.toFixed(1)}). Hydrate frequently.`;
                         }
                         else if (rainSum < 0.2) {
                             badgeClass = "bg-green-50 text-green-700 border-green-100"; icon = "✅";
-                            message = "Perfect Walking Weather."; subMessage = seasonRiskText || "Dry trail.";
+                            message = "Perfect Walking Weather."; 
+                            subMessage = seasonRiskText || "Dry trail. Enjoy the walk!";
                         } else {
-                            message = "Light Rain Expected."; subMessage = "Keep poncho handy.";
+                            message = "Light Rain Expected."; 
+                            subMessage = "Keep poncho handy. Socks might get wet.";
                         }
 
                         const d = json.daily;
@@ -575,7 +629,7 @@
                                     <div>
                                         <div class="flex items-center gap-2 mb-1">
                                             <span class="text-[10px] font-bold bg-[#1967d2] text-white px-2 py-0.5 rounded uppercase">${current.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}</span>
-                                            <span class="text-[10px] text-gray-400 uppercase tracking-wide truncate max-w-[120px]">${stage.start} → ${stage.end}</span>
+                                            <span class="text-[10px] text-gray-400 uppercase tracking-wide">${stage.start} → ${stage.end}</span>
                                         </div>
                                         <div class="flex items-center gap-3 text-[10px] text-gray-500 font-bold mt-1 mb-2">
                                             <span class="bg-gray-100 px-1.5 rounded text-gray-700">${stage.dist}</span>
