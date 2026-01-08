@@ -133,6 +133,162 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
     <script>
+
+<script>
+
+        // --- ROUTES ---
+
+ const routes = {
+            frances: {
+                name: "Camino Francés", center: [42.6, -4.0], zoom: 7,
+                stages: [
+                    { start: "Saint-Jean", end: "Roncesvalles", dist: "25km", lat: 43.163, lon: -1.235 },
+                    { start: "Roncesvalles", end: "Zubiri", dist: "21km", lat: 43.009, lon: -1.319 },
+                    { start: "Zubiri", end: "Pamplona", dist: "20km", lat: 42.929, lon: -1.503 },
+                    { start: "Pamplona", end: "Puente la Reina", dist: "24km", lat: 42.812, lon: -1.646 },
+                    { start: "Puente la Reina", end: "Estella", dist: "22km", lat: 42.690, lon: -1.815 },
+                    { start: "Estella", end: "Los Arcos", dist: "21km", lat: 42.671, lon: -2.024 },
+                    { start: "Los Arcos", end: "Logroño", dist: "28km", lat: 42.564, lon: -2.196 },
+                    { start: "Logroño", end: "Nájera", dist: "29km", lat: 42.465, lon: -2.443 },
+                    { start: "Nájera", end: "Santo Domingo", dist: "21km", lat: 42.415, lon: -2.735 },
+                    { start: "Santo Domingo", end: "Belorado", dist: "22km", lat: 42.439, lon: -2.948 },
+                    { start: "Belorado", end: "Agés", dist: "27km", lat: 42.420, lon: -3.176 },
+                    { start: "Agés", end: "Burgos", dist: "23km", lat: 42.368, lon: -3.483 },
+                    { start: "Burgos", end: "Hontanas", dist: "31km", lat: 42.343, lon: -3.696 },
+                    { start: "Hontanas", end: "Boadilla", dist: "28km", lat: 42.290, lon: -4.066 },
+                    { start: "Boadilla", end: "Carrión", dist: "25km", lat: 42.261, lon: -4.373 },
+                    { start: "Carrión", end: "Terradillos", dist: "26km", lat: 42.341, lon: -4.614 },
+                    { start: "Terradillos", end: "Bercianos", dist: "23km", lat: 42.366, lon: -4.956 },
+                    { start: "Bercianos", end: "Mansilla", dist: "26km", lat: 42.470, lon: -5.416 },
+                    { start: "Mansilla", end: "León", dist: "18km", lat: 42.598, lon: -5.567 },
+                    { start: "León", end: "San Martín", dist: "25km", lat: 42.483, lon: -5.766 },
+                    { start: "San Martín", end: "Astorga", dist: "24km", lat: 42.455, lon: -6.056 },
+                    { start: "Astorga", end: "Foncebadón", dist: "26km", lat: 42.493, lon: -6.340 },
+                    { start: "Foncebadón", end: "Ponferrada", dist: "27km", lat: 42.547, lon: -6.593 },
+                    { start: "Ponferrada", end: "Villafranca", dist: "24km", lat: 42.607, lon: -6.811 },
+                    { start: "Villafranca", end: "O Cebreiro", dist: "28km", lat: 42.708, lon: -7.042 },
+                    { start: "O Cebreiro", end: "Triacastela", dist: "21km", lat: 42.756, lon: -7.240 },
+                    { start: "Triacastela", end: "Sarria", dist: "18km", lat: 42.778, lon: -7.414 },
+                    { start: "Sarria", end: "Portomarín", dist: "22km", lat: 42.807, lon: -7.616 },
+                    { start: "Portomarín", end: "Palas de Rei", dist: "25km", lat: 42.873, lon: -7.868 },
+                    { start: "Palas de Rei", end: "Arzúa", dist: "29km", lat: 42.926, lon: -8.164 },
+                    { start: "Arzúa", end: "O Pedrouzo", dist: "19km", lat: 42.909, lon: -8.361 },
+                    { start: "O Pedrouzo", end: "Santiago", dist: "20km", lat: 42.880, lon: -8.544 }
+                ]
+            },
+            norte: {
+                name: "Camino del Norte", center: [43.4, -4.0], zoom: 7,
+                stages: [
+                     { start: "Irún", end: "San Sebastián", dist: "26km", lat: 43.338, lon: -1.788 },
+                    { start: "San Sebastián", end: "Zarautz", dist: "22km", lat: 43.318, lon: -1.981 },
+                    { start: "Zarautz", end: "Deba", dist: "22km", lat: 43.284, lon: -2.172 },
+                    { start: "Deba", end: "Markina", dist: "24km", lat: 43.296, lon: -2.355 },
+                    { start: "Markina", end: "Guernica", dist: "25km", lat: 43.267, lon: -2.498 },
+                    { start: "Guernica", end: "Bilbao", dist: "33km", lat: 43.315, lon: -2.680 },
+                    { start: "Bilbao", end: "Portugalete", dist: "19km", lat: 43.263, lon: -2.935 },
+                    { start: "Portugalete", end: "Castro Urdiales", dist: "27km", lat: 43.320, lon: -3.020 },
+                    { start: "Castro Urdiales", end: "Laredo", dist: "30km", lat: 43.383, lon: -3.218 },
+                    { start: "Laredo", end: "Güemes", dist: "29km", lat: 43.414, lon: -3.413 },
+                    { start: "Güemes", end: "Santander", dist: "15km", lat: 43.447, lon: -3.616 },
+                    { start: "Santander", end: "Santillana", dist: "37km", lat: 43.462, lon: -3.809 },
+                    { start: "Santillana", end: "Comillas", dist: "22km", lat: 43.389, lon: -4.107 },
+                    { start: "Comillas", end: "Unquera", dist: "28km", lat: 43.386, lon: -4.292 },
+                    { start: "Unquera", end: "Llanes", dist: "25km", lat: 43.383, lon: -4.437 },
+                    { start: "Llanes", end: "Ribadesella", dist: "31km", lat: 43.421, lon: -4.753 },
+                    { start: "Ribadesella", end: "Sebrayo", dist: "31km", lat: 43.462, lon: -5.059 },
+                    { start: "Sebrayo", end: "Gijón", dist: "35km", lat: 43.490, lon: -5.352 },
+                    { start: "Gijón", end: "Avilés", dist: "25km", lat: 43.532, lon: -5.661 },
+                    { start: "Avilés", end: "Muros de Nalón", dist: "22km", lat: 43.554, lon: -5.924 },
+                    { start: "Muros", end: "Soto de Luiña", dist: "16km", lat: 43.561, lon: -6.096 },
+                    { start: "Soto", end: "Cadavedo", dist: "23km", lat: 43.562, lon: -6.223 },
+                    { start: "Cadavedo", end: "Luarca", dist: "16km", lat: 43.546, lon: -6.402 },
+                    { start: "Luarca", end: "La Caridad", dist: "29km", lat: 43.542, lon: -6.536 },
+                    { start: "La Caridad", end: "Ribadeo", dist: "22km", lat: 43.550, lon: -6.826 },
+                    { start: "Ribadeo", end: "Lourenzá", dist: "28km", lat: 43.536, lon: -7.042 },
+                    { start: "Lourenzá", end: "Abadín", dist: "25km", lat: 43.469, lon: -7.296 },
+                    { start: "Abadín", end: "Vilalba", dist: "21km", lat: 43.363, lon: -7.458 },
+                    { start: "Vilalba", end: "Baamonde", dist: "21km", lat: 43.297, lon: -7.681 },
+                    { start: "Baamonde", end: "Sobrado", dist: "41km", lat: 43.159, lon: -7.789 },
+                    { start: "Sobrado", end: "Arzúa", dist: "21km", lat: 43.041, lon: -8.022 },
+                    { start: "Arzúa", end: "Santiago", dist: "39km", lat: 42.926, lon: -8.164 }
+                ]
+            },
+            plata: {
+                name: "Vía de la Plata", center: [39.5, -6.0], zoom: 6,
+                stages: [
+                     { start: "Sevilla", end: "Guillena", dist: "22km", lat: 37.389, lon: -5.984 },
+                    { start: "Guillena", end: "Castilblanco", dist: "18km", lat: 37.555, lon: -6.056 },
+                    { start: "Castilblanco", end: "Almadén", dist: "29km", lat: 37.674, lon: -5.955 },
+                    { start: "Almadén", end: "El Real", dist: "15km", lat: 37.872, lon: -6.071 },
+                    { start: "El Real", end: "Monesterio", dist: "20km", lat: 37.953, lon: -6.177 },
+                    { start: "Monesterio", end: "Fuente de Cantos", dist: "21km", lat: 38.087, lon: -6.274 },
+                    { start: "Fuente de Cantos", end: "Zafra", dist: "25km", lat: 38.247, lon: -6.307 },
+                    { start: "Zafra", end: "Villafranca", dist: "19km", lat: 38.425, lon: -6.417 },
+                    { start: "Villafranca", end: "Torremejía", dist: "27km", lat: 38.561, lon: -6.339 },
+                    { start: "Torremejía", end: "Mérida", dist: "16km", lat: 38.784, lon: -6.376 },
+                    { start: "Mérida", end: "Aljucén", dist: "16km", lat: 38.918, lon: -6.343 },
+                    { start: "Aljucén", end: "Alcuéscar", dist: "20km", lat: 39.027, lon: -6.295 },
+                    { start: "Alcuéscar", end: "Cáceres", dist: "38km", lat: 39.176, lon: -6.223 },
+                    { start: "Cáceres", end: "Embalse", dist: "30km", lat: 39.475, lon: -6.372 },
+                    { start: "Embalse", end: "Grimaldo", dist: "20km", lat: 39.734, lon: -6.431 },
+                    { start: "Grimaldo", end: "Carcaboso", dist: "30km", lat: 39.882, lon: -6.402 },
+                    { start: "Carcaboso", end: "Aldeanueva", dist: "38km", lat: 40.049, lon: -6.216 },
+                    { start: "Aldeanueva", end: "Calzada", dist: "22km", lat: 40.228, lon: -5.922 },
+                    { start: "Calzada", end: "Fuenterroble", dist: "20km", lat: 40.385, lon: -5.818 },
+                    { start: "Fuenterroble", end: "San Pedro", dist: "28km", lat: 40.563, lon: -5.748 },
+                    { start: "San Pedro", end: "Salamanca", dist: "24km", lat: 40.738, lon: -5.709 },
+                    { start: "Salamanca", end: "El Cubo", dist: "36km", lat: 40.970, lon: -5.663 },
+                    { start: "El Cubo", end: "Zamora", dist: "31km", lat: 41.229, lon: -5.753 },
+                    { start: "Zamora", end: "Montamarta", dist: "18km", lat: 41.503, lon: -5.746 },
+                    { start: "Montamarta", end: "Granja", dist: "22km", lat: 41.655, lon: -5.807 },
+                    { start: "Granja", end: "Tábara", dist: "25km", lat: 41.777, lon: -5.758 },
+                    { start: "Tábara", end: "Santa Marta", dist: "23km", lat: 41.890, lon: -6.046 },
+                    { start: "Santa Marta", end: "Mombuey", dist: "36km", lat: 42.029, lon: -6.096 },
+                    { start: "Mombuey", end: "Puebla de Sanabria", dist: "31km", lat: 42.022, lon: -6.327 },
+                    { start: "Puebla", end: "Lubián", dist: "29km", lat: 42.054, lon: -6.633 },
+                    { start: "Lubián", end: "A Gudiña", dist: "24km", lat: 42.032, lon: -6.919 },
+                    { start: "A Gudiña", end: "Laza", dist: "34km", lat: 42.061, lon: -7.139 },
+                    { start: "Laza", end: "Xunqueira", dist: "32km", lat: 42.062, lon: -7.461 },
+                    { start: "Xunqueira", end: "Ourense", dist: "22km", lat: 42.222, lon: -7.643 },
+                    { start: "Ourense", end: "Cea", dist: "22km", lat: 42.335, lon: -7.863 },
+                    { start: "Cea", end: "Castro Dozón", dist: "20km", lat: 42.474, lon: -7.986 },
+                    { start: "Castro", end: "Silleda", dist: "28km", lat: 42.578, lon: -8.026 },
+                    { start: "Silleda", end: "Santiago", dist: "40km", lat: 42.697, lon: -8.247 }
+                ]
+            },
+            lusitana: {
+                name: "Via Lusitana", center: [40.5, -8.5], zoom: 7,
+                stages: [
+                     { start: "Lisboa", end: "Alverca", dist: "28km", lat: 38.722, lon: -9.139 },
+                    { start: "Alverca", end: "Azambuja", dist: "29km", lat: 38.895, lon: -9.040 },
+                    { start: "Azambuja", end: "Santarém", dist: "32km", lat: 39.069, lon: -8.870 },
+                    { start: "Santarém", end: "Golegã", dist: "30km", lat: 39.236, lon: -8.686 },
+                    { start: "Golegã", end: "Tomar", dist: "30km", lat: 39.401, lon: -8.484 },
+                    { start: "Tomar", end: "Alvaiázere", dist: "31km", lat: 39.605, lon: -8.414 },
+                    { start: "Alvaiázere", end: "Rabaçal", dist: "32km", lat: 39.814, lon: -8.384 },
+                    { start: "Rabaçal", end: "Coimbra", dist: "29km", lat: 40.033, lon: -8.448 },
+                    { start: "Coimbra", end: "Mealhada", dist: "25km", lat: 40.203, lon: -8.410 },
+                    { start: "Mealhada", end: "Águeda", dist: "25km", lat: 40.380, lon: -8.450 },
+                    { start: "Águeda", end: "Albergaria", dist: "16km", lat: 40.575, lon: -8.444 },
+                    { start: "Albergaria", end: "Oliveira de Azeméis", dist: "20km", lat: 40.693, lon: -8.481 },
+                    { start: "Oliveira", end: "São João", dist: "18km", lat: 40.838, lon: -8.479 },
+                    { start: "São João", end: "Grijó", dist: "19km", lat: 40.970, lon: -8.508 },
+                    { start: "Grijó", end: "Porto", dist: "15km", lat: 41.050, lon: -8.575 },
+                    { start: "Porto", end: "Vilarinho", dist: "26km", lat: 41.149, lon: -8.611 },
+                    { start: "Vilarinho", end: "Barcelos", dist: "28km", lat: 41.328, lon: -8.697 },
+                    { start: "Barcelos", end: "Ponte de Lima", dist: "33km", lat: 41.530, lon: -8.620 },
+                    { start: "Ponte de Lima", end: "Rubiães", dist: "18km", lat: 41.767, lon: -8.583 },
+                    { start: "Rubiães", end: "Tui", dist: "19km", lat: 41.890, lon: -8.617 },
+                    { start: "Tui", end: "Redondela", dist: "31km", lat: 42.046, lon: -8.644 },
+                    { start: "Redondela", end: "Pontevedra", dist: "18km", lat: 42.285, lon: -8.611 },
+                    { start: "Pontevedra", end: "Caldas de Reis", dist: "23km", lat: 42.433, lon: -8.647 },
+                    { start: "Caldas", end: "Padrón", dist: "18km", lat: 42.604, lon: -8.643 },
+                    { start: "Padrón", end: "Santiago", dist: "25km", lat: 42.738, lon: -8.660 }
+                ]
+            }
+        };
+
+    
         // --- ICONS ---
         const icons = {
             sun: '<svg class="w-8 h-8 icon-sun" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 9c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000 1.41.996.996 0 001.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06z"/></svg>',
