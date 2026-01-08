@@ -290,6 +290,41 @@ const CAMINO_DB = {
             { id: 8, start: "Rodeiro", end: "A Laxe", dist: "27.2", lat: 42.70, lon: -8.05, water_gap: 8, bailout: "Med" },
             { id: 9, start: "A Laxe", end: "Outeiro", dist: "34.1", lat: 42.78, lon: -8.35, water_gap: 10, bailout: "Low" },
             { id: 10, start: "Outeiro", end: "Santiago", dist: "16.5", lat: 42.85, lon: -8.50, water_gap: 5, bailout: "High" }
+        ],
+        // ... existing seasonality and routes blocks ...
+
+    // 3. START LOCATIONS (Logistics for Landing Page & Planner)
+    start_locations: {
+        "frances": [
+            { city: "St-Jean-Pied-de-Port", dist: "~780 km", airport: "Biarritz (BIQ)", commute: "1.5 - 2h", method: "Bus/Train" },
+            { city: "Roncesvalles", dist: "~755 km", airport: "Pamplona (PNA)", commute: "1h 15m", method: "Bus (ALSA)" },
+            { city: "Pamplona", dist: "~712 km", airport: "Pamplona (PNA)", commute: "15m", method: "Taxi/Bus" },
+            { city: "Logroño", dist: "~617 km", airport: "Logroño (RJL)", commute: "15m", method: "Taxi" },
+            { city: "Burgos", dist: "~492 km", airport: "Burgos (RGS)", commute: "15m", method: "Taxi" },
+            { city: "León", dist: "~300 km", airport: "León (LEN)", commute: "20m", method: "Taxi" },
+            { city: "Sarria", dist: "~114 km", airport: "Santiago (SCQ)", commute: "1.5h", method: "Bus/Train" }
+        ],
+        "norte": [
+            { city: "Irún", dist: "~835 km", airport: "Biarritz (BIQ)", commute: "30m", method: "Bus" },
+            { city: "San Sebastián", dist: "~808 km", airport: "San Sebastián (EAS)", commute: "20m", method: "Bus" },
+            { city: "Bilbao", dist: "~680 km", airport: "Bilbao (BIO)", commute: "20m", method: "Bus A3247" },
+            { city: "Santander", dist: "~535 km", airport: "Santander (SDR)", commute: "15m", method: "Taxi" },
+            { city: "Gijón", dist: "~346 km", airport: "Asturias (OVD)", commute: "45m", method: "Bus" },
+            { city: "Ribadeo", dist: "~188 km", airport: "Asturias (OVD)", commute: "1h 15m", method: "Bus" }
+        ],
+        "plata": [
+            { city: "Sevilla", dist: "~1000 km", airport: "Sevilla (SVQ)", commute: "20m", method: "Bus EA" },
+            { city: "Mérida", dist: "~787 km", airport: "Badajoz (BJZ)", commute: "45m", method: "Bus" },
+            { city: "Cáceres", dist: "~713 km", airport: "Madrid (MAD)", commute: "3h", method: "Train" },
+            { city: "Salamanca", dist: "~500 km", airport: "Madrid (MAD)", commute: "1.5h", method: "Train" },
+            { city: "Ourense", dist: "~105 km", airport: "Santiago (SCQ)", commute: "40m", method: "Train" }
+        ],
+        "lusitana": [
+            { city: "Lisbon", dist: "~650 km", airport: "Lisbon (LIS)", commute: "20m", method: "Metro" },
+            { city: "Santarém", dist: "~563 km", airport: "Lisbon (LIS)", commute: "1h", method: "Train" },
+            { city: "Coimbra", dist: "~410 km", airport: "Porto (OPO)", commute: "1.5h", method: "Train" },
+            { city: "Porto", dist: "~240 km", airport: "Porto (OPO)", commute: "30m", method: "Metro" },
+            { city: "Tui", dist: "~115 km", airport: "Vigo (VGO)", commute: "25m", method: "Taxi" }
         ]
     }
 };
