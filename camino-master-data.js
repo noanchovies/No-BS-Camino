@@ -1,9 +1,121 @@
+/* ==========================================
+   HOLIDAY LOGIC (2026 EDITION)
+   Updated: Jan 2026
+   ========================================== */
+
+const REGIONS = {
+    // Spain
+    NAVARRA: "Navarra",
+    RIOJA: "La Rioja",
+    CYL: "Castilla y León",
+    GALICIA: "Galicia",
+    // Portugal (Treated as one region for simplicity)
+    PORTUGAL: "Portugal"
+};
+
+// 1. NATIONAL HOLIDAYS 2026 (Spain & Portugal)
+// Dates where almost everything is closed in the respective country
+const holidays2026 = {
+    SPAIN: [
+        "2026-01-01", // New Year
+        "2026-01-06", // Epiphany (Reyes)
+        "2026-04-03", // Good Friday (Viernes Santo)
+        "2026-05-01", // Labor Day
+        "2026-08-15", // Assumption of Mary
+        "2026-10-12", // Hispanic Day
+        "2026-11-01", // All Saints (Sunday - see regional for Monday shifts)
+        "2026-12-06", // Constitution Day (Sunday - see regional for Monday shifts)
+        "2026-12-08", // Immaculate Conception
+        "2026-12-25"  // Christmas
+    ],
+    PORTUGAL: [
+        "2026-01-01", // New Year
+        "2026-04-03", // Good Friday
+        "2026-04-25", // Freedom Day (Liberty Day)
+        "2026-05-01", // Labor Day
+        "2026-06-10", // Portugal Day
+        "2026-08-15", // Assumption
+        "2026-10-05", // Republic Day
+        "2026-11-01", // All Saints
+        "2026-12-01", // Restoration of Independence
+        "2026-12-08", // Immaculate Conception
+        "2026-12-25"  // Christmas
+    ]
+};
+
+// 2. REGIONAL SPECIFICS 2026 (The "Tricky" Dates)
+const regionalHolidays2026 = {
+    [REGIONS.NAVARRA]: [
+        "2026-04-02", // Maundy Thursday
+        "2026-04-06", // Easter Monday
+        "2026-11-02", // Mon after All Saints
+        "2026-12-03"  // San Francisco Javier (Region Day)
+    ],
+    [REGIONS.RIOJA]: [
+        "2026-04-02", // Maundy Thursday
+        "2026-04-06", // Easter Monday
+        "2026-06-09"  // Day of La Rioja
+    ],
+    [REGIONS.CYL]: [ // Castilla y León
+        "2026-04-02", // Maundy Thursday
+        "2026-04-23", // Villalar (Region Day)
+        "2026-11-02", // Mon after All Saints (Observed)
+        "2026-12-07"  // Mon after Constitution Day (Observed)
+    ],
+    [REGIONS.GALICIA]: [
+        "2026-04-02", // Maundy Thursday
+        "2026-05-17", // Galician Literature Day
+        "2026-07-25"  // Santiago Day (National Day of Galicia)
+    ],
+    [REGIONS.PORTUGAL]: [
+        "2026-06-13", // St Anthony (Lisbon only - technically local but major)
+        "2026-06-24"  // St John (Porto only - technically local but major)
+    ]
+};
+
+// 3. STAGE LOOKUP
+// Helper to map a Route + Stage ID to a Region
+function getStageRegion(route, stageId) {
+    // Portuguese Routes
+    if (route === "lusitana" || route === "coastal") {
+        // Simple logic: If it's a Portuguese route, assume Portugal
+        // (Note: Coastal & Lusitana eventually cross into Galicia. 
+        // You can refine this if you need 100% precision on the border crossing)
+        if (route === "lusitana" && stageId > 20) return REGIONS.GALICIA; // Crossing Tui
+        if (route === "coastal" && stageId > 5) return REGIONS.GALICIA; // Crossing Caminha (ferry)
+        return REGIONS.PORTUGAL;
+    }
+
+    // Camino Francés
+    if (route === "frances") {
+        if (stageId <= 6) return REGIONS.NAVARRA;
+        if (stageId <= 9) return REGIONS.RIOJA;
+        if (stageId <= 24) return REGIONS.CYL;
+        return REGIONS.GALICIA;
+    }
+
+    // Default Fallback
+    return null;
+}
+
 /**
- * CAMINO MASTER DATA (Global)
- * Source of Truth for all widgets (Daily Check, Landing Page, etc.)
- * Contains: Seasonality Matrix, Stage Details, and Start Location Logistics
- * Last Updated: Jan 2026
+ * MASTER CHECKER
+ * Call this in your daily generator loop
  */
+function isCaminoHoliday(dateString, route, stageId) {
+    const region = getStageRegion(route, stageId);
+    
+    // 1. Check Country-Wide Holidays
+    const country = (region === REGIONS.PORTUGAL) ? "PORTUGAL" : "SPAIN";
+    if (holidays2026[country].includes(dateString)) return true;
+
+    // 2. Check Regional Specifics
+    if (region && regionalHolidays2026[region]) {
+        if (regionalHolidays2026[region].includes(dateString)) return true;
+    }
+
+    return false;
+}
 
 const CAMINO_DB = {
     // -------------------------------------------------------------------------
