@@ -118,6 +118,143 @@ function isCaminoHoliday(dateString, route, stageId) {
 }
 
 const CAMINO_DB = {
+
+    // =========================================================================
+    // 0. GLOBAL SITE CONFIG (The "Marketing" Layer)
+    // =========================================================================
+    config: {
+        site_name: "No BS Camino",
+        year: "2026",
+        hero: {
+            title: "Easy Camino Planning",
+            subtitle: "All your information in a simple page. No Affiliate Scams or AI Slop."
+        },
+        // Which route to show in the "Weather Planner Preview" on home page
+        featured_route_id: "frances" 
+    },
+
+    // -------------------------------------------------------------------------
+    // 0.1 ROUTE METADATA (Cards, Tags, Visuals)
+    // -------------------------------------------------------------------------
+    routes_meta: {
+        "frances": {
+            name: "French Way (Francés)",
+            link: "routes/route-frances.html",
+            tag: "The Classic",
+            dist_label: "790km",
+            desc: "St. Jean → Santiago",
+            // Icons: mountain, user, plane, sun, flat, chart, eye, cloud, check
+            stats: [
+                { icon: "mountain", text: "Varied Terrain", color: "orange" },
+                { icon: "user", text: "High Traffic", color: "orange" },
+                { icon: "plane", text: "Fly: Biarritz", color: "blue" },
+                { icon: "sun", text: "May - Oct", color: "blue" }
+            ]
+        },
+        "portugues": {
+            name: "Portuguese Central",
+            link: "routes/route-portugues.html",
+            tag: "#2 Most Traveled",
+            dist_label: "620km",
+            desc: "Lisbon → Santiago",
+            stats: [
+                { icon: "flat", text: "Flat / Easy", color: "green" },
+                { icon: "user", text: "Med Traffic", color: "green" },
+                { icon: "plane", text: "Fly: Lisbon", color: "blue" },
+                { icon: "sun", text: "All Year", color: "blue" }
+            ]
+        },
+        "coastal": {
+            name: "Portuguese Coastal",
+            link: "routes/route-coastal.html",
+            tag: "Scenic & Beachfront",
+            dist_label: "280km",
+            desc: "Porto → Santiago",
+            stats: [
+                { icon: "flat", text: "Boardwalks", color: "green" },
+                { icon: "user", text: "Med Traffic", color: "orange" },
+                { icon: "plane", text: "Fly: Porto", color: "blue" },
+                { icon: "sun", text: "Apr - Oct", color: "blue" }
+            ]
+        },
+        "norte": {
+            name: "Norte",
+            link: "routes/route-norte.html",
+            tag: "Stunning Rugged",
+            dist_label: "820km",
+            desc: "Irún → Santiago",
+            stats: [
+                { icon: "mountain", text: "Very Hilly", color: "red" },
+                { icon: "user", text: "Low Traffic", color: "green" },
+                { icon: "plane", text: "Fly: San Seb.", color: "blue" },
+                { icon: "sun", text: "Summer Only", color: "blue" }
+            ]
+        },
+        "primitivo": {
+            name: "Primitivo",
+            link: "routes/route-primitivo.html",
+            tag: "The Original",
+            dist_label: "320km",
+            desc: "Oviedo → Santiago",
+            stats: [
+                { icon: "mountain", text: "Mountains", color: "red" },
+                { icon: "chart", text: "Hardest", color: "red" },
+                { icon: "plane", text: "Fly: Asturias", color: "blue" },
+                { icon: "sun", text: "May - Sep", color: "blue" }
+            ]
+        },
+        "invierno": {
+            name: "Invierno",
+            link: "routes/route-invierno.html",
+            tag: "Secret Winter Way",
+            dist_label: "260km",
+            desc: "Ponferrada → Santiago",
+            stats: [
+                { icon: "eye", text: "Secret Path", color: "green" },
+                { icon: "cloud", text: "All Year", color: "blue" },
+                { icon: "plane", text: "Fly: León", color: "blue" },
+                { icon: "check", text: "No Crowds", color: "green" }
+            ]
+        },
+        "plata": {
+            name: "Via de la Plata",
+            link: "routes/route-plata.html",
+            tag: "The Longest",
+            dist_label: "1000km",
+            desc: "Seville → Santiago",
+            stats: [
+                { icon: "sun", text: "Very Hot", color: "orange" },
+                { icon: "eye", text: "Solitary", color: "green" },
+                { icon: "plane", text: "Fly: Seville", color: "blue" },
+                { icon: "sun", text: "Spring/Autumn", color: "blue" }
+            ]
+        }
+    },
+
+    // -------------------------------------------------------------------------
+    // 0.2 FAQ DATA
+    // -------------------------------------------------------------------------
+    faqs: [
+        { cat: "GEAR", tag: "MYTH", title: '"Trail Runners vs. Boots"', text: "90% of veterans recommend non-waterproof trail runners. Boots trap heat = blisters." },
+        { cat: "RULES", tag: "2025 UPDATE", title: '"2025 Stamp Rules"', text: "You <strong>must</strong> get 2 stamps per day (start & end) for the last 100km, or no Compostela." },
+        { cat: "LOGISTICS", tag: "", title: '"Book IN ADVAAAANCEEEE"', text: "Nonsense. Book 1 day ahead via WhatsApp. Use Gronze.com for numbers." },
+        { cat: "MONEY", tag: "", title: '"Cash vs Card"', text: "Budget €50/day. The €25/day budget is dead due to inflation. Cards work in 90% of places." }
+    ],
+
+    // -------------------------------------------------------------------------
+    // 0.3 COST DATA
+    // -------------------------------------------------------------------------
+    costs: {
+        rows: [
+            { item: "Bed (Albergue)", myth: "€5 - €8", reality: "€12 - €18" },
+            { item: "Menu del Dia", myth: "€10", reality: "€14 - €18" },
+            { item: "1 Coffee / Beer", myth: "€1.00", reality: "€1.80 - €3.00" }
+        ],
+        total: { label: "Total Daily", myth: "€25 / day", reality: "€45 - €55 / day" },
+        disclaimer: "Most 'Budget Guide' blogs haven't walked since 2018. They keep prices low to sell you ads."
+    },
+
+    
     // -------------------------------------------------------------------------
     // 1. SEASONALITY MATRIX (Vibe & Risk by Month)
     // -------------------------------------------------------------------------
