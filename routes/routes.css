@@ -1,0 +1,33 @@
+/* routes/routes.css */
+
+/* Typography & Base */
+body { font-family: 'Google Sans', sans-serif; background-color: #ffffff; color: #202124; }
+
+/* Scrollbars */
+.custom-scroll::-webkit-scrollbar { height: 6px; }
+.custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+.custom-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
+/* Maps */
+.route-map-container {
+    height: 300px;
+    width: 100%;
+    background-color: #f3f4f6;
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #e5e7eb;
+}
+@media (min-width: 768px) { .route-map-container { height: 400px; } }
+
+/* Seasonal Toggles (Summer/Winter) */
+.risk-winter { display: none; }
+.mode-winter .risk-winter { display: block; }
+.mode-winter .risk-summer { display: none; }
+
+/* Difficulty Stars */
+.stars { letter-spacing: -2px; font-size: 0.75rem; color: #eab308; }
+
+/* Badges */
+.badge-critical { font-size: 10px; font-weight: bold; color: white; background: #ef4444; padding: 2px 8px; border-radius: 99px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }

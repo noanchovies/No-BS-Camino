@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camino de Invierno | The Executive Summary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="routes.css">
+</head>
+<body class="antialiased pb-20" data-route="invierno">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-2 text-gray-500 hover:text-[#1967d2] transition-colors font-bold text-sm">Back</a>
+            <div class="font-bold text-gray-800">Camino <span class="text-teal-600">Invierno</span></div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 pt-8">
+        <div class="mb-10">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">The Winter Way</h1>
+            <p class="text-lg text-gray-600 mb-6">The secret backdoor to Santiago. Originally used to bypass the snow of O Cebreiro. Dramatic canyons and vineyards.</p>
+            <div class="route-map-container">
+                <div id="map-detail-invierno" class="w-full h-full"></div>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <h3 class="font-bold text-gray-900 mb-4">Key Stages</h3>
+            <div class="overflow-hidden border border-gray-200 rounded-xl bg-white shadow-sm">
+                <table class="w-full text-left text-sm" id="stages-table">
+                    <thead class="bg-gray-50 border-b border-gray-100">
+                        <tr><th class="px-4 py-3">Stage</th><th class="px-4 py-3">Dist</th><th class="px-4 py-3">Highlight</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr><td class="px-4 py-3 font-bold">Ponferrada → Las Médulas</td><td class="px-4 py-3">27km</td><td class="px-4 py-3 text-orange-500">Roman Gold Mines</td></tr>
+                        <tr><td class="px-4 py-3 font-bold">A Rúa → Quiroga</td><td class="px-4 py-3">26km</td><td class="px-4 py-3 text-gray-500">Sil Canyon</td></tr>
+                        <tr><td class="px-4 py-3 font-bold">Monforte → Chantada</td><td class="px-4 py-3">30km</td><td class="px-4 py-3 text-red-500">Big Climb</td></tr>
+                        <tr><td class="px-4 py-3 font-bold">Lalín → Santiago</td><td class="px-4 py-3">50km</td><td class="px-4 py-3 text-blue-500">Split into 2 days</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="smart-starts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../camino-master-data.js"></script>
+    <script src="routes-logic.js"></script>
+</body>
+</html>

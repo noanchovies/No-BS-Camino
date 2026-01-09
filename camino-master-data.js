@@ -447,6 +447,21 @@ const CAMINO_DB = {
             { city: "Coimbra", dist: "~410 km", airport: "Porto (OPO)", commute: "1.5h", method: "Train" },
             { city: "Porto", dist: "~240 km", airport: "Porto (OPO)", commute: "30m", method: "Metro" },
             { city: "Tui", dist: "~115 km", airport: "Vigo (VGO)", commute: "25m", method: "Taxi" }
+        ],
+       "coastal": [
+            { city: "Porto", dist: "~280 km", airport: "Porto (OPO)", commute: "20m", method: "Metro" },
+            { city: "Viana do Castelo", dist: "~190 km", airport: "Porto (OPO)", commute: "1h", method: "Bus/Train" },
+            { city: "Vigo", dist: "~100 km", airport: "Vigo (VGO)", commute: "15m", method: "Taxi" }
+        ],
+        "primitivo": [
+            { city: "Oviedo", dist: "~320 km", airport: "Asturias (OVD)", commute: "45m", method: "Bus" },
+            { city: "Lugo", dist: "~100 km", airport: "Santiago (SCQ)", commute: "1.5h", method: "Bus (Monbus)" },
+            { city: "A Fonsagrada", dist: "~160 km", airport: "Asturias (OVD)", commute: "2.5h", method: "Bus (Alsa)" }
+        ],
+        "invierno": [
+            { city: "Ponferrada", dist: "~263 km", airport: "León (LEN)", commute: "1.5h", method: "Bus/Train" },
+            { city: "Monforte de Lemos", dist: "~130 km", airport: "Santiago (SCQ)", commute: "2h", method: "Train/Bus" },
+            { city: "A Rúa", dist: "~200 km", airport: "Santiago (SCQ)", commute: "2.5h", method: "Bus" }
         ]
     }
 };
