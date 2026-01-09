@@ -256,6 +256,25 @@ async function getTacticalForecast() {
             const current = new Date(); current.setDate(current.getDate() + startDayOffset + i); 
             
             let dateQuery = current.toISOString().split('T')[0];
+
+// --- NEW: HOLIDAY CHECK ---
+            // We check if this specific date, on this specific route/stage, is a holiday
+            let holidayBadge = "";
+            const isHoliday = isCaminoHoliday(dateQuery, currentRouteId, stage.id);
+            
+            if (isHoliday) {
+                holidayBadge = `
+                    <div class="mt-2 bg-yellow-50 text-yellow-800 border border-yellow-200 p-2 rounded-lg text-xs flex items-center gap-2 shadow-sm">
+                        <span class="text-lg">🏪</span>
+                        <div>
+                            <span class="font-bold block">Public Holiday</span>
+                            <span class="opacity-75">Shops/Pharmacies likely closed.</span>
+                        </div>
+                    </div>`;
+            }
+            // ---------------------------
+
+            
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${stage.lat}&longitude=${stage.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,daylight_duration&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,uv_index&timezone=auto&start_date=${dateQuery}&end_date=${dateQuery}`;
             
             const res = await fetch(url);
@@ -331,6 +350,7 @@ async function getTacticalForecast() {
                     <div class="card-tactical p-4 mb-4">
                         <div class="flex justify-between items-start mb-2">
                             <div>
+                            ${holidayBadge}
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="text-[10px] font-bold bg-[#1967d2] text-white px-2 py-0.5 rounded uppercase">${current.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}</span>
                                     <span class="text-[10px] text-gray-400 uppercase tracking-wide truncate max-w-[120px]">${stage.start} → ${stage.end}</span>
