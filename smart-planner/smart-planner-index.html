@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Weather Planner | No BS Camino</title>
+    
+    <link rel="manifest" href="../manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    
+    <link rel="stylesheet" href="smart-planner-planner.css">
+</head>
+<body class="antialiased pb-20 bg-white">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='../index.html'">
+                <svg class="w-6 h-6 text-[#1967d2]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span class="font-bold text-gray-700 text-lg">No BS <span class="text-[#1967d2]">Camino</span></span>
+            </div>
+            <a href="../index.html" class="px-4 py-2 rounded-full border border-gray-200 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">Back Home</a>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 pt-8">
+        
+        <div class="text-center mb-10" id="controls-container">
+            <h1 class="text-3xl font-bold google-gradient tracking-tight mb-3">Smart Weather Planner</h1>
+            <p class="text-gray-600 mb-8 text-sm">We calculate your daily position and pull accurate data for that specific location.</p>
+            
+            <div class="flex justify-center gap-4 md:gap-12 text-center">
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-[#1967d2] mb-2">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-800">1. Select Route</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-[#1967d2] mb-2">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-800">2. Pick Start</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-[#1967d2] mb-2">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-800">3. Set Date</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-flight shadow-sm mb-4 overflow-hidden z-10 relative" id="map-container">
+            <div class="p-4 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row gap-4 items-end">
+                <div class="w-full">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1 tracking-wider">Select Route</label>
+                    <div class="relative">
+                        <select id="routeSelect" onchange="changeRoute()" class="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 font-bold focus:outline-none focus:border-[#1967d2] appearance-none">
+                            <option value="frances">Camino Francés</option>
+                            <option value="norte">Camino del Norte</option>
+                            <option value="plata">Via de la Plata</option>
+                            <option value="lusitana">Via Lusitana</option>
+                            <option value="coastal">Portuguese Coastal</option>
+                            <option value="primitivo">Camino Primitivo</option>
+                            <option value="invierno">Camino de Invierno</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1 tracking-wider">Start Date</label>
+                    <input type="date" id="startDate" class="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 font-medium focus:outline-none focus:border-[#1967d2]">
+                </div>
+            </div>
+
+            <div class="px-4 py-2 bg-blue-50 border-b border-blue-100 flex items-center gap-2">
+                <input type="checkbox" id="addRestDays" class="w-4 h-4 text-[#1967d2] rounded focus:ring-[#1967d2] border-gray-300">
+                <label for="addRestDays" class="text-xs text-gray-700 cursor-pointer select-none font-medium">
+                    Add "Smart Rest Days" <span class="text-blue-600">(Every ~135km)</span>
+                </label>
+            </div>
+
+            <div class="relative">
+                <div id="map"></div>
+                <div class="absolute top-4 right-4 z-[999] bg-white/95 backdrop-blur px-3 py-2 rounded-lg shadow-sm border border-gray-200 pointer-events-none">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Start Location</p>
+                    <p id="selectedLocationText" class="text-sm font-bold text-[#1967d2]">Click a pin</p>
+                </div>
+            </div>
+
+            <div class="p-4 bg-white border-t border-gray-100">
+                <button id="getForecastBtn" onclick="getForecast()" class="w-full bg-[#1967d2] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm flex justify-center items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>
+                    Get 10-Day Forecast
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center mb-8">
+            <a href="../expert.html" class="inline-flex items-center gap-1 text-xs font-bold text-gray-400 hover:text-[#1967d2] transition-colors border-b border-dashed border-gray-300 hover:border-[#1967d2] pb-0.5">
+                Need hourly precision? Try Expert Mode
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+            </a>
+        </div>
+
+        <div id="summaryBox" class="hidden mb-10 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                <h4 class="text-xs font-bold text-[#1967d2] uppercase tracking-wider">Trip Analysis</h4>
+            </div>
+            
+            <div class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="border-r border-gray-100 last:border-0 pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Rain Days</div>
+                    <div id="sumRainCount" class="text-xl font-bold text-gray-900">--</div>
+                    <div id="sumRainDays" class="text-[10px] text-gray-400 font-medium truncate mt-0.5">--</div>
+                </div>
+                
+                <div class="border-r border-gray-100 last:border-0 pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Avg Daylight</div>
+                    <div id="sumAvgDaylight" class="text-xl font-bold text-gray-900">--</div>
+                    <div class="text-[10px] text-gray-400 font-medium mt-0.5">Hours</div>
+                </div>
+
+                <div class="border-r border-gray-100 last:border-0 pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Avg Sunrise</div>
+                    <div id="sumSunrise" class="text-xl font-bold text-gray-900">--:--</div>
+                    <div id="sumSunriseTemp" class="text-[10px] text-blue-500 font-bold mt-0.5">--°C</div>
+                </div>
+
+                <div class="pr-4">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Avg Sunset</div>
+                    <div id="sumSunset" class="text-xl font-bold text-gray-900">--:--</div>
+                    <div id="sumSunsetTemp" class="text-[10px] text-gray-500 font-bold mt-0.5">--°C</div>
+                </div>
+            </div>
+            
+            <div id="sumRecs" class="px-4 py-3 bg-blue-50/30 border-t border-blue-50 text-xs text-gray-700 font-medium flex flex-col gap-1"></div>
+        </div>
+
+        <div id="loading" class="hidden text-center py-10">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1967d2] mx-auto"></div>
+            <p class="text-xs text-gray-400 mt-3 font-medium">Fetching satellite data...</p>
+        </div>
+        
+        <div id="results" class="space-y-0 pb-20"></div>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <script src="../camino-master-data.js"></script>
+
+    <script src="smart-planner-logic.js"></script>
+
+</body>
+</html>
