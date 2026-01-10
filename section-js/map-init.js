@@ -1,19 +1,27 @@
-// This function runs ONLY after section-loader.js has finished injecting HTML
+// --- GLOBAL EVENT LISTENERS (Must run immediately) ---
+// We capture the install prompt event as soon as it fires
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log("App install prompt captured");
+});
+
+// --- MAIN INITIALIZATION FUNCTION ---
+// This runs ONLY after section-loader.js has finished injecting HTML
 window.initCaminoLanding = function() {
     console.log("HTML Injected. Initializing Maps & Interactivity...");
 
-    // --- 1. PWA Install Logic (From Banner) ---
+    // 1. PWA Install Logic (Connect the button to the captured event)
     const installBanner = document.getElementById('installBanner');
     const installBtn = document.getElementById('installBtn');
-    let deferredPrompt;
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if(installBanner) installBanner.classList.remove('hidden');
-    });
+    // If we captured the event earlier, show the banner now
+    if (deferredPrompt && installBanner) {
+        installBanner.classList.remove('hidden');
+    }
 
-    if(installBtn) {
+    if (installBtn) {
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
@@ -26,7 +34,12 @@ window.initCaminoLanding = function() {
         });
     }
 
-    // --- 2. Carousel Scroll Logic ---
+    // 2. Service Worker Registration (Moved here to clean up index.html)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed: ', err));
+    }
+
+    // 3. Carousel Scroll Logic
     window.scrollRoutes = function(direction) {
         const container = document.getElementById('routes-carousel');
         if(container) container.scrollBy({ left: direction === 'left' ? -320 : 320, behavior: 'smooth' });
@@ -37,25 +50,51 @@ window.initCaminoLanding = function() {
         if(container) container.scrollBy({ left: direction === 'left' ? -320 : 320, behavior: 'smooth' });
     };
 
-    // --- 3. Map Initialization ---
-    // Safety check: only run if Leaflet is loaded and map containers exist
+    // 4. Map Initialization
     if (typeof L === 'undefined') return;
 
     const redLineStyle = { color: '#dc2626', weight: 4, opacity: 0.8 };
     const mapOptions = { zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, attributionControl: false, zoomSnap: 0.1 };
 
-    // Weather Preview Map
+    // --- Weather Preview Map (Restored Full Coordinates) ---
     if(document.getElementById('preview-map')) {
-        var previewMap = L.map('preview-map', mapOptions).setView([42.8, -2.5], 7);
+        var previewMap = L.map('preview-map', {
+            zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, attributionControl: false
+        }).setView([42.8, -2.5], 7); 
+
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(previewMap);
+
+        var redIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+
+        var blueIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+
+        // FULL Coordinate List restored from original
+        const stages = [
+            [43.163, -1.235], [43.009, -1.319], [42.929, -1.503], [42.812, -1.646], 
+            [42.690, -1.815], [42.671, -2.024], [42.564, -2.196], [42.465, -2.443], 
+            [42.415, -2.735], [42.439, -2.948], [42.420, -3.176], [42.368, -3.483], 
+            [42.343, -3.696], [42.290, -4.066], [42.261, -4.373], [42.341, -4.614], 
+            [42.366, -4.956], [42.470, -5.416], [42.598, -5.567], [42.483, -5.766], 
+            [42.455, -6.056], [42.493, -6.340], [42.547, -6.593], [42.607, -6.811], 
+            [42.708, -7.042], [42.756, -7.240], [42.778, -7.414], [42.807, -7.616], 
+            [42.873, -7.868], [42.926, -8.164], [42.909, -8.361], [42.880, -8.544]
+        ];
         
-        // Add markers (simplified for brevity - keep your full list from the original file)
-        const stages = [[43.163, -1.235], [43.009, -1.319], [42.880, -8.544]]; // ...etc
-        var blueIcon = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] });
-        stages.forEach(coord => L.marker(coord, {icon: blueIcon}).addTo(previewMap));
+        stages.forEach((coord, index) => {
+            const icon = index === 0 ? redIcon : blueIcon;
+            L.marker(coord, {icon: icon}).addTo(previewMap);
+        });
     }
 
-    // Route Maps (Francés, Portugués, etc.)
+    // --- Route Mini Maps (Red Lines) ---
     // Helper to init mini-maps
     const initMiniMap = (id, coords) => {
         if(document.getElementById(id)) {
