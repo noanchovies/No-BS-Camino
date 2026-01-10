@@ -1,0 +1,180 @@
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h3 class="text-xl font-bold text-gray-800">Rapid Fire FAQ</h3>
+        <span class="text-xs text-gray-400 font-medium">Common Myths Debunked</span>
+    </div>
+    <div class="flex gap-2">
+        <button onclick="scrollFaq('left')" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 hover:text-[#1967d2] transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button onclick="scrollFaq('right')" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 hover:text-[#1967d2] transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+    </div>
+</div>
+
+<div id="faq-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
+    
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">GEAR</div>
+            <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">MYTH</span>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"Trail Runners vs. Boots"</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">90% of veterans recommend non-waterproof trail runners. Boots trap heat = blisters.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: r/CaminoDeSantiago</span>
+            <a href="myths.html#gear-boots" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">RULES</div>
+            <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">2025 UPDATE</span>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"2025 Stamp Rules"</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">You <strong>must</strong> get 2 stamps per day (start & end) for the last 100km, or no Compostela.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Pilgrim Office</span>
+            <a href="myths.html#rules-stamps" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">LOGISTICS</div>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"Book IN ADVAAAANCEEEE"</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">Nonsense. Book 1 day ahead via WhatsApp. Use Gronze.com for numbers.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Veteran Walkers</span>
+            <a href="myths.html#logistics-booking" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">MONEY</div>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"Costs & Cash vs Card"</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">Budget €50/day. The €25/day "budget camino" is dead due to inflation.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Experience</span>
+            <a href="myths.html#money-cash" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">WEIGHT</div>
+            <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">MYTH</span>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"Pack for every emergency."</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">Pack 10% of your body weight (5-7kg). Light is right.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Ivar</span>
+            <a href="myths.html#weight-10percent" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">SLEEP</div>
+            <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">FEAR</span>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"Albergues are dirty."</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">Bed bugs happen everywhere. Use <strong>Permethrin</strong> spray before leaving home.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Science</span>
+            <a href="myths.html#sleep-bedbugs" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">SAFETY</div>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"It's dangerous solo."</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">Statistically safer than your hometown. You will meet a "Tramily" quickly.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Crime Stats</span>
+            <a href="myths.html#safety-solo" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">FITNESS</div>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"I need to run marathons."</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">The first week <em>is</em> the training. Start slow. Most paths are flat.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Physiology</span>
+            <a href="myths.html#fitness-training" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">TECH</div>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"I'll use Google Maps."</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">Google sends you to highways. Use <strong>Mapy.cz</strong> or Organic Maps.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: Navigation</span>
+            <a href="myths.html#tech-maps" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+    <div class="snap-center shrink-0 w-[85vw] md:w-[350px] card-flight p-6 flex flex-col h-full">
+        <div class="flex justify-between items-start mb-4">
+            <div class="text-xs font-bold text-[#1967d2] bg-blue-50 px-2 py-1 rounded uppercase">THE VIBE</div>
+            <span class="text-[10px] text-red-400 font-bold border border-red-100 px-2 py-1 rounded bg-red-50">TOXIC MYTH</span>
+        </div>
+        <h4 class="text-xl font-bold text-gray-900 mb-4">"The last 100km isn't real."</h4>
+        <div class="reality-box mb-4 flex-grow">
+            <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
+            <p class="text-sm text-gray-700">Ignore the gatekeepers. Walking 100km is still a huge achievement.</p>
+        </div>
+        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+            <span class="text-xs text-gray-400 font-medium">Source: The Spirit</span>
+            <a href="myths.html#vibe-gatekeeping" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+        </div>
+    </div>
+
+</div>
+
+<div class="text-center mt-10">
+    <a href="myths.html" class="inline-flex items-center text-sm font-bold text-gray-500 hover:text-[#1967d2] transition-colors border-b border-gray-300 hover:border-[#1967d2] pb-1">
+        See full list of common myths debunked
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+    </a>
+</div>
