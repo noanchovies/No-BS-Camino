@@ -151,7 +151,7 @@ const CAMINO_DB = {
                 { icon: "sun", text: "May - Oct", color: "blue" }
             ]
         },
-        "portugues": {
+        "lusitana": {
             name: "Portuguese Central",
             link: "routes/route-portugues.html",
             tag: "#2 Most Traveled",
