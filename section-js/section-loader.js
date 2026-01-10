@@ -1,6 +1,6 @@
 // Configuration: Which sections go where?
 const sections = [
-    { file: 'index-sections/banner.html',  target: 'inject-banner' },
+    { file: 'index-sections/get-app-banner.html', target: 'inject-banner' },
     { file: 'index-sections/header.html',  target: 'inject-header' },
     { file: 'index-sections/hero.html',    target: 'inject-hero' },
     { file: 'index-sections/routes.html',  target: 'inject-routes' },
