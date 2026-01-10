@@ -1,15 +1,10 @@
 /**
- * NO BS SITE BLOCK ENGINE (Data-Driven Version)
+ * NO BS SITE BLOCK ENGINE (Restored Fidelity)
  * Dependencies: CAMINO_DB (camino-master-data.js), Leaflet
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Safety Check
-    if (typeof CAMINO_DB === 'undefined') {
-        console.error("CRITICAL: CAMINO_DB not loaded.");
-        return;
-    }
-
+    if (typeof CAMINO_DB === 'undefined') { console.error("CRITICAL: CAMINO_DB not loaded."); return; }
     const config = CAMINO_DB.config;
 
     renderHeader(config);
@@ -22,11 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderLinks();
     renderFooter(config);
     
-    // Initialize Maps (Hybrid: Logic draws lines from DB coordinates)
     setTimeout(initRouteMaps, 500);
 });
 
-// --- 1. ICON LIBRARY (Visual System) ---
+// --- 1. ICON LIBRARY ---
 function getIcon(name, colorClass) {
     const paths = {
         mountain: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>',
@@ -43,7 +37,7 @@ function getIcon(name, colorClass) {
     return `<svg class="w-4 h-4 ${colors[colorClass] || 'text-gray-500'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">${paths[name] || ''}</svg>`;
 }
 
-// --- 2. RENDERERS (The Factory) ---
+// --- 2. RENDERERS ---
 
 function renderHeader(config) {
     document.getElementById('block-header').innerHTML = `
@@ -75,7 +69,6 @@ function renderHero(config) {
 }
 
 function renderInstallBanner() {
-    // This is static UI, rarely changes between sites
     document.getElementById('block-install').innerHTML = `
     <div id="installBanner" class="hidden bg-[#1967d2] text-white px-4 py-3 shadow-md flex justify-between items-center sticky top-0 z-[60]">
         <div class="flex items-center gap-3">
@@ -87,18 +80,10 @@ function renderInstallBanner() {
 }
 
 function renderRoutesSection() {
-    // 1. Get the list of routes from DB
     const routesMeta = CAMINO_DB.routes_meta;
-    
-    // 2. Generate HTML
     let cardsHtml = Object.keys(routesMeta).map(key => {
         const route = routesMeta[key];
-        
-        let statsHtml = route.stats.map(stat => `
-            <div class="flex items-center gap-2">
-                ${getIcon(stat.icon, stat.color)} ${stat.text}
-            </div>
-        `).join('');
+        let statsHtml = route.stats.map(stat => `<div class="flex items-center gap-2">${getIcon(stat.icon, stat.color)} ${stat.text}</div>`).join('');
 
         return `
         <a href="${route.link}" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
@@ -112,9 +97,7 @@ function renderRoutesSection() {
                     <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">${route.dist_label}</span>
                 </div>
                 <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">${route.desc}</p>
-                <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
-                    ${statsHtml}
-                </div>
+                <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">${statsHtml}</div>
             </div>
         </a>`;
     }).join('');
@@ -130,13 +113,10 @@ function renderRoutesSection() {
             <button onclick="document.getElementById('routes-carousel').scrollBy({left: 320, behavior: 'smooth'})" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
         </div>
     </div>
-    <div id="routes-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
-        ${cardsHtml}
-    </div>`;
+    <div id="routes-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">${cardsHtml}</div>`;
 }
 
 function renderPlannerPreview(featuredRouteId) {
-    // Dynamic: You could eventually pull specific stats for the preview here if desired
     document.getElementById('block-planner-preview').innerHTML = `
     <div class="flex justify-between items-end mb-4"> 
         <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
@@ -149,27 +129,18 @@ function renderPlannerPreview(featuredRouteId) {
         <div class="bg-blue-50/50 border border-blue-100 rounded-2xl p-3 md:p-6 relative overflow-hidden">
             <div id="preview-map" class="h-32 md:h-48 w-full bg-blue-100 rounded-xl mb-3 md:mb-6 relative overflow-hidden border border-blue-200 z-0"></div>
              <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/90 to-transparent flex items-end justify-center pb-4 z-20 rounded-b-2xl pointer-events-none">
-                <span class="bg-[#1967d2] text-white text-sm font-bold py-2.5 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform group-hover:scale-105 flex items-center gap-2 pointer-events-auto">
-                    Plan Your Specific Dates
-                </span>
+                <span class="bg-[#1967d2] text-white text-sm font-bold py-2.5 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform group-hover:scale-105 flex items-center gap-2 pointer-events-auto">Plan Your Specific Dates</span>
             </div>
         </div>
     </div>`;
     
-    // Draw Preview Map based on "Featured Route" from DB Config
     setTimeout(() => {
          if(document.getElementById('preview-map') && CAMINO_DB.routes[featuredRouteId]) {
             const data = CAMINO_DB.routes[featuredRouteId];
-            const startNode = data[0];
-            const endNode = data[data.length-1];
-            // Simple center point calculation
-            const midLat = (startNode.lat + endNode.lat) / 2;
-            const midLon = (startNode.lon + endNode.lon) / 2;
-
+            const startNode = data[0], endNode = data[data.length-1];
+            const midLat = (startNode.lat + endNode.lat) / 2, midLon = (startNode.lon + endNode.lon) / 2;
             var pMap = L.map('preview-map', { zoomControl: false, dragging: false, scrollWheelZoom: false, attributionControl: false }).setView([midLat, midLon], 6); 
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(pMap);
-            
-            // Draw simplified line
             const path = data.map(s => [s.lat, s.lon]);
             L.polyline(path, { color: '#dc2626', weight: 3, opacity: 0.6 }).addTo(pMap);
          }
@@ -189,6 +160,10 @@ function renderFAQ() {
                 <h5 class="text-xs font-bold text-[#1967d2] uppercase mb-1">The Reality</h5>
                 <p class="text-sm text-gray-700">${f.text}</p>
             </div>
+            <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                <span class="text-xs text-gray-400 font-medium">Source: ${f.source}</span>
+                <a href="${f.url}" class="text-sm font-bold text-[#1967d2] hover:underline">Read Full Breakdown →</a>
+            </div>
         </div>
     `).join('');
 
@@ -200,17 +175,20 @@ function renderFAQ() {
             <button onclick="document.getElementById('faq-carousel').scrollBy({left: 320, behavior: 'smooth'})" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
         </div>
     </div>
-    <div id="faq-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
-        ${faqHtml}
+    <div id="faq-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">${faqHtml}</div>
+    <div class="text-center mt-10">
+        <a href="myths.html" class="inline-flex items-center text-sm font-bold text-gray-500 hover:text-[#1967d2] transition-colors border-b border-gray-300 hover:border-[#1967d2] pb-1">
+            See full list of common myths debunked
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </a>
     </div>`;
 }
 
 function renderCosts(year) {
     const data = CAMINO_DB.costs;
-    
     let rowsHtml = data.rows.map(row => `
         <tr class="hover:bg-gray-50/50 transition-colors">
-            <td class="px-6 py-4 font-medium text-gray-900">${row.item}</td>
+            <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">${row.item}</td>
             <td class="px-6 py-4 text-gray-500">${row.myth}</td>
             <td class="px-6 py-4 font-bold text-gray-800 bg-blue-50/30">${row.reality}</td>
         </tr>
@@ -244,8 +222,6 @@ function renderCosts(year) {
 }
 
 function renderLinks() {
-    // This could also be in DB if you want, but for now links are usually site specific logic.
-    // If you want it in DB, add a 'links' array to config.
     document.getElementById('block-links').innerHTML = `
     <h3 class="text-xl font-bold text-gray-800 mb-6">Direct Links</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -271,22 +247,18 @@ function renderFooter(config) {
     <p class="text-sm text-gray-400">© ${config.year} ${config.site_name}. Built for utility.</p>`;
 }
 
-// --- 4. MAP DRAWING LOGIC (The "Hybrid" Part) ---
 function initRouteMaps() {
     const mapOptions = { zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, attributionControl: false, zoomSnap: 0.1 };
     const redLineStyle = { color: '#dc2626', weight: 4, opacity: 0.8, smoothFactor: 1 };
 
     const routes = CAMINO_DB.routes_meta;
-    
     Object.keys(routes).forEach(key => {
         const mapId = `map-${key}`;
         if(document.getElementById(mapId)) {
-            // Get coordinates from the RAW route data, NOT the meta data
             const routeData = CAMINO_DB.routes[key];
             if(routeData) {
                 const map = L.map(mapId, mapOptions);
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
-                
                 const points = routeData.map(s => [s.lat, s.lon]);
                 const line = L.polyline(points, redLineStyle).addTo(map);
                 map.fitBounds(line.getBounds(), {padding: [20, 20]});
