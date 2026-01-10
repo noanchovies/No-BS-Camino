@@ -1,0 +1,242 @@
+<div class="flex items-center justify-between mb-6">
+    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#1967d2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+        Routes
+    </h3>
+    <div class="flex gap-2">
+        <button onclick="scrollRoutes('left')" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 hover:text-[#1967d2] transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button onclick="scrollRoutes('right')" class="p-2 rounded-full border border-gray-200 hover:bg-gray-50 hover:text-[#1967d2] transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+    </div>
+</div>
+
+<div id="routes-carousel" class="flex overflow-x-auto gap-4 pb-4 no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
+    
+    <a href="route-frances.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+        <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+            <div id="map-frances" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">The Classic</div>
+        </div>
+        <div class="p-5">
+            <div class="flex justify-between items-baseline mb-1">
+                <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">French Way (Francés)</h4>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">790km</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">St. Jean → Santiago</p>
+            <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Varied Terrain
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    High Traffic
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    Fly: Biarritz
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    May - Oct
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <a href="route-portugues.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+        <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+            <div id="map-portugues" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">#2 Most Traveled</div>
+        </div>
+        <div class="p-5">
+            <div class="flex justify-between items-baseline mb-1">
+                <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Portuguese Central</h4>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">620km</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Lisbon → Santiago</p>
+            <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Flat / Easy
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Med Traffic
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    Fly: Lisbon
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    All Year
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <a href="routes/route-coastal.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+        <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+            <div id="map-coastal" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">Scenic & Beachfront</div>
+        </div>
+        <div class="p-5">
+            <div class="flex justify-between items-baseline mb-1">
+                <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Portuguese Coastal</h4>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">280km</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Porto → Santiago</p>
+            <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Boardwalks
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    Med Traffic
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    Fly: Porto
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Apr - Oct
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <a href="routes/route-primitivo.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+        <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+            <div id="map-primitivo" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">The Oldest Camino Route</div>
+        </div>
+        <div class="p-5">
+            <div class="flex justify-between items-baseline mb-1">
+                <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Primitivo</h4>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">320km</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Oviedo → Santiago</p>
+            <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Mountains
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                    Hardest
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    Fly: Asturias
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    May - Sep
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <a href="route-norte.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+        <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+            <div id="map-norte" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">Stunning Rugged Landscapes</div>
+        </div>
+        <div class="p-5">
+            <div class="flex justify-between items-baseline mb-1">
+                <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Norte</h4>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">820km</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Irún → Santiago</p>
+            <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Very Hilly
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Low Traffic
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    Fly: San Seb.
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Summer Only
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <a href="route-plata.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+        <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+            <div id="map-plata" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">Roman Roads & a Real Taste of Spain</div>
+        </div>
+        <div class="p-5">
+            <div class="flex justify-between items-baseline mb-1">
+                <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Via de la Plata</h4>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">1000km</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Seville → Santiago</p>
+            <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Very Hot
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Solitary
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    Fly: Seville
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Spring/Autumn
+                </div>
+            </div>
+        </div>
+    </a>    
+
+    <a href="routes/route-invierno.html" class="snap-center shrink-0 w-[85vw] md:w-[300px] card-flight overflow-hidden group cursor-pointer block">
+        <div class="h-40 bg-gray-100 relative overflow-hidden border-b border-gray-100">
+            <div id="map-invierno" class="w-full h-full z-0 mix-blend-multiply opacity-90"></div>
+            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100 z-10">The Secret Winter Way</div>
+        </div>
+        <div class="p-5">
+            <div class="flex justify-between items-baseline mb-1">
+                <h4 class="text-lg font-bold text-gray-900 group-hover:text-[#1967d2] transition-colors">Invierno</h4>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">260km</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 uppercase tracking-wide">Ponferrada → Santiago</p>
+            <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 font-medium">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Secret Path
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                    All Year
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    Fly: León
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    No Crowds
+                </div>
+            </div>
+        </div>
+    </a>
+
+</div>
