@@ -31,13 +31,13 @@
     <main class="max-w-4xl mx-auto px-4 pt-12">
         <div id="inject-hero" class="text-center mb-16"></div>
 
-        <div id="inject-routes" class="mb-20 scroll-mt-24"></div>
+        <div id="routes" class="mb-20 scroll-mt-24"></div>
 
         <div id="inject-weather" class="mb-20"></div>
 
-        <div id="inject-faq" class="mb-20 scroll-mt-24 relative"></div>
+        <div id="faq-section" class="mb-20 scroll-mt-24 relative"></div>
 
-        <div id="inject-costs" class="mb-20 scroll-mt-24"></div>
+        <div id="logistics" class="mb-20 scroll-mt-24"></div>
 
         <div id="inject-links" class="mb-20 scroll-mt-24"></div>
     </main>
@@ -51,7 +51,6 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Adjust path if sw.js is in root or subfolder relative to this index
                 navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed: ', err));
             });
         }
