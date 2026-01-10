@@ -1,14 +1,14 @@
 // Configuration: Which sections go where?
 const sections = [
     { file: 'index-sections/get-app-banner.html', target: 'inject-banner' },
-    { file: 'index-sections/header.html',  target: 'inject-header' },
-    { file: 'index-sections/hero.html',    target: 'inject-hero' },
-    { file: 'index-sections/routes.html',  target: 'inject-routes' },
-    { file: 'index-sections/weather.html', target: 'inject-weather' },
-    { file: 'index-sections/faq.html',     target: 'inject-faq' },
-    { file: 'index-sections/costs.html',   target: 'inject-costs' },
-    { file: 'index-sections/links.html',   target: 'inject-links' },
-    { file: 'index-sections/footer.html',  target: 'inject-footer' }
+    { file: 'index-sections/index-header.html',  target: 'inject-header' },
+    { file: 'index-sections/index-hero.html',    target: 'inject-hero' },
+    { file: 'index-sections/index-routes.html',  target: 'inject-routes' },
+    { file: 'index-sections/index-weather.html', target: 'inject-weather' },
+    { file: 'index-sections/index-faq.html',     target: 'inject-faq' },
+    { file: 'index-sections/index-costs.html',   target: 'inject-costs' },
+    { file: 'index-sections/index-links.html',   target: 'inject-links' },
+    { file: 'index-sections/index-footer.html',  target: 'inject-footer' }
 ];
 
 async function loadPage() {
